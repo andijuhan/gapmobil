@@ -1,5 +1,5 @@
 import Header from '@/components/Header';
-import './globals.css';
+import '../globals.css';
 import type { Metadata } from 'next';
 import Footer from '@/components/Footer';
 
@@ -16,9 +16,7 @@ export default function RootLayout({
    return (
       <html lang='en'>
          <body className='font-primaryFont text-black bg-white'>
-            <Header />
             {children}
-            <Footer />
          </body>
       </html>
    );

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React from 'react';
 
 const AboutUs = () => {
@@ -20,9 +21,11 @@ const AboutUs = () => {
                   Memberikan harga terbaik mobil terbaik dan mobil yang
                   berkualitas untuk Anda.
                </p>
-               <button className='bg-[#f7a621] px-10 py-3 lg:px-20 lg:py-4 rounded-full mt-5 font-bold'>
-                  Baca Selengkapnya
-               </button>
+               <Link href='/tentang-kami'>
+                  <button className='bg-[#f7a621] px-10 py-3 lg:px-20 lg:py-4 rounded-full mt-5 font-bold'>
+                     Baca Selengkapnya
+                  </button>
+               </Link>
             </div>
          </div>
       </div>

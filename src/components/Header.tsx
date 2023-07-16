@@ -17,12 +17,12 @@ const Header = () => {
             <div className='lg:hidden'>
                <AiOutlineMenu size={30} />
             </div>
-            <div className='hidden lg:flex gap-10 text-xl font-semibold'>
+            <div className='hidden lg:flex gap-10 text-lg font-bold'>
                <Link href='/'>Beranda</Link>
-               <Link href='/'>Beli Mobil</Link>
+               <Link href='/beli-mobil'>Beli Mobil</Link>
                <Link href='/tentang-kami'>Tentang Kami</Link>
-               <Link href='/'>Artikel</Link>
-               <Link href='/'>Hubungi Kami</Link>
+               <Link href='/artikel'>Artikel</Link>
+               <Link href='/hubungi-kami'>Hubungi Kami</Link>
             </div>
          </div>
       </div>
