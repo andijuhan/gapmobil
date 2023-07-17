@@ -1,34 +1,10 @@
 'use client';
 import { BsChevronDown } from 'react-icons/bs';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { BiSearch } from 'react-icons/bi';
 
 const SearchFilter = () => {
    const [toggle, setToggle] = useState(true);
-   const [windowSize, setWindowSize] = useState(0);
-
-   const handleResize = () => {
-      setWindowSize(window.innerWidth);
-   };
-
-   useEffect(() => {
-      // Tambahkan event listener ketika komponen dimuat
-      window.addEventListener('resize', handleResize);
-
-      // Hapus event listener ketika komponen di-unmount
-      return () => window.removeEventListener('resize', handleResize);
-   }, []);
-
-   useEffect(() => {
-      if (windowSize <= 820) {
-         setToggle(false);
-      } else {
-         setToggle(true);
-      }
-   }, [windowSize]);
-
-   console.log(windowSize);
-   console.log(toggle);
 
    return (
       <div className='max-w-6xl mx-auto py-[10px] lg:py-[40px]'>
@@ -46,9 +22,11 @@ const SearchFilter = () => {
             />
          </div>
          <form
-            className={`px-[20px] lg:px-0 mb-[40px] lg:mb-0 ${
-               toggle ? '' : 'hidden'
-            }`}
+            className={`px-[20px] lg:px-0 lg:mb-0 ${
+               toggle
+                  ? 'h-[0px] opacity-0 overflow-y-hidden lg:overflow-visible transition-all duration-300 ease-out'
+                  : 'h-[100px] opacity-100 transition-all duration-300 ease-in-out mb-[40px]'
+            } lg:opacity-100 lg:h-auto`}
             action=''
          >
             <div className='flex items-center justify-center'>
