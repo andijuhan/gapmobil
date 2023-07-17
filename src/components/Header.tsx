@@ -8,11 +8,13 @@ const Header = () => {
       <div className='w-full bg-black py-[10px] px-[10px] lg:px-0 lg:py-[17px] text-white fixed left-0 top-0 z-10'>
          <div className='max-w-6xl mx-auto flex justify-between items-center'>
             <div>
-               <img
-                  className='w-[200px]'
-                  src='/images/gap-mobil-logo.png'
-                  alt=''
-               />
+               <Link href='/'>
+                  <img
+                     className='w-[200px]'
+                     src='/images/gap-mobil-logo.png'
+                     alt=''
+                  />
+               </Link>
             </div>
             <div className='lg:hidden'>
                <AiOutlineMenu size={30} />

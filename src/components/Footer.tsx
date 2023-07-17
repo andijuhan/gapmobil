@@ -41,14 +41,15 @@ const Footer = () => {
             </div>
          </div>
          <div className='flex flex-col gap-[10px] fixed right-[10px] bottom-[10px] z-10'>
-            <a target='_blank' href='https://www.instagram.com/gapmobil/'>
+            <Link target='_blank' href='https://www.instagram.com/gapmobil/'>
                <img
                   className='w-[75px] h-[75px] drop-shadow-lg'
                   src='/images/ig.png'
                   alt=''
                />
-            </a>
-            <a
+            </Link>
+
+            <Link
                target='_blank'
                href='https://api.whatsapp.com/send/?phone=62818755588&text&type=phone_number&app_absent=0'
             >
@@ -57,7 +58,7 @@ const Footer = () => {
                   src='/images/wa.png'
                   alt=''
                />
-            </a>
+            </Link>
          </div>
       </>
    );
