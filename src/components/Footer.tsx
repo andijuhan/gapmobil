@@ -25,7 +25,7 @@ const Footer = () => {
                   <Link href='/'>Beranda</Link>
                   <Link href='/beli-mobil'>Beli Mobil</Link>
                   <Link href='/tentang-kami'>Tentang Kami</Link>
-                  <Link href='/artikel'>Artikel</Link>
+                  <Link href='/berita'>Artikel</Link>
                   <Link href='/hubungi-kami'>Hubungi Kami</Link>
                </div>
             </div>
@@ -40,7 +40,7 @@ const Footer = () => {
                </p>
             </div>
          </div>
-         <div className='flex flex-col gap-[10px] fixed right-[10px] bottom-[10px] z-10'>
+         <div className='flex flex-col gap-[10px] fixed right-[10px] bottom-[10px]'>
             <Link target='_blank' href='https://www.instagram.com/gapmobil/'>
                <img
                   className='w-[75px] h-[75px] drop-shadow-lg'
