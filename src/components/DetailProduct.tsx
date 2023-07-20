@@ -22,7 +22,7 @@ const DetailProduct = () => {
             </div>
             {!tab ? (
                <div className='grid grid-cols-2 lg:grid-cols-4 p-[30px]'>
-                  <ul className='space-y-3'>
+                  <ul className='space-y-3 text-sm lg:text-base'>
                      <li>Jarak Tempuh</li>
                      <li>Tipe Registrasi</li>
                      <li>Transmisi</li>
@@ -31,7 +31,7 @@ const DetailProduct = () => {
                      <li>Tangan ke-</li>
                   </ul>
 
-                  <ul className='space-y-3 font-bold'>
+                  <ul className='space-y-3 font-bold text-sm lg:text-base'>
                      <li>125.000 km</li>
                      <li>-</li>
                      <li>MT</li>
@@ -40,7 +40,7 @@ const DetailProduct = () => {
                      <li>0</li>
                   </ul>
 
-                  <ul className='space-y-3'>
+                  <ul className='space-y-3 text-sm lg:text-base'>
                      <li>Tempat Duduk</li>
                      <li>Warna</li>
                      <li>Tanggal Registrasi</li>
@@ -48,7 +48,7 @@ const DetailProduct = () => {
                      <li>Status Odometer</li>
                   </ul>
 
-                  <ul className='space-y-3 font-bold'>
+                  <ul className='space-y-3 font-bold text-sm lg:text-base'>
                      <li>125.000 km</li>
                      <li>-</li>
                      <li>MT</li>
@@ -58,7 +58,7 @@ const DetailProduct = () => {
                </div>
             ) : (
                <div className='grid grid-cols-2 lg:grid-cols-4 p-[30px]'>
-                  <ul className='space-y-3'>
+                  <ul className='space-y-3 text-sm lg:text-base'>
                      <li>Jumlah Kunci</li>
                      <li>Tool Kit</li>
                      <li>Buku Servis</li>
@@ -66,7 +66,7 @@ const DetailProduct = () => {
                      <li>Dongkrak</li>
                   </ul>
 
-                  <ul className='space-y-3 font-bold'>
+                  <ul className='space-y-3 font-bold text-sm lg:text-base'>
                      <li>0</li>
                      <li>Ya</li>
                      <li>Ya</li>
@@ -81,7 +81,7 @@ const DetailProduct = () => {
             <div className='flex gap-[40px] font-bold bg-gray-300 py-3 pl-7'>
                <button>Data Modifikasi</button>
             </div>
-            <div className='grid grid-cols-4 p-[30px]'>
+            <div className='p-[30px] text-sm lg:text-base'>
                <p>Hyundai Avega GX manual 2011</p>
             </div>
          </div>
