@@ -17,5 +17,5 @@ module.exports = {
          primaryFont: ['Montserrat', 'sans-serif'],
       },
    },
-   plugins: [],
+   plugins: [require('daisyui')],
 };
