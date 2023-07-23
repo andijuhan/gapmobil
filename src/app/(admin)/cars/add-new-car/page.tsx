@@ -1,11 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 import SuccessToast from '@/components/SuccessToast';
+import UploadWidget from '@/components/UploadWidget';
 import WarningToast from '@/components/WarningToast';
+import CloudinaryMediaLiblaryWidget from '@/components/CloudinaryMediaLiblaryWidget';
 import { createSlug } from '@/utils';
 import MDEditor, { selectWord } from '@uiw/react-md-editor';
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState } from 'react';
+import { AiOutlineClose } from 'react-icons/ai';
 
 const page = () => {
    const [detailModifikasi, setDetailModifikasi] = useState<string | undefined>(
@@ -25,7 +28,7 @@ const page = () => {
    const [tglReg, setTglReg] = useState('');
    const [masaBerlakuStnk, setMasaBerlakuStnk] = useState('');
    const [statusOdo, setStatusOdo] = useState('Asli');
-   const [images, setImages] = useState(['']);
+   const [images, setImages] = useState<string[]>([]);
    const [sumbited, setSumbited] = useState(false);
    const [warning, setWarning] = useState(false);
 
@@ -40,7 +43,7 @@ const page = () => {
       setTglReg('');
       setMasaBerlakuStnk('');
       setStatusOdo('Asli');
-      setImages(['']);
+      setImages([]);
       setDetailModifikasi('');
    };
 
@@ -52,7 +55,8 @@ const page = () => {
          !warna ||
          !tglReg ||
          !masaBerlakuStnk ||
-         !detailModifikasi
+         !detailModifikasi ||
+         images.length === 0
       ) {
          setWarning(true);
          setTimeout(() => {
@@ -94,7 +98,7 @@ const page = () => {
                }),
             });
 
-            if (response.status === 200) {
+            if (response.ok) {
                setSumbited(true);
                setTimeout(() => {
                   setSumbited(false);
@@ -105,6 +109,14 @@ const page = () => {
             console.error('Error:', error);
          }
       }
+   };
+
+   const handleRemoveImages = (imgUrl: string) => {
+      // Filter out the elements that don't match the value to remove
+      const updatedArray = images.filter((element) => element !== imgUrl);
+
+      // Update the state with the new array
+      setImages(updatedArray);
    };
 
    return (
@@ -131,7 +143,7 @@ const page = () => {
                   </label>
                   <input
                      className={`p-3 rounded-md w-[480px] border focus:outline-none  ${
-                        title === ''
+                        title === '' && warning
                            ? 'ring-2 ring-red-300'
                            : 'focus:ring-4 focus:ring-blue-300'
                      }`}
@@ -150,7 +162,7 @@ const page = () => {
                   </label>
                   <input
                      className={`p-3 rounded-md w-[480px] border focus:outline-none  ${
-                        harga === 0
+                        harga === 0 && warning
                            ? 'ring-2 ring-red-300'
                            : 'focus:ring-4 focus:ring-blue-300'
                      }`}
@@ -170,7 +182,7 @@ const page = () => {
                         </label>
                         <input
                            className={`p-3 rounded-md w-[480px] border focus:outline-none  ${
-                              jarakTempuh === 0
+                              jarakTempuh === 0 && warning
                                  ? 'ring-2 ring-red-300'
                                  : 'focus:ring-4 focus:ring-blue-300'
                            }`}
@@ -283,7 +295,7 @@ const page = () => {
                         </label>
                         <input
                            className={`p-3 rounded-md w-[480px] border focus:outline-none  ${
-                              warna === ''
+                              warna === '' && warning
                                  ? 'ring-2 ring-red-300'
                                  : 'focus:ring-4 focus:ring-blue-300'
                            }`}
@@ -301,7 +313,7 @@ const page = () => {
                         </label>
                         <input
                            className={`p-3 rounded-md w-[480px] border focus:outline-none  ${
-                              tglReg === ''
+                              tglReg === '' && warning
                                  ? 'ring-2 ring-red-300'
                                  : 'focus:ring-4 focus:ring-blue-300'
                            }`}
@@ -318,7 +330,7 @@ const page = () => {
                         </label>
                         <input
                            className={`p-3 rounded-md w-[480px] border focus:outline-none  ${
-                              masaBerlakuStnk === ''
+                              masaBerlakuStnk === '' && warning
                                  ? 'ring-2 ring-red-300'
                                  : 'focus:ring-4 focus:ring-blue-300'
                            }`}
@@ -347,18 +359,53 @@ const page = () => {
                   </div>
                </div>
             </form>
-            <div className='flex flex-col gap-4 border rounded-lg p-10 bg-white'>
-               <div className='h-[300px] border rounded-lg w-full flex flex-col justify-center items-center gap-4'>
-                  <button className='font-semibold bg-blue-600 text-white rounded-lg p-3'>
-                     Add Image
-                  </button>
+            <div className='flex flex-col gap-4 rounded-lg p-10 bg-white'>
+               <div
+                  className={`h-[300px] border rounded-lg w-full flex flex-col justify-center items-center gap-4 ${
+                     images.length === 0 && warning ? 'ring-2 ring-red-300' : ''
+                  }`}
+               >
+                  <CloudinaryMediaLiblaryWidget
+                     images={images}
+                     setImages={setImages}
+                     warning={warning}
+                  >
+                     {(handleGalery) => (
+                        <button
+                           onClick={handleGalery}
+                           className='font-semibold bg-blue-600 text-white rounded-lg p-3'
+                        >
+                           Add Image
+                        </button>
+                     )}
+                  </CloudinaryMediaLiblaryWidget>
                   <p className='text-sm font-light'>Car galery slider</p>
                   <div className='flex justify-center items-center gap-2'>
-                     <img
-                        className='w-[100px]'
-                        src='/images/no-image.png'
-                        alt=''
-                     />
+                     {images.length === 0 ? (
+                        <img
+                           className='w-[100px]'
+                           src='/images/no-image.png'
+                           alt=''
+                        />
+                     ) : (
+                        <div className='flex gap-3 justify-center items-center'>
+                           {images.map((item, index) => (
+                              <div className='relative' key={index}>
+                                 <img
+                                    className='w-[90px] h-[60px] object-cover object-center rounded-lg'
+                                    src={item}
+                                    alt=''
+                                 ></img>
+                                 <div
+                                    className='absolute top-0 right-0 bg-red-500 rounded-full p-1 text-white cursor-pointer'
+                                    onClick={() => handleRemoveImages(item)}
+                                 >
+                                    <AiOutlineClose />
+                                 </div>
+                              </div>
+                           ))}
+                        </div>
+                     )}
                   </div>
                </div>
                <div className='flex flex-col gap-10 font-semibold mt-5'>
@@ -367,8 +414,10 @@ const page = () => {
                   </label>
                   <div
                      data-color-mode='light'
-                     className={`font-normal p-3 rounded-md border focus:outline-none  ${
-                        detailModifikasi === '' ? 'ring-2 ring-red-300' : ''
+                     className={`font-normal p-3 rounded-md border focus:outline-none ${
+                        detailModifikasi === '' && warning
+                           ? 'ring-2 ring-red-300'
+                           : ''
                      }`}
                   >
                      <MDEditor
@@ -379,6 +428,7 @@ const page = () => {
                      />
                   </div>
                </div>
+
                <div className='flex gap-2 mt-[30px]'>
                   <button
                      type='button'
