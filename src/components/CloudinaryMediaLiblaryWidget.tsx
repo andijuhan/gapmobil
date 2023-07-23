@@ -1,18 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useRef } from 'react';
-import { AiOutlineClose } from 'react-icons/ai';
 
 interface IUploadWidget {
    setImages: React.Dispatch<React.SetStateAction<string[]>>;
    images: string[];
-   warning: boolean;
    children: (parentMethod: () => void) => React.ReactNode;
 }
 
 const CloudinaryMediaLiblaryWidget = ({
    images,
    setImages,
-   warning,
    children,
 }: IUploadWidget) => {
    const cloudinaryRef = useRef<any>(null);
@@ -41,7 +38,6 @@ const CloudinaryMediaLiblaryWidget = ({
                   );
 
                   setImages((prevImg) => [...prevImg, ...cloudinaryImg]);
-                  console.log(images);
                },
             }
          );

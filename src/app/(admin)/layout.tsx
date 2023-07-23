@@ -1,6 +1,6 @@
 import '../globals.css';
 import type { Metadata } from 'next';
-import Navbar from '@/components/Navbar';
+import AdminSidebar from '@/components/AdminSidebar';
 
 export const metadata: Metadata = {
    title: 'Create Next App',
@@ -15,7 +15,7 @@ export default function RootLayout({
    return (
       <html lang='en'>
          <body className='font-primaryFont text-black bg-violet-100 min-h-screen flex'>
-            <Navbar />
+            <AdminSidebar />
             <div className='w-full min-h-[100vh]'>{children}</div>
          </body>
       </html>

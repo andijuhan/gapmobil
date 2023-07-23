@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 import SuccessToast from '@/components/SuccessToast';
-import UploadWidget from '@/components/UploadWidget';
 import WarningToast from '@/components/WarningToast';
 import CloudinaryMediaLiblaryWidget from '@/components/CloudinaryMediaLiblaryWidget';
 import { createSlug } from '@/utils';
@@ -9,13 +8,14 @@ import MDEditor, { selectWord } from '@uiw/react-md-editor';
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
+import AdminNavbar from '@/components/AdminNavbar';
+import LoadingToast from '@/components/LoadingToast';
 
 const page = () => {
    const [detailModifikasi, setDetailModifikasi] = useState<string | undefined>(
       ''
    );
    const [title, setTitle] = useState('');
-   const [published, setPublished] = useState(true);
    const [harga, setHarga] = useState(0);
    const [jarakTempuh, setJarakTempuh] = useState(0);
    const [tipeRegistrasi, setTipeRegistrasi] = useState('');
@@ -31,6 +31,7 @@ const page = () => {
    const [images, setImages] = useState<string[]>([]);
    const [sumbited, setSumbited] = useState(false);
    const [warning, setWarning] = useState(false);
+   const [isLoading, setIsloading] = useState(false);
 
    const resetForm = () => {
       setTitle('');
@@ -67,11 +68,12 @@ const page = () => {
       return true;
    };
 
-   const publishHandler = async () => {
+   const publishHandler = async (isDraft: boolean) => {
       const slug = createSlug(title);
       if (validateForm()) {
          try {
             // Send data to the API endpoint using fetch or Axios
+            setIsloading(true);
             const response = await fetch('/api/cars', {
                method: 'POST',
                headers: {
@@ -80,7 +82,7 @@ const page = () => {
                body: JSON.stringify({
                   title,
                   slug,
-                  published,
+                  published: isDraft ? false : true,
                   harga,
                   jarakTempuh,
                   tipeRegistrasi,
@@ -100,12 +102,14 @@ const page = () => {
 
             if (response.ok) {
                setSumbited(true);
+               setIsloading(false);
                setTimeout(() => {
                   setSumbited(false);
                }, 5000);
                resetForm();
             }
          } catch (error) {
+            setIsloading(false);
             console.error('Error:', error);
          }
       }
@@ -123,13 +127,8 @@ const page = () => {
       <div className='p-10 rounded-lg h-full'>
          <SuccessToast show={sumbited} />
          <WarningToast show={warning} />
-
-         <div className='flex justify-between items-center mb-7'>
-            <h1 className='text-xl font-bold'>Add New Car</h1>
-            <div className='h-10 w-10 rounded-full font-semibold text-2xl flex justify-center items-center text-white bg-violet-600 p-4 ring-4 ring-violet-300'>
-               A
-            </div>
-         </div>
+         <LoadingToast show={isLoading} />
+         <AdminNavbar title='Add New Car' />
 
          <div className='grid grid-cols-2 gap-5'>
             <form
@@ -142,15 +141,15 @@ const page = () => {
                      Title
                   </label>
                   <input
-                     className={`p-3 rounded-md w-[480px] border focus:outline-none  ${
+                     className={`p-3 rounded-md w-[480px] border focus:outline-none text-gray-600 ${
                         title === '' && warning
                            ? 'ring-2 ring-red-300'
-                           : 'focus:ring-4 focus:ring-blue-300'
+                           : 'focus:ring-4 focus:ring-violet-300'
                      }`}
                      type='text'
                      id='title'
                      name='title'
-                     placeholder='Honda CRV 2011'
+                     placeholder='Honda CRV 2020'
                      value={title}
                      onChange={(e) => setTitle(e.target.value)}
                   />
@@ -161,10 +160,10 @@ const page = () => {
                      Harga
                   </label>
                   <input
-                     className={`p-3 rounded-md w-[480px] border focus:outline-none  ${
+                     className={`p-3 rounded-md w-[480px] border focus:outline-none text-gray-600 ${
                         harga === 0 && warning
                            ? 'ring-2 ring-red-300'
-                           : 'focus:ring-4 focus:ring-blue-300'
+                           : 'focus:ring-4 focus:ring-violet-300'
                      }`}
                      type='number'
                      id='harga'
@@ -181,10 +180,10 @@ const page = () => {
                            Jarak Tempuh
                         </label>
                         <input
-                           className={`p-3 rounded-md w-[480px] border focus:outline-none  ${
+                           className={`p-3 rounded-md w-[480px] border focus:outline-none text-gray-600 ${
                               jarakTempuh === 0 && warning
                                  ? 'ring-2 ring-red-300'
-                                 : 'focus:ring-4 focus:ring-blue-300'
+                                 : 'focus:ring-4 focus:ring-violet-300'
                            }`}
                            type='number'
                            id='jarakTempuh'
@@ -201,7 +200,7 @@ const page = () => {
                            Tipe Registrasi
                         </label>
                         <input
-                           className='p-3 rounded-md border focus:outline-none focus:ring-4 focus:ring-blue-300'
+                           className='p-3 rounded-md border focus:outline-none focus:ring-4 focus:ring-violet-300 text-gray-600'
                            type='text'
                            id='tipeRegistrasi'
                            name='tipeRegistrasi'
@@ -214,7 +213,7 @@ const page = () => {
                            Transmisi
                         </label>
                         <select
-                           className='p-3 rounded-md border focus:outline-none focus:ring-4 focus:ring-blue-300'
+                           className='p-3 rounded-md border focus:outline-none focus:ring-4 focus:ring-violet-300 text-gray-600'
                            name='transmisi'
                            id='transmisi'
                            value={transmisi}
@@ -229,7 +228,7 @@ const page = () => {
                            Garansi
                         </label>
                         <select
-                           className='p-3 rounded-md border focus:outline-none focus:ring-4 focus:ring-blue-300'
+                           className='p-3 rounded-md border focus:outline-none focus:ring-4 focus:ring-violet-300 text-gray-600'
                            name='garansi'
                            id='garansi'
                            value={garansi ? 'Ya' : 'Tidak'}
@@ -246,7 +245,7 @@ const page = () => {
                            Bahan Bakar
                         </label>
                         <select
-                           className='p-3 rounded-md border focus:outline-none focus:ring-4 focus:ring-blue-300'
+                           className='p-3 rounded-md border focus:outline-none focus:ring-4 focus:ring-violet-300 text-gray-600'
                            name='bahanBakar'
                            id='bahanBakar'
                            value={bahanBakar}
@@ -258,10 +257,10 @@ const page = () => {
                      </div>
                      <div className='flex gap-10 font-semibold items-center'>
                         <label className='w-[150px]' htmlFor='tanganKe'>
-                           Tangan Ke-
+                           Tangan Ke -
                         </label>
                         <input
-                           className='p-3 rounded-md  border focus:outline-none focus:ring-4 focus:ring-blue-300'
+                           className='p-3 rounded-md  border focus:outline-none focus:ring-4 focus:ring-violet-300 text-gray-600'
                            type='number'
                            id='tanganKe'
                            name='tanganKe'
@@ -276,7 +275,7 @@ const page = () => {
                            Tempat Duduk
                         </label>
                         <select
-                           className='p-3 rounded-md border focus:outline-none focus:ring-4 focus:ring-blue-300'
+                           className='p-3 rounded-md border focus:outline-none focus:ring-4 focus:ring-violet-300 text-gray-600'
                            name='tempatDuduk'
                            id='tempatDuduk'
                            value={tempatDuduk}
@@ -294,15 +293,15 @@ const page = () => {
                            Warna
                         </label>
                         <input
-                           className={`p-3 rounded-md w-[480px] border focus:outline-none  ${
+                           className={`p-3 rounded-md w-[480px] border focus:outline-none text-gray-600 ${
                               warna === '' && warning
                                  ? 'ring-2 ring-red-300'
-                                 : 'focus:ring-4 focus:ring-blue-300'
+                                 : 'focus:ring-4 focus:ring-violet-300'
                            }`}
                            type='text'
                            id='warna'
                            name='warna'
-                           placeholder='hitam'
+                           placeholder='Hitam'
                            value={warna}
                            onChange={(e) => setWarna(e.target.value)}
                         />
@@ -312,10 +311,10 @@ const page = () => {
                            Tanggal Registrasi
                         </label>
                         <input
-                           className={`p-3 rounded-md w-[480px] border focus:outline-none  ${
+                           className={`p-3 rounded-md w-[480px] border focus:outline-none text-gray-600 ${
                               tglReg === '' && warning
                                  ? 'ring-2 ring-red-300'
-                                 : 'focus:ring-4 focus:ring-blue-300'
+                                 : 'focus:ring-4 focus:ring-violet-300'
                            }`}
                            type='date'
                            id='tglReg'
@@ -329,10 +328,10 @@ const page = () => {
                            Masa Berlaku STNK
                         </label>
                         <input
-                           className={`p-3 rounded-md w-[480px] border focus:outline-none  ${
+                           className={`p-3 rounded-md w-[480px] border focus:outline-none text-gray-600 ${
                               masaBerlakuStnk === '' && warning
                                  ? 'ring-2 ring-red-300'
-                                 : 'focus:ring-4 focus:ring-blue-300'
+                                 : 'focus:ring-4 focus:ring-violet-300'
                            }`}
                            type='date'
                            id='masaBerlakuStnk'
@@ -346,7 +345,7 @@ const page = () => {
                            Status Odomoter
                         </label>
                         <select
-                           className='p-3 rounded-md border focus:outline-none focus:ring-4 focus:ring-blue-300'
+                           className='p-3 rounded-md border focus:outline-none focus:ring-4 focus:ring-violet-300 text-gray-600'
                            name='statusOdo'
                            id='statusOdo'
                            value={statusOdo}
@@ -368,7 +367,6 @@ const page = () => {
                   <CloudinaryMediaLiblaryWidget
                      images={images}
                      setImages={setImages}
-                     warning={warning}
                   >
                      {(handleGalery) => (
                         <button
@@ -379,7 +377,7 @@ const page = () => {
                         </button>
                      )}
                   </CloudinaryMediaLiblaryWidget>
-                  <p className='text-sm font-light'>Car galery slider</p>
+                  <p className='text-sm'>Car galery slider</p>
                   <div className='flex justify-center items-center gap-2'>
                      {images.length === 0 ? (
                         <img
@@ -388,16 +386,21 @@ const page = () => {
                            alt=''
                         />
                      ) : (
-                        <div className='flex gap-3 justify-center items-center'>
+                        <div className='flex gap-3 justify-center items-center p-[20px] overflow-x-hidden'>
                            {images.map((item, index) => (
                               <div className='relative' key={index}>
                                  <img
-                                    className='w-[90px] h-[60px] object-cover object-center rounded-lg'
+                                    className='w-[90px] h-[60px] object-cover object-center rounded-[5px] ring-4 ring-violet-400 border-gray-200'
                                     src={item}
                                     alt=''
                                  ></img>
+                                 {index === 0 && (
+                                    <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white bg-opacity-80 rounded-[5px] text-gray-900 font-medium text-xs p-1'>
+                                       Cover Image
+                                    </div>
+                                 )}
                                  <div
-                                    className='absolute top-0 right-0 bg-red-500 rounded-full p-1 text-white cursor-pointer'
+                                    className='absolute -top-2 -right-2 bg-red-400 rounded-full p-1 text-white cursor-pointer'
                                     onClick={() => handleRemoveImages(item)}
                                  >
                                     <AiOutlineClose />
@@ -432,12 +435,15 @@ const page = () => {
                <div className='flex gap-2 mt-[30px]'>
                   <button
                      type='button'
-                     onClick={publishHandler}
-                     className='min-w-[150px] font-semibold bg-blue-600 text-white rounded-lg p-3'
+                     onClick={() => publishHandler(false)}
+                     className='min-w-[150px] font-semibold bg-violet-600 text-white rounded-lg p-3'
                   >
                      Publish
                   </button>
-                  <button className='min-w-[150px] font-semibold bg-red-600 text-white rounded-lg p-3'>
+                  <button
+                     onClick={() => publishHandler(true)}
+                     className='min-w-[150px] font-semibold bg-gray-800 text-white rounded-lg p-3'
+                  >
                      Draft
                   </button>
                </div>
