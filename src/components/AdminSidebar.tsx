@@ -17,8 +17,8 @@ const AdminSidebar = () => {
    const path = usePathname();
 
    return (
-      <div className='w-[220px] bg-slate-900 min-h-screen text-white font-semibold px-[30px]'>
-         <div className='mt-[30px] mb-[20px]'>
+      <div className='w-[70px] lg:w-[220px] bg-slate-900 min-h-screen text-white font-semibold px-2 lg:px-[30px]'>
+         <div className='mt-[30px] mb-[40px]'>
             <img className='mx-auto' src='/images/admin-logo.svg' alt='' />
          </div>
          <div className='border-b mb-[20px] border-slate-500'></div>
@@ -31,21 +31,31 @@ const AdminSidebar = () => {
                   } hover:bg-violet-700 cursor-pointer`}
                >
                   <AiOutlineDashboard size={20} />
-                  <span>Dashboard</span>
+                  <span className='hidden lg:block'>Dashboard</span>
                </div>
             </Link>
 
-            <div onClick={() => setCarToggle(!carToggle)}>
-               <div
-                  className={`flex gap-3 items-center ${
-                     path.includes('cars') && 'bg-violet-700'
-                  } hover:bg-violet-700 rounded-[10px] py-2 px-3 cursor-pointer`}
-               >
-                  <AiOutlineCar size={20} />
-                  <span>Cars</span>
-               </div>
+            <div
+               className='relative'
+               onClick={() => {
+                  setCarToggle(!carToggle);
+                  setPostToggle(false);
+                  setSettingToggle(false);
+               }}
+            >
+               <Link href='/cars/manage-cars'>
+                  <div
+                     className={`flex gap-3 items-center ${
+                        path.includes('cars') && 'bg-violet-700'
+                     } hover:bg-violet-700 rounded-[10px] py-2 px-3`}
+                  >
+                     <AiOutlineCar size={20} />
+                     <span className='hidden lg:block'>Cars</span>
+                  </div>
+               </Link>
+
                <ul
-                  className={`text-sm font-medium space-y-1 mt-4 px-2 bg-slate-800 rounded-[10px] ${
+                  className={`absolute -top-4 left-[105%] w-max text-sm font-medium space-y-1 mt-4 p-2 bg-slate-800 rounded-[10px] ${
                      !carToggle && 'hidden'
                   }`}
                >
@@ -70,13 +80,26 @@ const AdminSidebar = () => {
                </ul>
             </div>
 
-            <div onClick={() => setPostToggle(!postToggle)}>
-               <div className='flex gap-3 items-center hover:bg-violet-700 rounded-[10px] py-2 px-3 cursor-pointer'>
-                  <AiOutlineEdit size={20} />
-                  <span>Post</span>
-               </div>
+            <div
+               className='relative'
+               onClick={() => {
+                  setPostToggle(!postToggle);
+                  setCarToggle(false);
+                  setSettingToggle(false);
+               }}
+            >
+               <Link href='/post/manage-post'>
+                  <div
+                     className={`flex gap-3 items-center hover:bg-violet-700 rounded-[10px] py-2 px-3 ${
+                        path.includes('post') && 'bg-violet-700'
+                     }`}
+                  >
+                     <AiOutlineEdit size={20} />
+                     <span className='hidden lg:block'>Post</span>
+                  </div>
+               </Link>
                <ul
-                  className={`text-sm font-medium space-y-1 mt-4 px-2 bg-slate-800 rounded-[10px] ${
+                  className={`absolute -top-4 left-[105%] w-max text-sm font-medium space-y-1 mt-4 p-2 bg-slate-800 rounded-[10px] ${
                      !postToggle && 'hidden'
                   }`}
                >
@@ -88,21 +111,28 @@ const AdminSidebar = () => {
                   </li>
                </ul>
             </div>
-            <div onClick={() => setSettingToggle(!settingToggle)}>
+            <div
+               className='relative'
+               onClick={() => {
+                  setSettingToggle(!settingToggle);
+                  setCarToggle(false);
+                  setPostToggle(false);
+               }}
+            >
                <div className='flex gap-3 items-center hover:bg-violet-700 rounded-[10px] py-2 px-3 cursor-pointer'>
                   <BsGear size={20} />
-                  <span>Setting</span>
+                  <span className='hidden lg:block'>Setting</span>
                </div>
                <ul
-                  className={`text-sm font-medium space-y-1 mt-4 px-4 bg-slate-800 rounded-[10px] ${
+                  className={`absolute -top-4 left-[105%] w-max text-sm font-medium space-y-1 mt-4 p-2 bg-slate-800 rounded-[10px] ${
                      !settingToggle && 'hidden'
                   }`}
                >
                   <li className='p-2 hover:font-bold rounded-[10px] cursor-pointer justify-center'>
-                     Slider
+                     General
                   </li>
                   <li className='p-2 hover:font-bold rounded-[10px] cursor-pointer'>
-                     Account
+                     Homepage
                   </li>
                </ul>
             </div>

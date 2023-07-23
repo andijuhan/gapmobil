@@ -124,24 +124,26 @@ const page = () => {
    };
 
    return (
-      <div className='p-10 rounded-lg h-full'>
+      <div className='p-2 lg:p-10 rounded-lg h-full'>
          <SuccessToast show={sumbited} />
          <WarningToast show={warning} />
          <LoadingToast show={isLoading} />
-         <AdminNavbar title='Add New Car' />
+         <div className='pt-4 lg:pt-0 lg:px-0 px-2'>
+            <AdminNavbar title='Add New Car' />
+         </div>
 
-         <div className='grid grid-cols-2 gap-5'>
+         <div className='grid grid-cols-1 lg:grid-cols-2 gap-5'>
             <form
-               className='flex flex-col gap-5 border rounded-lg p-10 bg-white'
+               className='flex flex-col gap-5 border rounded-lg p-4 lg:p-10 bg-white'
                action=''
             >
-               <p>**Bidang merah wajib di isi</p>
-               <div className='flex gap-10 font-semibold items-center mt-2'>
-                  <label className='w-[150px]' htmlFor='title'>
-                     Title
+               <p>Tanda bintang wajib di isi*</p>
+               <div className='grid grid-cols-3 font-semibold items-center mt-2'>
+                  <label className='' htmlFor='title'>
+                     Title*
                   </label>
                   <input
-                     className={`p-3 rounded-md w-[480px] border focus:outline-none text-gray-600 ${
+                     className={`p-3 rounded-md col-span-2 border focus:outline-none text-gray-600 ${
                         title === '' && warning
                            ? 'ring-2 ring-red-300'
                            : 'focus:ring-4 focus:ring-violet-300'
@@ -155,12 +157,12 @@ const page = () => {
                   />
                </div>
 
-               <div className='flex gap-10 font-semibold items-center'>
-                  <label className='w-[150px]' htmlFor='harga'>
-                     Harga
+               <div className='grid grid-cols-3 font-semibold items-center'>
+                  <label className='' htmlFor='harga'>
+                     Harga*
                   </label>
                   <input
-                     className={`p-3 rounded-md w-[480px] border focus:outline-none text-gray-600 ${
+                     className={`p-3 rounded-md border focus:outline-none text-gray-600 ${
                         harga === 0 && warning
                            ? 'ring-2 ring-red-300'
                            : 'focus:ring-4 focus:ring-violet-300'
@@ -173,14 +175,14 @@ const page = () => {
                      onChange={(e) => setHarga(Number(e.target.value))}
                   />
                </div>
-               <div className='mt-[40px] flex flex-row gap-3'>
+               <div className='mt-[40px] '>
                   <div className='flex flex-col gap-4'>
-                     <div className='flex gap-10 font-semibold items-center'>
-                        <label className='w-[150px]' htmlFor='jarakTempuh'>
-                           Jarak Tempuh
+                     <div className='grid grid-cols-3 font-semibold items-center'>
+                        <label className='' htmlFor='jarakTempuh'>
+                           Jarak Tempuh*
                         </label>
                         <input
-                           className={`p-3 rounded-md w-[480px] border focus:outline-none text-gray-600 ${
+                           className={`p-3 rounded-md border focus:outline-none text-gray-600 ${
                               jarakTempuh === 0 && warning
                                  ? 'ring-2 ring-red-300'
                                  : 'focus:ring-4 focus:ring-violet-300'
@@ -195,8 +197,8 @@ const page = () => {
                            }
                         />
                      </div>
-                     <div className='flex gap-10 font-semibold items-center'>
-                        <label className='w-[150px]' htmlFor='tipeRegistrasi'>
+                     <div className='grid grid-cols-3 font-semibold items-center'>
+                        <label className='' htmlFor='tipeRegistrasi'>
                            Tipe Registrasi
                         </label>
                         <input
@@ -208,8 +210,8 @@ const page = () => {
                            onChange={(e) => setTipeRegistrasi(e.target.value)}
                         />
                      </div>
-                     <div className='flex gap-10 font-semibold items-center'>
-                        <label className='w-[150px]' htmlFor='transmisi'>
+                     <div className='grid grid-cols-3 font-semibold items-center'>
+                        <label className='' htmlFor='transmisi'>
                            Transmisi
                         </label>
                         <select
@@ -223,8 +225,8 @@ const page = () => {
                            <option value='AT'>AT</option>
                         </select>
                      </div>
-                     <div className='flex gap-10 font-semibold items-center'>
-                        <label className='w-[150px]' htmlFor='garansi'>
+                     <div className='grid grid-cols-3 font-semibold items-center'>
+                        <label className='' htmlFor='garansi'>
                            Garansi
                         </label>
                         <select
@@ -240,8 +242,8 @@ const page = () => {
                            <option value='Tidak'>Tidak</option>
                         </select>
                      </div>
-                     <div className='flex gap-10 font-semibold items-center'>
-                        <label className='w-[150px]' htmlFor='bahanBakar'>
+                     <div className='grid grid-cols-3 font-semibold items-center'>
+                        <label className='' htmlFor='bahanBakar'>
                            Bahan Bakar
                         </label>
                         <select
@@ -255,12 +257,12 @@ const page = () => {
                            <option value='Solar'>Solar</option>
                         </select>
                      </div>
-                     <div className='flex gap-10 font-semibold items-center'>
-                        <label className='w-[150px]' htmlFor='tanganKe'>
-                           Tangan Ke -
+                     <div className='grid grid-cols-3 font-semibold items-center'>
+                        <label className='' htmlFor='tanganKe'>
+                           Tangan Ke*
                         </label>
                         <input
-                           className='p-3 rounded-md  border focus:outline-none focus:ring-4 focus:ring-violet-300 text-gray-600'
+                           className='p-3 rounded-md border focus:outline-none focus:ring-4 focus:ring-violet-300 text-gray-600'
                            type='number'
                            id='tanganKe'
                            name='tanganKe'
@@ -270,8 +272,8 @@ const page = () => {
                            onChange={(e) => setTanganKe(Number(e.target.value))}
                         />
                      </div>
-                     <div className='flex gap-10 font-semibold items-center'>
-                        <label className='w-[150px]' htmlFor='tempatDuduk'>
+                     <div className='grid grid-cols-3 font-semibold items-center'>
+                        <label className='' htmlFor='tempatDuduk'>
                            Tempat Duduk
                         </label>
                         <select
@@ -288,12 +290,12 @@ const page = () => {
                            <option value='8'>8</option>
                         </select>
                      </div>
-                     <div className='flex gap-10 font-semibold items-center'>
-                        <label className='w-[150px]' htmlFor='warna'>
-                           Warna
+                     <div className='grid grid-cols-3 font-semibold items-center'>
+                        <label className='' htmlFor='warna'>
+                           Warna*
                         </label>
                         <input
-                           className={`p-3 rounded-md w-[480px] border focus:outline-none text-gray-600 ${
+                           className={`p-3 rounded-md border focus:outline-none text-gray-600 ${
                               warna === '' && warning
                                  ? 'ring-2 ring-red-300'
                                  : 'focus:ring-4 focus:ring-violet-300'
@@ -306,12 +308,12 @@ const page = () => {
                            onChange={(e) => setWarna(e.target.value)}
                         />
                      </div>
-                     <div className='flex gap-10 font-semibold items-center'>
-                        <label className='w-[150px]' htmlFor='tglReg'>
-                           Tanggal Registrasi
+                     <div className='grid grid-cols-3 font-semibold items-center'>
+                        <label className='' htmlFor='tglReg'>
+                           Tanggal Registrasi*
                         </label>
                         <input
-                           className={`p-3 rounded-md w-[480px] border focus:outline-none text-gray-600 ${
+                           className={`p-3 rounded-md border focus:outline-none text-gray-600 ${
                               tglReg === '' && warning
                                  ? 'ring-2 ring-red-300'
                                  : 'focus:ring-4 focus:ring-violet-300'
@@ -323,12 +325,12 @@ const page = () => {
                            onChange={(e) => setTglReg(e.target.value)}
                         />
                      </div>
-                     <div className='flex gap-10 font-semibold items-center'>
-                        <label className='w-[150px]' htmlFor='masaBerlakuStnk'>
-                           Masa Berlaku STNK
+                     <div className='grid grid-cols-3 font-semibold items-center'>
+                        <label className='' htmlFor='masaBerlakuStnk'>
+                           Masa Berlaku STNK*
                         </label>
                         <input
-                           className={`p-3 rounded-md w-[480px] border focus:outline-none text-gray-600 ${
+                           className={`p-3 rounded-md border focus:outline-none text-gray-600 ${
                               masaBerlakuStnk === '' && warning
                                  ? 'ring-2 ring-red-300'
                                  : 'focus:ring-4 focus:ring-violet-300'
@@ -340,9 +342,9 @@ const page = () => {
                            onChange={(e) => setMasaBerlakuStnk(e.target.value)}
                         />
                      </div>
-                     <div className='flex gap-10 font-semibold items-center'>
-                        <label className='w-[150px]' htmlFor='statusOdo'>
-                           Status Odomoter
+                     <div className='grid grid-cols-3 font-semibold items-center'>
+                        <label className='' htmlFor='statusOdo'>
+                           Status Odomoter*
                         </label>
                         <select
                            className='p-3 rounded-md border focus:outline-none focus:ring-4 focus:ring-violet-300 text-gray-600'
@@ -395,8 +397,8 @@ const page = () => {
                                     alt=''
                                  ></img>
                                  {index === 0 && (
-                                    <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white bg-opacity-80 rounded-[5px] text-gray-900 font-medium text-xs p-1'>
-                                       Cover Image
+                                    <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white bg-opacity-80 rounded-[5px] text-violet-600 font-semibold text-xs p-1'>
+                                       Featured
                                     </div>
                                  )}
                                  <div
@@ -412,8 +414,8 @@ const page = () => {
                   </div>
                </div>
                <div className='flex flex-col gap-10 font-semibold mt-5'>
-                  <label className='w-[150px]' htmlFor='data_modifikasi'>
-                     Data Modifikasi
+                  <label className='w-[200px]' htmlFor='data_modifikasi'>
+                     Data Modifikasi *
                   </label>
                   <div
                      data-color-mode='light'
@@ -432,17 +434,17 @@ const page = () => {
                   </div>
                </div>
 
-               <div className='flex gap-2 mt-[30px]'>
+               <div className='flex gap-2 mt-[10px] lg:mt-[30px]'>
                   <button
                      type='button'
                      onClick={() => publishHandler(false)}
-                     className='min-w-[150px] font-semibold bg-violet-600 text-white rounded-lg p-3'
+                     className='lg:min-w-[200px] font-semibold bg-violet-600 text-white rounded-lg p-3'
                   >
                      Publish
                   </button>
                   <button
                      onClick={() => publishHandler(true)}
-                     className='min-w-[150px] font-semibold bg-gray-800 text-white rounded-lg p-3'
+                     className='lg:min-w-[200px] font-semibold bg-gray-800 text-white rounded-lg p-3'
                   >
                      Draft
                   </button>
