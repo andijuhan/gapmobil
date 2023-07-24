@@ -3,7 +3,12 @@ import prisma from '@/utils/prisma';
 
 export const GET = async (req: Request, res: Response) => {
    try {
-      return NextResponse.json({ message: 'oke' });
+      const data = await prisma.car.findMany({
+         orderBy: {
+            updateAt: 'desc',
+         },
+      });
+      return NextResponse.json(data);
    } catch (error) {
       return NextResponse.json(
          { message: 'error', error },
