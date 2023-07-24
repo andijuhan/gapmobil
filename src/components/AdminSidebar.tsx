@@ -18,7 +18,7 @@ const AdminSidebar = () => {
    const path = usePathname();
 
    return (
-      <div className='w-[70px] lg:w-[250px] bg-slate-900 min-h-screen text-white text-sm px-2 lg:px-1 font-bold'>
+      <div className='w-[70px] lg:w-[200px] bg-gray-900 min-h-screen text-white text-sm px-2 lg:px-1 font-bold'>
          <div className='mt-[30px] mb-[40px]'>
             <h1 className='text-center text-2xl font-bold'>Admin.</h1>
          </div>
@@ -66,8 +66,7 @@ const AdminSidebar = () => {
                >
                   <li
                      className={`p-2 hover:font-bold  cursor-pointer ${
-                        path.includes('manage-car') &&
-                        'font-bold text-violet-500'
+                        path.includes('manage-car') && 'font-bold'
                      }`}
                   >
                      <Link className='w-full' href='/cars/manage-cars'>
@@ -76,8 +75,7 @@ const AdminSidebar = () => {
                   </li>
                   <li
                      className={`p-2 hover:font-bold  cursor-pointer ${
-                        path.includes('add-new-car') &&
-                        'font-bold text-violet-500'
+                        path.includes('add-new-car') && 'font-bold'
                      }`}
                   >
                      <Link className='w-full' href='/cars/add-new-car'>
@@ -100,7 +98,7 @@ const AdminSidebar = () => {
                      } hover:bg-violet-700  py-2 px-3`}
                   >
                      <AiOutlineEdit size={20} />
-                     <span className='hidden lg:block'>Post</span>
+                     <span className='hidden lg:block'>Posts</span>
                      <AiFillCaretDown
                         className={`hidden lg:block ${
                            postToggle &&
