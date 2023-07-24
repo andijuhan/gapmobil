@@ -6,6 +6,7 @@ import {
    AiOutlineDashboard,
    AiOutlineCar,
    AiOutlineEdit,
+   AiFillCaretDown,
 } from 'react-icons/ai';
 import { BsGear } from 'react-icons/bs';
 import { usePathname } from 'next/navigation';
@@ -35,15 +36,15 @@ const AdminSidebar = () => {
                </div>
             </Link>
 
-            <div
-               className='relative'
-               onClick={() => {
-                  setCarToggle(!carToggle);
-                  setPostToggle(false);
-                  setSettingToggle(false);
-               }}
-            >
-               <Link href='/cars/manage-cars'>
+            <div className='relative'>
+               <Link
+                  onClick={() => {
+                     setCarToggle(!carToggle);
+                     setPostToggle(false);
+                     setSettingToggle(false);
+                  }}
+                  href='#'
+               >
                   <div
                      className={`flex gap-3 items-center ${
                         path.includes('cars') && 'bg-violet-700'
@@ -51,11 +52,16 @@ const AdminSidebar = () => {
                   >
                      <AiOutlineCar size={20} />
                      <span className='hidden lg:block'>Cars</span>
+                     <AiFillCaretDown
+                        className={`hidden lg:block ${
+                           carToggle && 'transition-all rotate-180 duration-300'
+                        }`}
+                     />
                   </div>
                </Link>
 
                <ul
-                  className={`absolute -top-4 left-[105%] w-max text-sm font-medium space-y-1 mt-4 p-2 bg-slate-800 rounded-[10px] ${
+                  className={`absolute lg:relative -top-4 lg:top-0 lg:left-0 left-[105%] w-max lg:w-full text-sm font-medium space-y-1 mt-4 p-2 bg-slate-800 rounded-[10px] ${
                      !carToggle && 'hidden'
                   }`}
                >
@@ -80,51 +86,67 @@ const AdminSidebar = () => {
                </ul>
             </div>
 
-            <div
-               className='relative'
-               onClick={() => {
-                  setPostToggle(!postToggle);
-                  setCarToggle(false);
-                  setSettingToggle(false);
-               }}
-            >
-               <Link href='/post/manage-post'>
+            <div className='relative'>
+               <Link
+                  onClick={() => {
+                     setPostToggle(!postToggle);
+                     setCarToggle(false);
+                     setSettingToggle(false);
+                  }}
+                  href='#'
+               >
                   <div
-                     className={`flex gap-3 items-center hover:bg-violet-700 rounded-[10px] py-2 px-3 ${
-                        path.includes('post') && 'bg-violet-700'
-                     }`}
+                     className={`flex gap-3 items-center ${
+                        path.includes('posts') && 'bg-violet-700'
+                     } hover:bg-violet-700 rounded-[10px] py-2 px-3`}
                   >
                      <AiOutlineEdit size={20} />
                      <span className='hidden lg:block'>Post</span>
+                     <AiFillCaretDown
+                        className={`hidden lg:block ${
+                           postToggle &&
+                           'transition-all rotate-180 duration-300'
+                        }`}
+                     />
                   </div>
                </Link>
                <ul
-                  className={`absolute -top-4 left-[105%] w-max text-sm font-medium space-y-1 mt-4 p-2 bg-slate-800 rounded-[10px] ${
+                  className={`absolute lg:relative -top-4 lg:top-0 lg:left-0 left-[105%] w-max lg:w-full text-sm font-medium space-y-1 mt-4 p-2 bg-slate-800 rounded-[10px] ${
                      !postToggle && 'hidden'
                   }`}
                >
-                  <li className='p-2 hover:font-bold rounded-[10px] cursor-pointer justify-center'>
-                     Manage Posts
-                  </li>
-                  <li className='p-2 hover:font-bold rounded-[10px] cursor-pointer'>
-                     Add New Post
-                  </li>
+                  <Link href='/posts/manage-posts'>
+                     <li className='p-2 hover:font-bold rounded-[10px] cursor-pointer justify-center'>
+                        Manage Posts
+                     </li>
+                  </Link>
+                  <Link href='/posts/add-new-post'>
+                     <li className='p-2 hover:font-bold rounded-[10px] cursor-pointer'>
+                        Add New Post
+                     </li>
+                  </Link>
                </ul>
             </div>
-            <div
-               className='relative'
-               onClick={() => {
-                  setSettingToggle(!settingToggle);
-                  setCarToggle(false);
-                  setPostToggle(false);
-               }}
-            >
-               <div className='flex gap-3 items-center hover:bg-violet-700 rounded-[10px] py-2 px-3 cursor-pointer'>
+            <div className='relative'>
+               <div
+                  onClick={() => {
+                     setSettingToggle(!settingToggle);
+                     setCarToggle(false);
+                     setPostToggle(false);
+                  }}
+                  className='flex gap-3 items-center hover:bg-violet-700 rounded-[10px] py-2 px-3 cursor-pointer'
+               >
                   <BsGear size={20} />
                   <span className='hidden lg:block'>Setting</span>
+                  <AiFillCaretDown
+                     className={`hidden lg:block ${
+                        settingToggle &&
+                        'transition-all rotate-180 duration-300'
+                     }`}
+                  />
                </div>
                <ul
-                  className={`absolute -top-4 left-[105%] w-max text-sm font-medium space-y-1 mt-4 p-2 bg-slate-800 rounded-[10px] ${
+                  className={`absolute lg:relative -top-4 lg:top-0 lg:left-0 left-[105%] w-max lg:w-full text-sm font-medium space-y-1 mt-4 p-2 bg-slate-800 rounded-[10px] ${
                      !settingToggle && 'hidden'
                   }`}
                >
