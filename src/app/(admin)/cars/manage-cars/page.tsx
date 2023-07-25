@@ -2,39 +2,16 @@
 import AdminNavbar from '@/components/AdminNavbar';
 import ListCars from '@/components/ListCars';
 
-export interface IApiResponse {
-   id: string;
-   published: boolean;
-   slug: string;
-   title: string;
-   harga: number;
-   jarakTempuh: number;
-   tipeRegistrasi: string;
-   transmisi: string;
-   garansi: boolean;
-   bahanBakar: string;
-   tanganKe: number;
-   tempatDuduk: number;
-   warna: string;
-   tglReg: string;
-   masaBerlakuStnk: string;
-   statusOdo: string;
-   images: string[];
-   detailModifikasi: string;
-   createAt: string;
-   updateAt: string;
-}
+const getData = async () => {
+   try {
+      const response = await fetch('http://localhost:3000/api/cars', {
+         cache: 'no-store',
+      });
 
-const getData = async (): Promise<IApiResponse[]> => {
-   const response = await fetch('http://localhost:3000/api/cars', {
-      cache: 'no-store',
-   });
-
-   if (!response.ok) {
-      throw new Error('Failed to fetch data');
+      return response.json();
+   } catch (error) {
+      console.log(error);
    }
-
-   return response.json();
 };
 
 const page = async () => {
