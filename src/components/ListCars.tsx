@@ -43,7 +43,7 @@ const ListCars = ({ apiResponse }: IListCarsProps) => {
    useEffect(() => {
       const handleSortAndOrder = async () => {
          const response = await fetch(
-            `/api/cars/sort?sortby=${sort}&&order=${order}`,
+            `/api/cars/?sortby=${sort}&&order=${order}`,
             {
                headers: {
                   'Content-Type': 'application/json',
@@ -57,10 +57,9 @@ const ListCars = ({ apiResponse }: IListCarsProps) => {
       if (sort !== '') handleSortAndOrder();
    }, [sort, setSort, order, setOrder]);
 
-   console.log(sort, order);
    return (
       <div>
-         <div className='flex justify-between items-center mb-[20px]'>
+         <div className='flex flex-col lg:flex-row justify-between items-center mb-[20px] gap-5 font-medium'>
             <div className='flex gap-5 items-center'>
                <select
                   className='p-3 rounded-md border focus:outline-none focus:ring-4 focus:ring-violet-300 text-gray-600'
@@ -87,19 +86,17 @@ const ListCars = ({ apiResponse }: IListCarsProps) => {
                </select>
             </div>
             <div className='flex items-center gap-5'>
-               <label className='' htmlFor='harga'>
-                  Cari Mobil
-               </label>
                <input
-                  className='p-3 rounded-md border focus:outline-none text-gray-600 focus:ring-4 focus:ring-violet-300'
+                  className='p-3 lg:w-[480px] rounded-md border focus:outline-none text-gray-600 focus:ring-4 focus:ring-violet-300'
                   type='text'
+                  placeholder='Search Car'
                />
             </div>
          </div>
-         <div className='overflow-x-auto'>
+         <div className='overflow-x-auto font-medium'>
             <table className='table'>
                {/* head */}
-               <thead>
+               <thead className='text-base text-black font-medium'>
                   <tr>
                      <th>
                         <label>
@@ -139,9 +136,7 @@ const ListCars = ({ apiResponse }: IListCarsProps) => {
                                  </div>
                               </div>
                               <div>
-                                 <div className='font-bold capitalize'>
-                                    {item.title}
-                                 </div>
+                                 <div className='capitalize'>{item.title}</div>
                               </div>
                            </div>
                         </td>
@@ -169,7 +164,7 @@ const ListCars = ({ apiResponse }: IListCarsProps) => {
                   ))}
                </tbody>
                {/* foot */}
-               <tfoot>
+               <tfoot className='text-base text-black font-medium'>
                   <tr>
                      <th></th>
                      <th>Title</th>

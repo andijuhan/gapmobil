@@ -6,10 +6,10 @@ import {
    AiOutlineDashboard,
    AiOutlineCar,
    AiOutlineEdit,
-   AiFillCaretDown,
 } from 'react-icons/ai';
 import { BsGear } from 'react-icons/bs';
 import { usePathname } from 'next/navigation';
+import { BsChevronDown } from 'react-icons/bs';
 
 const AdminSidebar = () => {
    const [carToggle, setCarToggle] = useState(false);
@@ -18,25 +18,25 @@ const AdminSidebar = () => {
    const path = usePathname();
 
    return (
-      <div className='w-[70px] lg:w-[200px] bg-gray-900 min-h-screen text-white text-sm px-2 lg:px-1 font-bold'>
-         <div className='mt-[30px] mb-[40px]'>
-            <h1 className='text-center text-2xl font-bold'>Admin.</h1>
+      <div className='fixed lg:relative z-40 w-[50vw] lg:w-[250px] bg-gray-800 min-h-screen text-gray-200 font-medium px-7'>
+         <div className='mt-[30px] mb-[30px]'>
+            <h1 className='text-xl text-white font-semibold'>Admin Panel</h1>
          </div>
-         <div className='border-b mb-[40px] border-slate-500'></div>
 
-         <div className='flex flex-col gap-3 dropdown'>
+         <div className='flex flex-col gap-5 dropdown'>
+            {/* MANAGE DASHBOARD */}
             <Link href='/dashboard'>
                <div
-                  className={`flex gap-3 items-center  py-2 px-3 ${
-                     path === '/dashboard' && 'bg-violet-700'
-                  } hover:bg-violet-700 cursor-pointer`}
+                  className={`flex gap-3 items-center ${
+                     path === '/dashboard' && 'font-bold text-white'
+                  } hover:font-bold cursor-pointer`}
                >
-                  <AiOutlineDashboard size={20} />
-                  <span className='hidden lg:block'>Dashboard</span>
+                  <AiOutlineDashboard size={15} />
+                  <span>Dashboard</span>
                </div>
             </Link>
-
-            <div className='relative'>
+            {/* MANAGE CAR */}
+            <div>
                <Link
                   onClick={() => {
                      setCarToggle(!carToggle);
@@ -44,48 +44,43 @@ const AdminSidebar = () => {
                   href='#'
                >
                   <div
-                     className={`flex gap-3 items-center ${
-                        path.includes('cars') && 'bg-violet-700'
-                     } hover:bg-violet-700  py-2 px-3`}
+                     className={`flex justify-between items-center ${
+                        path.includes('cars') && 'font-semibold text-white'
+                     } `}
                   >
-                     <AiOutlineCar size={20} />
-                     <span className='hidden lg:block'>Cars</span>
-                     <AiFillCaretDown
-                        className={`hidden lg:block ${
+                     <div className='flex items-center gap-3'>
+                        <AiOutlineCar size={15} />
+                        <span>Cars</span>
+                     </div>
+                     <BsChevronDown
+                        className={` ${
                            carToggle && 'transition-all rotate-180 duration-300'
                         }`}
-                        size={10}
                      />
                   </div>
                </Link>
 
-               <ul
-                  className={`absolute lg:relative -top-4 lg:top-0 lg:left-0 left-[105%] w-max lg:w-full text-sm font-medium space-y-1 mt-1 p-2 bg-slate-800 z-10  ${
-                     !carToggle && 'hidden'
-                  }`}
-               >
+               <ul className={`mt-2 ml-4 ${!carToggle && 'hidden'}`}>
                   <li
                      className={`p-2 hover:font-bold  cursor-pointer ${
-                        path.includes('manage-car') && 'font-bold'
+                        path.includes('manage-car') &&
+                        'text-white font-semibold'
                      }`}
                   >
-                     <Link className='w-full' href='/cars/manage-cars'>
-                        Manage Car
-                     </Link>
+                     <Link href='/cars/manage-cars'>Manage Cars</Link>
                   </li>
                   <li
                      className={`p-2 hover:font-bold  cursor-pointer ${
-                        path.includes('add-new-car') && 'font-bold'
+                        path.includes('add-new-car') &&
+                        'text-white font-semibold'
                      }`}
                   >
-                     <Link className='w-full' href='/cars/add-new-car'>
-                        Add New Car
-                     </Link>
+                     <Link href='/cars/add-new-car'>Add New Car</Link>
                   </li>
                </ul>
             </div>
-
-            <div className='relative'>
+            {/* MANAGE POST */}
+            <div>
                <Link
                   onClick={() => {
                      setPostToggle(!postToggle);
@@ -93,68 +88,53 @@ const AdminSidebar = () => {
                   href='#'
                >
                   <div
-                     className={`flex gap-3 items-center ${
-                        path.includes('posts') && 'bg-violet-700'
-                     } hover:bg-violet-700  py-2 px-3`}
+                     className={`flex justify-between items-center ${
+                        path.includes('cars') && 'font-semibold text-white'
+                     } `}
                   >
-                     <AiOutlineEdit size={20} />
-                     <span className='hidden lg:block'>Posts</span>
-                     <AiFillCaretDown
-                        className={`hidden lg:block ${
+                     <div className='flex items-center gap-3'>
+                        <AiOutlineEdit size={15} />
+                        <span>Posts</span>
+                     </div>
+                     <BsChevronDown
+                        className={` ${
                            postToggle &&
                            'transition-all rotate-180 duration-300'
                         }`}
-                        size={10}
                      />
                   </div>
                </Link>
-               <ul
-                  className={`absolute lg:relative -top-4 lg:top-0 lg:left-0 left-[105%] w-max lg:w-full text-sm font-medium space-y-1 mt-1 p-2 z-10 bg-slate-800  ${
-                     !postToggle && 'hidden'
-                  }`}
-               >
-                  <Link href='/posts/manage-posts'>
-                     <li className='p-2 hover:font-bold  cursor-pointer justify-center'>
-                        Manage Posts
-                     </li>
-                  </Link>
-                  <Link href='/posts/add-new-post'>
-                     <li className='p-2 hover:font-bold  cursor-pointer'>
-                        Add New Post
-                     </li>
-                  </Link>
-               </ul>
-            </div>
-            <div className='relative'>
-               <div
-                  onClick={() => {
-                     setSettingToggle(!settingToggle);
-                  }}
-                  className='flex gap-3 items-center hover:bg-violet-700  py-2 px-3 cursor-pointer'
-               >
-                  <BsGear size={20} />
-                  <span className='hidden lg:block'>Setting</span>
-                  <AiFillCaretDown
-                     className={`hidden lg:block ${
-                        settingToggle &&
-                        'transition-all rotate-180 duration-300'
+
+               <ul className={`mt-2 ml-4 ${!postToggle && 'hidden'}`}>
+                  <li
+                     className={`p-2 hover:font-bold  cursor-pointer ${
+                        path.includes('manage-posts') &&
+                        'text-white font-semibold'
                      }`}
-                     size={10}
-                  />
-               </div>
-               <ul
-                  className={`absolute lg:relative -top-4 lg:top-0 lg:left-0 left-[105%] w-max lg:w-full text-sm font-medium space-y-1 mt-1 p-2 z-10 bg-slate-800  ${
-                     !settingToggle && 'hidden'
-                  }`}
-               >
-                  <li className='p-2 hover:font-bold  cursor-pointer justify-center'>
-                     General
+                  >
+                     <Link href='/posts/manage-posts'>Manage Posts</Link>
                   </li>
-                  <li className='p-2 hover:font-bold  cursor-pointer'>
-                     Homepage
+                  <li
+                     className={`p-2 hover:font-bold  cursor-pointer ${
+                        path.includes('add-new-post') &&
+                        'text-white font-semibold'
+                     }`}
+                  >
+                     <Link href='/posts/add-new-post'>Add New Post</Link>
                   </li>
                </ul>
             </div>
+            {/* SETTING */}
+            <Link href='/dashboard'>
+               <div
+                  className={`flex gap-3 items-center ${
+                     path === '/dashboard' && 'font-bold text-white'
+                  } hover:font-bold cursor-pointer`}
+               >
+                  <BsGear size={15} />
+                  <span>Setting</span>
+               </div>
+            </Link>
          </div>
       </div>
    );

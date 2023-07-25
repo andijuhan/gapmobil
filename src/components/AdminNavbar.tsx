@@ -1,3 +1,5 @@
+import { AiOutlineUser } from 'react-icons/ai';
+
 interface IAdminNavbarProps {
    title: string;
 }
@@ -5,9 +7,9 @@ interface IAdminNavbarProps {
 const AdminNavbar = ({ title }: IAdminNavbarProps) => {
    return (
       <div className='flex justify-between items-center mb-7'>
-         <h1 className='text-xl font-bold'>{title}</h1>
-         <div className='h-10 w-10 rounded-full font-semibold text-2xl flex justify-center items-center text-white bg-violet-600 p-4 ring-4 ring-violet-300 cursor-pointer'>
-            A
+         <h1 className='text-xl font-semibold'>{title}</h1>
+         <div className='h-10 w-10 bg-violet-700 text-white p-2 rounded-full font-semibold text-2xl flex justify-center items-center cursor-pointer'>
+            <AiOutlineUser size={30} />
          </div>
       </div>
    );

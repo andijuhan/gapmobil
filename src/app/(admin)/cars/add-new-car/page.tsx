@@ -124,7 +124,7 @@ const page = () => {
    };
 
    return (
-      <div className='p-2 lg:p-10 rounded-lg h-full'>
+      <div className='p-2 lg:p-5 rounded-lg h-full'>
          <SuccessToast show={sumbited} />
          <WarningToast show={warning} />
          <LoadingToast show={isLoading} />
@@ -132,13 +132,13 @@ const page = () => {
             <AdminNavbar title='Add New Car' />
          </div>
 
-         <div className='grid grid-cols-1 lg:grid-cols-2 gap-5'>
+         <div className='grid grid-cols-1 lg:grid-cols-2 gap-5 font-medium'>
             <form
-               className='flex flex-col gap-5 border rounded-lg p-4 lg:p-10 bg-white'
+               className='flex flex-col gap-2 border rounded-lg p-4 lg:p-10 bg-white'
                action=''
             >
                <p>Tanda bintang wajib di isi*</p>
-               <div className='grid grid-cols-3 font-semibold items-center mt-2'>
+               <div className='grid grid-cols-3 items-center mt-2'>
                   <label className='' htmlFor='title'>
                      Title*
                   </label>
@@ -157,7 +157,7 @@ const page = () => {
                   />
                </div>
 
-               <div className='grid grid-cols-3 font-semibold items-center'>
+               <div className='grid grid-cols-3 items-center'>
                   <label className='' htmlFor='harga'>
                      Harga*
                   </label>
@@ -175,9 +175,9 @@ const page = () => {
                      onChange={(e) => setHarga(Number(e.target.value))}
                   />
                </div>
-               <div className='mt-[40px] '>
-                  <div className='flex flex-col gap-4'>
-                     <div className='grid grid-cols-3 font-semibold items-center'>
+               <div>
+                  <div className='flex flex-col gap-2'>
+                     <div className='grid grid-cols-3  items-center'>
                         <label className='' htmlFor='jarakTempuh'>
                            Jarak Tempuh*
                         </label>
@@ -197,7 +197,7 @@ const page = () => {
                            }
                         />
                      </div>
-                     <div className='grid grid-cols-3 font-semibold items-center'>
+                     <div className='grid grid-cols-3  items-center'>
                         <label className='' htmlFor='tipeRegistrasi'>
                            Tipe Registrasi
                         </label>
@@ -210,7 +210,7 @@ const page = () => {
                            onChange={(e) => setTipeRegistrasi(e.target.value)}
                         />
                      </div>
-                     <div className='grid grid-cols-3 font-semibold items-center'>
+                     <div className='grid grid-cols-3  items-center'>
                         <label className='' htmlFor='transmisi'>
                            Transmisi
                         </label>
@@ -225,7 +225,7 @@ const page = () => {
                            <option value='AT'>AT</option>
                         </select>
                      </div>
-                     <div className='grid grid-cols-3 font-semibold items-center'>
+                     <div className='grid grid-cols-3  items-center'>
                         <label className='' htmlFor='garansi'>
                            Garansi
                         </label>
@@ -242,7 +242,7 @@ const page = () => {
                            <option value='Tidak'>Tidak</option>
                         </select>
                      </div>
-                     <div className='grid grid-cols-3 font-semibold items-center'>
+                     <div className='grid grid-cols-3  items-center'>
                         <label className='' htmlFor='bahanBakar'>
                            Bahan Bakar
                         </label>
@@ -257,7 +257,7 @@ const page = () => {
                            <option value='Solar'>Solar</option>
                         </select>
                      </div>
-                     <div className='grid grid-cols-3 font-semibold items-center'>
+                     <div className='grid grid-cols-3  items-center'>
                         <label className='' htmlFor='tanganKe'>
                            Tangan Ke*
                         </label>
@@ -272,7 +272,7 @@ const page = () => {
                            onChange={(e) => setTanganKe(Number(e.target.value))}
                         />
                      </div>
-                     <div className='grid grid-cols-3 font-semibold items-center'>
+                     <div className='grid grid-cols-3  items-center'>
                         <label className='' htmlFor='tempatDuduk'>
                            Tempat Duduk
                         </label>
@@ -290,7 +290,7 @@ const page = () => {
                            <option value='8'>8</option>
                         </select>
                      </div>
-                     <div className='grid grid-cols-3 font-semibold items-center'>
+                     <div className='grid grid-cols-3  items-center'>
                         <label className='' htmlFor='warna'>
                            Warna*
                         </label>
@@ -308,7 +308,7 @@ const page = () => {
                            onChange={(e) => setWarna(e.target.value)}
                         />
                      </div>
-                     <div className='grid grid-cols-3 font-semibold items-center'>
+                     <div className='grid grid-cols-3  items-center'>
                         <label className='' htmlFor='tglReg'>
                            Tanggal Registrasi*
                         </label>
@@ -325,7 +325,7 @@ const page = () => {
                            onChange={(e) => setTglReg(e.target.value)}
                         />
                      </div>
-                     <div className='grid grid-cols-3 font-semibold items-center'>
+                     <div className='grid grid-cols-3  items-center'>
                         <label className='' htmlFor='masaBerlakuStnk'>
                            Masa Berlaku STNK*
                         </label>
@@ -342,7 +342,7 @@ const page = () => {
                            onChange={(e) => setMasaBerlakuStnk(e.target.value)}
                         />
                      </div>
-                     <div className='grid grid-cols-3 font-semibold items-center'>
+                     <div className='grid grid-cols-3  items-center'>
                         <label className='' htmlFor='statusOdo'>
                            Status Odomoter*
                         </label>
@@ -360,7 +360,7 @@ const page = () => {
                   </div>
                </div>
             </form>
-            <div className='flex flex-col gap-4 rounded-lg p-10 bg-white'>
+            <div className='flex flex-col rounded-lg p-5 bg-white'>
                <div
                   className={`h-[300px] border rounded-lg w-full flex flex-col justify-center items-center gap-4 ${
                      images.length === 0 && warning ? 'ring-2 ring-red-300' : ''
@@ -373,7 +373,7 @@ const page = () => {
                      {(handleGalery) => (
                         <button
                            onClick={handleGalery}
-                           className='font-semibold bg-blue-600 text-white rounded-lg p-3'
+                           className=' bg-gray-800 text-white rounded-lg p-3'
                         >
                            Add Image
                         </button>
@@ -392,12 +392,12 @@ const page = () => {
                            {images.map((item, index) => (
                               <div className='relative' key={index}>
                                  <img
-                                    className='w-[90px] h-[60px] object-cover object-center rounded-[5px] ring-4 ring-violet-400 border-gray-200'
+                                    className='w-[90px] h-[60px] object-cover object-center rounded-[5px] border-gray-200'
                                     src={item}
                                     alt=''
                                  ></img>
                                  {index === 0 && (
-                                    <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white bg-opacity-80 rounded-[5px] text-violet-600 font-semibold text-xs p-1'>
+                                    <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white bg-opacity-80 rounded-[5px] text-black  text-xs p-1'>
                                        Featured
                                     </div>
                                  )}
@@ -413,10 +413,8 @@ const page = () => {
                      )}
                   </div>
                </div>
-               <div className='flex flex-col gap-10 font-semibold mt-5'>
-                  <label className='w-[200px]' htmlFor='data_modifikasi'>
-                     Data Modifikasi *
-                  </label>
+               <div className='flex flex-col mt-5 gap-5'>
+                  <label htmlFor='data_modifikasi'>Data Modifikasi *</label>
                   <div
                      data-color-mode='light'
                      className={`font-normal p-3 rounded-md border focus:outline-none ${
@@ -438,13 +436,13 @@ const page = () => {
                   <button
                      type='button'
                      onClick={() => publishHandler(false)}
-                     className='lg:min-w-[200px] font-semibold bg-violet-600 text-white rounded-lg p-3'
+                     className='lg:min-w-[200px]  bg-violet-600 text-white rounded-lg p-3'
                   >
                      Publish
                   </button>
                   <button
                      onClick={() => publishHandler(true)}
-                     className='lg:min-w-[200px] font-semibold bg-gray-800 text-white rounded-lg p-3'
+                     className='lg:min-w-[200px]  bg-gray-800 text-white rounded-lg p-3'
                   >
                      Draft
                   </button>
