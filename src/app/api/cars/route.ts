@@ -20,7 +20,7 @@ export const GET = async (req: Request, res: Response) => {
          orderBy = { updateAt: 'desc' };
       }
 
-      const data = await prisma.car.findMany({ orderBy });
+      const data = await prisma.car.findMany({ orderBy, take: 10 });
 
       return NextResponse.json(data);
    } catch (error) {

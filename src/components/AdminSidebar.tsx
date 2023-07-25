@@ -18,9 +18,9 @@ const AdminSidebar = () => {
    const path = usePathname();
 
    return (
-      <div className='fixed lg:relative z-40 w-[50vw] lg:w-[250px] bg-gray-800 min-h-screen text-slate-400 font-medium px-7'>
-         <div className='mt-[30px] mb-[30px]'>
-            <h1 className='text-xl text-white font-semibold'>Admin Panel</h1>
+      <div className='fixed lg:relative z-40 w-[50vw] lg:w-[250px] bg-gray-800 min-h-screen text-slate-400 py-4 px-7'>
+         <div className='py-3 mb-[30px]'>
+            <h1 className='text-xl font-medium text-white'>Admin Panel</h1>
          </div>
 
          <div className='flex flex-col gap-5 dropdown text-base'>
@@ -28,8 +28,8 @@ const AdminSidebar = () => {
             <Link href='/dashboard'>
                <div
                   className={`flex gap-3 items-center ${
-                     path === '/dashboard' && 'font-bold text-white'
-                  } hover:font-bold cursor-pointer`}
+                     path === '/dashboard' && 'font-medium text-white'
+                  } hover:font-medium cursor-pointer`}
                >
                   <AiOutlineDashboard size={15} />
                   <span>Dashboard</span>
@@ -44,8 +44,8 @@ const AdminSidebar = () => {
                   href='#'
                >
                   <div
-                     className={`flex justify-between items-center hover:font-bold ${
-                        path.includes('cars') && 'font-semibold text-white'
+                     className={`flex justify-between items-center hover:font-medium ${
+                        path.includes('cars') && 'font-medium text-white'
                      } `}
                   >
                      <div className='flex items-center gap-3'>
@@ -62,17 +62,15 @@ const AdminSidebar = () => {
 
                <ul className={`mt-2 ml-4 ${!carToggle && 'hidden'}`}>
                   <li
-                     className={`p-2 hover:font-bold  cursor-pointer ${
-                        path.includes('manage-car') &&
-                        'text-white font-semibold'
+                     className={`p-2 hover:font-medium  cursor-pointer ${
+                        path.includes('manage-car') && 'text-white font-medium'
                      }`}
                   >
                      <Link href='/cars/manage-cars'>Manage Cars</Link>
                   </li>
                   <li
-                     className={`p-2 hover:font-bold  cursor-pointer ${
-                        path.includes('add-new-car') &&
-                        'text-white font-semibold'
+                     className={`p-2 hover:font-medium  cursor-pointer ${
+                        path.includes('add-new-car') && 'text-white font-medium'
                      }`}
                   >
                      <Link href='/cars/add-new-car'>Add New Car</Link>
@@ -88,8 +86,8 @@ const AdminSidebar = () => {
                   href='#'
                >
                   <div
-                     className={`flex justify-between items-center hover:font-bold ${
-                        path.includes('posts') && 'font-semibold text-white'
+                     className={`flex justify-between items-center hover:font-medium ${
+                        path.includes('posts') && 'font-medium text-white'
                      } `}
                   >
                      <div className='flex items-center gap-3'>
@@ -107,17 +105,17 @@ const AdminSidebar = () => {
 
                <ul className={`mt-2 ml-4 ${!postToggle && 'hidden'}`}>
                   <li
-                     className={`p-2 hover:font-bold  cursor-pointer ${
+                     className={`p-2 hover:font-medium  cursor-pointer ${
                         path.includes('manage-posts') &&
-                        'text-white font-semibold'
+                        'text-white font-medium'
                      }`}
                   >
                      <Link href='/posts/manage-posts'>Manage Posts</Link>
                   </li>
                   <li
-                     className={`p-2 hover:font-bold  cursor-pointer ${
+                     className={`p-2 hover:font-medium  cursor-pointer ${
                         path.includes('add-new-post') &&
-                        'text-white font-semibold'
+                        'text-white font-medium'
                      }`}
                   >
                      <Link href='/posts/add-new-post'>Add New Post</Link>
@@ -128,8 +126,8 @@ const AdminSidebar = () => {
             <Link href='/dashboard'>
                <div
                   className={`flex gap-3 items-center ${
-                     path === '/dashboard' && 'font-bold text-white'
-                  } hover:font-bold cursor-pointer`}
+                     path === '/dashboard' && 'font-medium text-white'
+                  } hover:font-medium cursor-pointer`}
                >
                   <BsGear size={15} />
                   <span>Setting</span>

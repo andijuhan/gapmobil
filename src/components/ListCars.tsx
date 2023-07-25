@@ -1,9 +1,31 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
-import { IApiResponse } from '@/app/(admin)/cars/manage-cars/page';
 import React, { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import { AiOutlineEye } from 'react-icons/ai';
+
+interface IApiResponse {
+   id: string;
+   published: boolean;
+   slug: string;
+   title: string;
+   harga: number;
+   jarakTempuh: number;
+   tipeRegistrasi: string;
+   transmisi: string;
+   garansi: boolean;
+   bahanBakar: string;
+   tanganKe: number;
+   tempatDuduk: number;
+   warna: string;
+   tglReg: string;
+   masaBerlakuStnk: string;
+   statusOdo: string;
+   images: string[];
+   detailModifikasi: string;
+   createAt: string;
+   updateAt: string;
+}
 
 interface IListCarsProps {
    apiResponse: IApiResponse[];
