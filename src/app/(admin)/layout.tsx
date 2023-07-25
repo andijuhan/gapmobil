@@ -14,7 +14,7 @@ export default function RootLayout({
 }) {
    return (
       <html lang='en'>
-         <body className='font-primaryFont text-black bg-gray-100 min-h-screen flex'>
+         <body className='font-secondaryFont text-black bg-gray-100 min-h-screen flex'>
             <AdminSidebar />
             <div className='w-full min-h-[100vh] overflow-x-auto'>
                {children}

@@ -134,10 +134,10 @@ const page = () => {
 
          <div className='grid grid-cols-1 lg:grid-cols-2 gap-5 font-medium'>
             <form
-               className='flex flex-col gap-2 border rounded-lg p-4 lg:p-10 bg-white'
+               className='flex flex-col gap-3 border rounded-lg p-4 lg:p-5 bg-white'
                action=''
             >
-               <p>Tanda bintang wajib di isi*</p>
+               <p className='text-sm font-light'>Tanda bintang wajib di isi*</p>
                <div className='grid grid-cols-3 items-center mt-2'>
                   <label className='' htmlFor='title'>
                      Title*
@@ -176,7 +176,7 @@ const page = () => {
                   />
                </div>
                <div>
-                  <div className='flex flex-col gap-2'>
+                  <div className='flex flex-col gap-3'>
                      <div className='grid grid-cols-3  items-center'>
                         <label className='' htmlFor='jarakTempuh'>
                            Jarak Tempuh*
@@ -414,7 +414,7 @@ const page = () => {
                   </div>
                </div>
                <div className='flex flex-col mt-5 gap-5'>
-                  <label htmlFor='data_modifikasi'>Data Modifikasi *</label>
+                  <label htmlFor='data_modifikasi'>Data Modifikasi*</label>
                   <div
                      data-color-mode='light'
                      className={`font-normal p-3 rounded-md border focus:outline-none ${
@@ -436,13 +436,14 @@ const page = () => {
                   <button
                      type='button'
                      onClick={() => publishHandler(false)}
-                     className='lg:min-w-[200px]  bg-violet-600 text-white rounded-lg p-3'
+                     className='lg:min-w-[150px]  bg-violet-600 text-white rounded-lg p-3'
                   >
                      Publish
                   </button>
                   <button
+                     type='button'
                      onClick={() => publishHandler(true)}
-                     className='lg:min-w-[200px]  bg-gray-800 text-white rounded-lg p-3'
+                     className='lg:min-w-[150px]  bg-gray-800 text-white rounded-lg p-3'
                   >
                      Draft
                   </button>

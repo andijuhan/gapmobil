@@ -17,7 +17,7 @@ export const GET = async (req: Request, res: Response) => {
       } else if (sort === 'harga') {
          orderBy = { harga: order === 'desc' ? 'desc' : 'asc' };
       } else {
-         orderBy = { title: 'desc' };
+         orderBy = { updateAt: 'desc' };
       }
 
       const data = await prisma.car.findMany({ orderBy });

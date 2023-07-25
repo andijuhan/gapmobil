@@ -15,6 +15,7 @@ module.exports = {
       },
       fontFamily: {
          primaryFont: ['Montserrat', 'sans-serif'],
+         secondaryFont: ['Inter', 'sans-serif'],
       },
    },
    plugins: [require('daisyui')],

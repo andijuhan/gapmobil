@@ -3,6 +3,7 @@
 import { IApiResponse } from '@/app/(admin)/cars/manage-cars/page';
 import React, { useEffect, useState } from 'react';
 import { format } from 'date-fns';
+import { AiOutlineEye } from 'react-icons/ai';
 
 interface IListCarsProps {
    apiResponse: IApiResponse[];
@@ -96,7 +97,7 @@ const ListCars = ({ apiResponse }: IListCarsProps) => {
          <div className='overflow-x-auto font-medium'>
             <table className='table'>
                {/* head */}
-               <thead className='text-base text-black font-medium'>
+               <thead className='text-base text-gray-800'>
                   <tr>
                      <th>
                         <label>
@@ -131,7 +132,7 @@ const ListCars = ({ apiResponse }: IListCarsProps) => {
                         <td>
                            <div className='flex items-center space-x-3'>
                               <div className='avatar'>
-                                 <div className='mask w-20 h-12 rounded-md object-cover'>
+                                 <div className='mask w-20 h-12 rounded-sm object-cover'>
                                     <img src={item.images[0]} alt='' />
                                  </div>
                               </div>
@@ -156,15 +157,15 @@ const ListCars = ({ apiResponse }: IListCarsProps) => {
                         <td>Rp {item.harga}</td>
 
                         <th>
-                           <button className='btn btn-ghost btn-xs'>
-                              details
-                           </button>
+                           <div className='opacity-20 hover:opacity-40 cursor-pointer'>
+                              <AiOutlineEye size={30} />
+                           </div>
                         </th>
                      </tr>
                   ))}
                </tbody>
                {/* foot */}
-               <tfoot className='text-base text-black font-medium'>
+               <tfoot className='text-base text-gray-800 font-medium'>
                   <tr>
                      <th></th>
                      <th>Title</th>

@@ -45,7 +45,7 @@ const page = async () => {
          <div className='pt-4 lg:pt-0 lg:px-0 px-2'>
             <AdminNavbar title='Manage Cars' />
          </div>
-         <div className='bg-white p-4 lg:p-10 rounded-lg'>
+         <div className='bg-white p-4 lg:p-5 rounded-lg'>
             <ListCars apiResponse={data} />
          </div>
       </div>

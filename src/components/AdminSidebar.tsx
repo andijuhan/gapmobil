@@ -18,12 +18,12 @@ const AdminSidebar = () => {
    const path = usePathname();
 
    return (
-      <div className='fixed lg:relative z-40 w-[50vw] lg:w-[250px] bg-gray-800 min-h-screen text-gray-200 font-medium px-7'>
+      <div className='fixed lg:relative z-40 w-[50vw] lg:w-[250px] bg-gray-800 min-h-screen text-slate-400 font-medium px-7'>
          <div className='mt-[30px] mb-[30px]'>
             <h1 className='text-xl text-white font-semibold'>Admin Panel</h1>
          </div>
 
-         <div className='flex flex-col gap-5 dropdown'>
+         <div className='flex flex-col gap-5 dropdown text-base'>
             {/* MANAGE DASHBOARD */}
             <Link href='/dashboard'>
                <div
@@ -44,7 +44,7 @@ const AdminSidebar = () => {
                   href='#'
                >
                   <div
-                     className={`flex justify-between items-center ${
+                     className={`flex justify-between items-center hover:font-bold ${
                         path.includes('cars') && 'font-semibold text-white'
                      } `}
                   >
@@ -88,8 +88,8 @@ const AdminSidebar = () => {
                   href='#'
                >
                   <div
-                     className={`flex justify-between items-center ${
-                        path.includes('cars') && 'font-semibold text-white'
+                     className={`flex justify-between items-center hover:font-bold ${
+                        path.includes('posts') && 'font-semibold text-white'
                      } `}
                   >
                      <div className='flex items-center gap-3'>
