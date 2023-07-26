@@ -5,6 +5,14 @@ export const GET = async (req: Request, res: Response) => {
    const { searchParams } = new URL(req.url);
    const sort = searchParams.get('sortby');
    const order = searchParams.get('order');
+   const search = searchParams.get('search')?.toLowerCase() || '';
+   let page = Number(searchParams.get('page')) || 0;
+   const take = Number(searchParams.get('take')) || 10;
+   console.log(search);
+
+   if (page !== 0) {
+      page = (page - 1) * take;
+   }
 
    try {
       let orderBy: any;
@@ -20,7 +28,17 @@ export const GET = async (req: Request, res: Response) => {
          orderBy = { updateAt: 'desc' };
       }
 
-      const data = await prisma.car.findMany({ orderBy, take: 10 });
+      const data = await prisma.car.findMany({
+         orderBy,
+         skip: page,
+         take,
+         where: {
+            title: { contains: search },
+         },
+      });
+
+      const totalData = await prisma.car.count();
+      //const totalPage = Math.ceil(totalData / take);
 
       return NextResponse.json(data);
    } catch (error) {
@@ -57,7 +75,7 @@ export const POST = async (req: Request, res: Response) => {
    try {
       const data = await prisma.car.create({
          data: {
-            title,
+            title: (title as string).toLowerCase(),
             slug,
             published,
             harga,
