@@ -28,22 +28,30 @@ export const GET = async (req: Request, res: Response) => {
          orderBy = { updateAt: 'desc' };
       }
 
-      const data = await prisma.car.findMany({
+      const cars = await prisma.car.findMany({
          orderBy,
          skip: page,
          take,
          where: {
             title: { contains: search },
          },
+         select: {
+            id: true,
+            images: true,
+            title: true,
+            published: true,
+            updateAt: true,
+            harga: true,
+         },
       });
 
       const totalData = await prisma.car.count();
-      //const totalPage = Math.ceil(totalData / take);
+      const totalPage = Math.ceil(totalData / take);
 
-      return NextResponse.json(data);
+      return NextResponse.json({ cars, totalPage });
    } catch (error) {
       return NextResponse.json(
-         { message: 'error', error },
+         { message: 'Gagal mendapatkan data dari database:', error },
          {
             status: 500,
          }

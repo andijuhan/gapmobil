@@ -2,14 +2,14 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { format } from 'date-fns';
-import { AiOutlineEye } from 'react-icons/ai';
+import { AiOutlineEye, AiOutlineLoading3Quarters } from 'react-icons/ai';
 import useDebounce from '@/hooks/useDebounce';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { formatPrice } from '@/utils';
 
-interface IApiResponse {
+export interface IApiResponse {
    id: string;
    published: boolean;
    slug: string;
@@ -34,10 +34,12 @@ interface IApiResponse {
 
 interface IListCarsProps {
    apiResponse: IApiResponse[];
+   totalPage: number;
+   loading: boolean;
 }
 
-const ListCars = ({ apiResponse }: IListCarsProps) => {
-   const [cars, setCar] = useState<IApiResponse[]>(apiResponse);
+const ListCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
+   const [cars, setCar] = useState<IApiResponse[]>([]);
    const [carId, setCarId] = useState<String[]>([]);
    const [sort, setSort] = useState<string>('');
    const [order, setOrder] = useState<string>('desc');
@@ -48,6 +50,12 @@ const ListCars = ({ apiResponse }: IListCarsProps) => {
    const [take, setTake] = useState<number>(10);
 
    let page = Number(searchParam.get('page')) || 0;
+
+   useEffect(() => {
+      if (!loading) {
+         setCar(apiResponse);
+      }
+   }, [apiResponse]);
 
    const handleSelectCar = (
       event: React.ChangeEvent<HTMLInputElement>,
@@ -87,7 +95,7 @@ const ListCars = ({ apiResponse }: IListCarsProps) => {
          );
 
          const data = await response.json();
-         setCar(data);
+         setCar(data.cars);
       };
       if (sort !== '') handleSortAndOrder();
    }, [sort, setSort, order, setOrder]);
@@ -105,7 +113,7 @@ const ListCars = ({ apiResponse }: IListCarsProps) => {
             );
 
             const data = await response.json();
-            setCar(data);
+            setCar(data.cars);
          }
       };
       if (debounceSearch !== '' && debounceSearch.length > 3) {
@@ -116,21 +124,22 @@ const ListCars = ({ apiResponse }: IListCarsProps) => {
    }, [debounceSearch]);
 
    useEffect(() => {
-      const handlePagination = async () => {
-         const response = await fetch(
-            `/api/cars/?sortby=${sort}&&order=${order}&&page=${page}&&take=${take}`,
-            {
-               headers: {
-                  'Content-Type': 'application/json',
-               },
-            }
-         );
-
-         const data = await response.json();
-         setCar(data);
-      };
       if (page > 1) handlePagination();
    }, [page]);
+
+   const handlePagination = async () => {
+      const response = await fetch(
+         `/api/cars/?sortby=${sort}&&order=${order}&&page=${page}&&take=${take}`,
+         {
+            headers: {
+               'Content-Type': 'application/json',
+            },
+         }
+      );
+
+      const data = await response.json();
+      setCar(data.cars);
+   };
 
    const handleNextNavigation = () => {
       if (page === 0) {
@@ -186,7 +195,7 @@ const ListCars = ({ apiResponse }: IListCarsProps) => {
                />
             </div>
          </div>
-         {cars.length === 0 ? (
+         {cars?.length === 0 && !loading ? (
             <div className='flex flex-col gap-2 p-5 justify-center items-center'>
                <h2 className='text-lg font-medium text-gray-500'>
                   Not available
@@ -198,8 +207,13 @@ const ListCars = ({ apiResponse }: IListCarsProps) => {
                </Link>
             </div>
          ) : null}
+         {loading ? (
+            <div className='flex justify-center items-center'>
+               <AiOutlineLoading3Quarters className='animate-spin' size={30} />
+            </div>
+         ) : null}
          <div className='overflow-x-auto font-medium'>
-            {cars.length !== 0 ? (
+            {cars?.length !== 0 && !loading ? (
                <table className='table'>
                   {/* head */}
                   <thead className='text-base text-gray-800'>
@@ -222,7 +236,7 @@ const ListCars = ({ apiResponse }: IListCarsProps) => {
                   </thead>
                   <tbody>
                      {/* row 1 */}
-                     {cars.map((item) => (
+                     {cars?.map((item) => (
                         <tr
                            className={`hover:bg-gray-50 ${
                               carId.includes(item.id) && 'bg-gray-100'
@@ -250,7 +264,9 @@ const ListCars = ({ apiResponse }: IListCarsProps) => {
                                  </div>
                                  <div>
                                     <div className='capitalize'>
-                                       {item.title}
+                                       <Link href={`/cars/edit-car/${item.id}`}>
+                                          {item.title}
+                                       </Link>
                                     </div>
                                  </div>
                               </div>
@@ -271,7 +287,7 @@ const ListCars = ({ apiResponse }: IListCarsProps) => {
                            <td>{formatPrice(item.harga)}</td>
 
                            <th>
-                              <div className='opacity-30 hover:opacity-40 cursor-pointer'>
+                              <div className='opacity-50 hover:opacity-40 cursor-pointer'>
                                  <AiOutlineEye size={30} />
                               </div>
                            </th>
@@ -291,15 +307,22 @@ const ListCars = ({ apiResponse }: IListCarsProps) => {
                   </tfoot>
                </table>
             ) : null}
-
             <div className='join flex justify-center mt-[40px]'>
-               <button onClick={handlePrevNavigation} className='join-item btn'>
+               <button
+                  disabled={page === 0}
+                  onClick={handlePrevNavigation}
+                  className='join-item btn'
+               >
                   «
                </button>
                <button className='join-item btn'>
                   {page === 0 ? 'Page 1' : `Page ${page}`}
                </button>
-               <button onClick={handleNextNavigation} className='join-item btn'>
+               <button
+                  disabled={page === totalPage}
+                  onClick={handleNextNavigation}
+                  className='join-item btn'
+               >
                   »
                </button>
             </div>

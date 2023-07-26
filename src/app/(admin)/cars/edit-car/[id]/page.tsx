@@ -6,12 +6,17 @@ import CloudinaryMediaLiblaryWidget from '@/components/CloudinaryMediaLiblaryWid
 import { createSlug } from '@/utils';
 import MDEditor, { selectWord } from '@uiw/react-md-editor';
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import AdminNavbar from '@/components/AdminNavbar';
 import LoadingToast from '@/components/LoadingToast';
+import { useParams } from 'next/navigation';
+import { IApiResponse } from '@/components/ListCars';
+import { useRouter } from 'next/navigation';
 
 const page = () => {
+   const router = useParams();
+   const navigate = useRouter();
    const [detailModifikasi, setDetailModifikasi] = useState<string | undefined>(
       ''
    );
@@ -29,24 +34,41 @@ const page = () => {
    const [masaBerlakuStnk, setMasaBerlakuStnk] = useState('');
    const [statusOdo, setStatusOdo] = useState('Asli');
    const [images, setImages] = useState<string[]>([]);
+   const [slug, setSlug] = useState<String>('');
    const [sumbited, setSumbited] = useState(false);
    const [warning, setWarning] = useState(false);
    const [isLoading, setIsloading] = useState(false);
 
-   const resetForm = () => {
-      setTitle('');
-      setHarga(0);
-      setJarakTempuh(0);
-      setTipeRegistrasi('');
-      setTanganKe(1);
-      setTempatDuduk(7);
-      setWarna('');
-      setTglReg('');
-      setMasaBerlakuStnk('');
-      setStatusOdo('Asli');
-      setImages([]);
-      setDetailModifikasi('');
-   };
+   useEffect(() => {
+      const fetchData = async () => {
+         const response = await fetch(`/api/cars/${router.id}`, {
+            headers: {
+               'Content-Type': 'application/json',
+            },
+         });
+
+         if (!response.ok) navigate.push('/cars/manage-cars');
+
+         const data: IApiResponse = await response.json();
+         setTitle(data.title);
+         setHarga(data.harga);
+         setJarakTempuh(data.jarakTempuh);
+         setTipeRegistrasi(data.tipeRegistrasi);
+         setTransmisi(data.transmisi);
+         setGaransi(data.garansi);
+         setBahanBakar(data.bahanBakar);
+         setTanganKe(data.tanganKe);
+         setTempatDuduk(data.tempatDuduk);
+         setWarna(data.warna);
+         setTglReg(data.tglReg);
+         setMasaBerlakuStnk(data.masaBerlakuStnk);
+         setStatusOdo(data.statusOdo);
+         setImages(data.images);
+         setSlug(data.slug);
+         setDetailModifikasi(data.detailModifikasi);
+      };
+      fetchData();
+   }, []);
 
    const validateForm = () => {
       if (
@@ -68,14 +90,13 @@ const page = () => {
       return true;
    };
 
-   const publishHandler = async (isDraft: boolean) => {
-      const slug = createSlug(title);
+   const updateHandler = async (isDraft: boolean) => {
       if (validateForm()) {
          try {
             // Send data to the API endpoint using fetch or Axios
             setIsloading(true);
-            const response = await fetch('/api/cars', {
-               method: 'POST',
+            const response = await fetch(`/api/cars/${router.id}`, {
+               method: 'PATCH',
                headers: {
                   'Content-Type': 'application/json',
                },
@@ -106,7 +127,6 @@ const page = () => {
                setTimeout(() => {
                   setSumbited(false);
                }, 5000);
-               resetForm();
             }
          } catch (error) {
             setIsloading(false);
@@ -125,7 +145,7 @@ const page = () => {
 
    return (
       <div className='p-2 lg:p-7 rounded-lg h-full'>
-         <SuccessToast show={sumbited} message='Data berhasil ditambahkan' />
+         <SuccessToast show={sumbited} message='Data berhasil diupdate' />
          <WarningToast show={warning} />
          <LoadingToast show={isLoading} />
          <div className='pt-4 lg:pt-0 lg:px-0 px-2'>
@@ -435,14 +455,14 @@ const page = () => {
                <div className='flex gap-2 mt-[10px] lg:mt-[30px]'>
                   <button
                      type='button'
-                     onClick={() => publishHandler(false)}
+                     onClick={() => updateHandler(false)}
                      className='lg:min-w-[150px]  bg-violet-600 text-white rounded-lg p-3'
                   >
-                     Publish
+                     Update
                   </button>
                   <button
                      type='button'
-                     onClick={() => publishHandler(true)}
+                     onClick={() => updateHandler(true)}
                      className='lg:min-w-[150px]  bg-gray-800 text-white rounded-lg p-3'
                   >
                      Draft

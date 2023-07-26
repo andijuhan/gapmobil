@@ -10,7 +10,12 @@ const transitionStyles = {
    exitActive: 'transition-opacity duration-200 opacity-0',
 };
 
-const SuccessToast = ({ show }: { show: boolean }) => {
+interface ISuccessToastProps {
+   show: boolean;
+   message: string;
+}
+
+const SuccessToast = ({ show, message }: ISuccessToastProps) => {
    return (
       <Transition
          show={show}
@@ -25,7 +30,7 @@ const SuccessToast = ({ show }: { show: boolean }) => {
             className={`w-[320px] fixed top-5 left-1/2 transform -translate-x-1/2 flex justify-center gap-4 items-center font-semibold text-white bg-green-400 p-5 rounded-lg ${transitionStyles}`}
          >
             <AiOutlineCheckCircle size={30} />
-            <span>Data berhasil ditambahkan</span>
+            <span>{message}</span>
          </div>
       </Transition>
    );
