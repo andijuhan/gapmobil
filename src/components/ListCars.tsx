@@ -7,6 +7,7 @@ import useDebounce from '@/hooks/useDebounce';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
+import { formatPrice } from '@/utils';
 
 interface IApiResponse {
    id: string;
@@ -267,7 +268,7 @@ const ListCars = ({ apiResponse }: IListCarsProps) => {
                                  'd MMMM yyyy HH:mm'
                               )}
                            </td>
-                           <td>Rp {item.harga}</td>
+                           <td>{formatPrice(item.harga)}</td>
 
                            <th>
                               <div className='opacity-30 hover:opacity-40 cursor-pointer'>

@@ -23,3 +23,12 @@ export const generateRandomCode = () => {
 
    return code;
 };
+
+export const formatPrice = (price: number) => {
+   const formattedPrice = price.toLocaleString('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+   });
+
+   return formattedPrice;
+};

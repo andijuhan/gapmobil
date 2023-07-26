@@ -18,11 +18,11 @@ const page = async () => {
    const data = await getData();
 
    return (
-      <div className='p-2 lg:p-5 rounded-lg h-full'>
+      <div className='p-2 lg:p-7 rounded-lg h-full'>
          <div className='pt-4 lg:pt-0 lg:px-0 px-2'>
             <AdminNavbar title='Manage Cars' />
          </div>
-         <div className='bg-white p-4 lg:p-5 rounded-lg'>
+         <div className='bg-white p-4 lg:p-7 rounded-lg'>
             <ListCars apiResponse={data} />
          </div>
       </div>

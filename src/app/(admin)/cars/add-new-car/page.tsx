@@ -124,7 +124,7 @@ const page = () => {
    };
 
    return (
-      <div className='p-2 lg:p-5 rounded-lg h-full'>
+      <div className='p-2 lg:p-7 rounded-lg h-full'>
          <SuccessToast show={sumbited} />
          <WarningToast show={warning} />
          <LoadingToast show={isLoading} />
@@ -134,7 +134,7 @@ const page = () => {
 
          <div className='grid grid-cols-1 lg:grid-cols-2 gap-5 font-medium'>
             <form
-               className='flex flex-col gap-3 border rounded-lg p-4 lg:p-5 bg-white'
+               className='flex flex-col gap-3 border rounded-lg p-4 lg:p-7 bg-white'
                action=''
             >
                <p className='text-sm font-light'>Tanda bintang wajib di isi*</p>
