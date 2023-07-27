@@ -3,8 +3,7 @@
 import SuccessToast from '@/components/SuccessToast';
 import WarningToast from '@/components/WarningToast';
 import CloudinaryMediaLiblaryWidget from '@/components/CloudinaryMediaLiblaryWidget';
-import { createSlug } from '@/utils';
-import MDEditor, { selectWord } from '@uiw/react-md-editor';
+import MDEditor from '@uiw/react-md-editor';
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useEffect, useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
@@ -12,15 +11,17 @@ import AdminNavbar from '@/components/AdminNavbar';
 import LoadingToast from '@/components/LoadingToast';
 import { useParams } from 'next/navigation';
 import { IApiResponse } from '@/components/ListCars';
-import { useRouter } from 'next/navigation';
+import { generateCarModelYear } from '@/utils';
 
 const page = () => {
    const router = useParams();
-   const navigate = useRouter();
+
    const [detailModifikasi, setDetailModifikasi] = useState<string | undefined>(
       ''
    );
-   const [title, setTitle] = useState('');
+   const [merek, setMerek] = useState('');
+   const [model, setModel] = useState('');
+   const [tahun, setTahun] = useState(2000);
    const [harga, setHarga] = useState(0);
    const [jarakTempuh, setJarakTempuh] = useState(0);
    const [tipeRegistrasi, setTipeRegistrasi] = useState('');
@@ -38,8 +39,11 @@ const page = () => {
    const [sumbited, setSumbited] = useState(false);
    const [warning, setWarning] = useState(false);
    const [isLoading, setIsloading] = useState(false);
+   const [initialDataLoad, setInitialDataLoad] = useState(false);
+   const generateYear = generateCarModelYear();
 
    useEffect(() => {
+      setInitialDataLoad(true);
       const fetchData = async () => {
          const response = await fetch(`/api/cars/${router.id}`, {
             headers: {
@@ -47,10 +51,12 @@ const page = () => {
             },
          });
 
-         if (!response.ok) navigate.push('/cars/manage-cars');
+         if (response.ok) setInitialDataLoad(false);
 
          const data: IApiResponse = await response.json();
-         setTitle(data.title);
+         setMerek(data.merek);
+         setModel(data.model_);
+         setTahun(data.tahun);
          setHarga(data.harga);
          setJarakTempuh(data.jarakTempuh);
          setTipeRegistrasi(data.tipeRegistrasi);
@@ -72,7 +78,7 @@ const page = () => {
 
    const validateForm = () => {
       if (
-         !title ||
+         !merek ||
          harga === 0 ||
          jarakTempuh === 0 ||
          !warna ||
@@ -101,7 +107,9 @@ const page = () => {
                   'Content-Type': 'application/json',
                },
                body: JSON.stringify({
-                  title,
+                  merek,
+                  model,
+                  tahun,
                   slug,
                   published: isDraft ? false : true,
                   harga,
@@ -147,7 +155,8 @@ const page = () => {
       <div className='p-2 lg:p-7 rounded-lg h-full'>
          <SuccessToast show={sumbited} message='Data berhasil diupdate' />
          <WarningToast show={warning} />
-         <LoadingToast show={isLoading} />
+         <LoadingToast show={isLoading} message='Mengaupdate data' />
+
          <div className='pt-4 lg:pt-0 lg:px-0 px-2'>
             <AdminNavbar title='Add New Car' />
          </div>
@@ -160,21 +169,63 @@ const page = () => {
                <p className='text-sm font-light'>Tanda bintang wajib di isi*</p>
                <div className='grid grid-cols-3 items-center mt-2'>
                   <label className='' htmlFor='title'>
-                     Title*
+                     Merek*
                   </label>
                   <input
-                     className={`p-3 rounded-md col-span-2 border focus:outline-none text-gray-600 ${
-                        title === '' && warning
+                     className={`p-3 rounded-md border focus:outline-none text-gray-600 ${
+                        merek === '' && warning
                            ? 'ring-2 ring-red-300'
                            : 'focus:ring-4 focus:ring-violet-300'
                      }`}
                      type='text'
-                     id='title'
-                     name='title'
-                     placeholder='Honda CRV 2020'
-                     value={title}
-                     onChange={(e) => setTitle(e.target.value)}
+                     id='merek'
+                     name='merek'
+                     placeholder='Honda'
+                     value={merek}
+                     onChange={(e) => setMerek(e.target.value)}
                   />
+               </div>
+
+               <div className='grid grid-cols-3 items-center mt-2'>
+                  <label className='' htmlFor='title'>
+                     Model*
+                  </label>
+                  <input
+                     className={`p-3 rounded-md border focus:outline-none text-gray-600 ${
+                        model === '' && warning
+                           ? 'ring-2 ring-red-300'
+                           : 'focus:ring-4 focus:ring-violet-300'
+                     }`}
+                     type='text'
+                     id='model'
+                     name='model'
+                     placeholder='CRV'
+                     value={model}
+                     onChange={(e) => setModel(e.target.value)}
+                  />
+               </div>
+
+               <div className='grid grid-cols-3 items-center mt-2'>
+                  <label className='' htmlFor='tahun'>
+                     Tahun*
+                  </label>
+                  <select
+                     className={`p-3 rounded-md border focus:outline-none text-gray-600 ${
+                        model === '' && warning
+                           ? 'ring-2 ring-red-300'
+                           : 'focus:ring-4 focus:ring-violet-300'
+                     }`}
+                     id='tahun'
+                     name='tahun'
+                     value={tahun}
+                     onChange={(e) => setTahun(Number(e.target.value))}
+                  >
+                     {generateYear.map((year) => (
+                        <option key={year} value={year}>
+                           {year}
+                        </option>
+                     ))}
+                  </select>
                </div>
 
                <div className='grid grid-cols-3 items-center'>
@@ -454,16 +505,18 @@ const page = () => {
 
                <div className='flex gap-2 mt-[10px] lg:mt-[30px]'>
                   <button
+                     disabled={initialDataLoad || isLoading}
                      type='button'
                      onClick={() => updateHandler(false)}
-                     className='lg:min-w-[150px]  bg-violet-600 text-white rounded-lg p-3'
+                     className='btn btn-primary'
                   >
                      Update
                   </button>
                   <button
+                     disabled={initialDataLoad || isLoading}
                      type='button'
                      onClick={() => updateHandler(true)}
-                     className='lg:min-w-[150px]  bg-gray-800 text-white rounded-lg p-3'
+                     className='btn'
                   >
                      Draft
                   </button>

@@ -3,7 +3,7 @@
 import SuccessToast from '@/components/SuccessToast';
 import WarningToast from '@/components/WarningToast';
 import CloudinaryMediaLiblaryWidget from '@/components/CloudinaryMediaLiblaryWidget';
-import { createSlug } from '@/utils';
+import { createSlug, generateCarModelYear } from '@/utils';
 import MDEditor, { selectWord } from '@uiw/react-md-editor';
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState } from 'react';
@@ -15,7 +15,9 @@ const page = () => {
    const [detailModifikasi, setDetailModifikasi] = useState<string | undefined>(
       ''
    );
-   const [title, setTitle] = useState('');
+   const [merek, setMerek] = useState('');
+   const [model, setModel] = useState('');
+   const [tahun, setTahun] = useState<number>();
    const [harga, setHarga] = useState(0);
    const [jarakTempuh, setJarakTempuh] = useState(0);
    const [tipeRegistrasi, setTipeRegistrasi] = useState('');
@@ -32,9 +34,10 @@ const page = () => {
    const [sumbited, setSumbited] = useState(false);
    const [warning, setWarning] = useState(false);
    const [isLoading, setIsloading] = useState(false);
+   const generateYear = generateCarModelYear();
 
    const resetForm = () => {
-      setTitle('');
+      setMerek('');
       setHarga(0);
       setJarakTempuh(0);
       setTipeRegistrasi('');
@@ -50,7 +53,7 @@ const page = () => {
 
    const validateForm = () => {
       if (
-         !title ||
+         !merek ||
          harga === 0 ||
          jarakTempuh === 0 ||
          !warna ||
@@ -69,7 +72,7 @@ const page = () => {
    };
 
    const publishHandler = async (isDraft: boolean) => {
-      const slug = createSlug(title);
+      const slug = createSlug(merek);
       if (validateForm()) {
          try {
             // Send data to the API endpoint using fetch or Axios
@@ -80,7 +83,9 @@ const page = () => {
                   'Content-Type': 'application/json',
                },
                body: JSON.stringify({
-                  title,
+                  merek,
+                  model,
+                  tahun,
                   slug,
                   published: isDraft ? false : true,
                   harga,
@@ -127,7 +132,7 @@ const page = () => {
       <div className='p-2 lg:p-7 rounded-lg h-full'>
          <SuccessToast show={sumbited} message='Data berhasil ditambahkan' />
          <WarningToast show={warning} />
-         <LoadingToast show={isLoading} />
+         <LoadingToast show={isLoading} message='Menambahkan data' />
          <div className='pt-4 lg:pt-0 lg:px-0 px-2'>
             <AdminNavbar title='Add New Car' />
          </div>
@@ -140,21 +145,63 @@ const page = () => {
                <p className='text-sm font-light'>Tanda bintang wajib di isi*</p>
                <div className='grid grid-cols-3 items-center mt-2'>
                   <label className='' htmlFor='title'>
-                     Title*
+                     Merek*
                   </label>
                   <input
-                     className={`p-3 rounded-md col-span-2 border focus:outline-none text-gray-600 ${
-                        title === '' && warning
+                     className={`p-3 rounded-md border focus:outline-none text-gray-600 ${
+                        merek === '' && warning
                            ? 'ring-2 ring-red-300'
                            : 'focus:ring-4 focus:ring-violet-300'
                      }`}
                      type='text'
-                     id='title'
-                     name='title'
-                     placeholder='Honda CRV 2020'
-                     value={title}
-                     onChange={(e) => setTitle(e.target.value)}
+                     id='merek'
+                     name='merek'
+                     placeholder='Honda'
+                     value={merek}
+                     onChange={(e) => setMerek(e.target.value)}
                   />
+               </div>
+
+               <div className='grid grid-cols-3 items-center mt-2'>
+                  <label className='' htmlFor='title'>
+                     Model*
+                  </label>
+                  <input
+                     className={`p-3 rounded-md border focus:outline-none text-gray-600 ${
+                        model === '' && warning
+                           ? 'ring-2 ring-red-300'
+                           : 'focus:ring-4 focus:ring-violet-300'
+                     }`}
+                     type='text'
+                     id='model'
+                     name='model'
+                     placeholder='CRV'
+                     value={model}
+                     onChange={(e) => setModel(e.target.value)}
+                  />
+               </div>
+
+               <div className='grid grid-cols-3 items-center mt-2'>
+                  <label className='' htmlFor='tahun'>
+                     Tahun*
+                  </label>
+                  <select
+                     className={`p-3 rounded-md border focus:outline-none text-gray-600 ${
+                        model === '' && warning
+                           ? 'ring-2 ring-red-300'
+                           : 'focus:ring-4 focus:ring-violet-300'
+                     }`}
+                     id='tahun'
+                     name='tahun'
+                     value={tahun}
+                     onChange={(e) => setTahun(Number(e.target.value))}
+                  >
+                     {generateYear.map((year) => (
+                        <option key={year} value={year}>
+                           {year}
+                        </option>
+                     ))}
+                  </select>
                </div>
 
                <div className='grid grid-cols-3 items-center'>
@@ -434,16 +481,18 @@ const page = () => {
 
                <div className='flex gap-2 mt-[10px] lg:mt-[30px]'>
                   <button
+                     disabled={isLoading}
                      type='button'
                      onClick={() => publishHandler(false)}
-                     className='lg:min-w-[150px]  bg-violet-600 text-white rounded-lg p-3'
+                     className='btn btn-primary'
                   >
                      Publish
                   </button>
                   <button
+                     disabled={isLoading}
                      type='button'
                      onClick={() => publishHandler(true)}
-                     className='lg:min-w-[150px]  bg-gray-800 text-white rounded-lg p-3'
+                     className='btn'
                   >
                      Draft
                   </button>

@@ -123,16 +123,48 @@ const AdminSidebar = () => {
                </ul>
             </div>
             {/* SETTING */}
-            <Link href='/dashboard'>
-               <div
-                  className={`flex gap-3 items-center ${
-                     path === '/dashboard' && 'font-medium text-white'
-                  } hover:font-medium cursor-pointer`}
+            <div>
+               <Link
+                  onClick={() => {
+                     setSettingToggle(!settingToggle);
+                  }}
+                  href='#'
                >
-                  <BsGear size={15} />
-                  <span>Setting</span>
-               </div>
-            </Link>
+                  <div
+                     className={`flex justify-between items-center hover:font-medium ${
+                        path.includes('settings') && 'font-medium text-white'
+                     } `}
+                  >
+                     <div className='flex items-center gap-3'>
+                        <BsGear size={15} />
+                        <span>Settings</span>
+                     </div>
+                     <BsChevronDown
+                        className={` ${
+                           settingToggle &&
+                           'transition-all rotate-180 duration-300'
+                        }`}
+                     />
+                  </div>
+               </Link>
+
+               <ul className={`mt-2 ml-4 ${!settingToggle && 'hidden'}`}>
+                  <li
+                     className={`p-2 hover:font-medium  cursor-pointer ${
+                        path.includes('general') && 'text-white font-medium'
+                     }`}
+                  >
+                     <Link href='/settings/car-info'>General</Link>
+                  </li>
+                  <li
+                     className={`p-2 hover:font-medium  cursor-pointer ${
+                        path.includes('car-info') && 'text-white font-medium'
+                     }`}
+                  >
+                     <Link href='/settings/car-info'>Car info</Link>
+                  </li>
+               </ul>
+            </div>
          </div>
       </div>
    );

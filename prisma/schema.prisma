@@ -14,7 +14,9 @@ model Car {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   published Boolean
   slug String @unique
-  title String
+  merek String
+  model_ String
+  tahun Int
   harga Int
   jarakTempuh Int
   tipeRegistrasi String?

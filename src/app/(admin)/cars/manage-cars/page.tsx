@@ -5,20 +5,7 @@ import ListCars from '@/components/ListCars';
 import { fetcher } from '@/utils';
 import useSWR from 'swr';
 
-/* const getData = async () => {
-   try {
-      const response = await fetch('http://localhost:3000/api/cars', {
-         cache: 'no-store',
-      });
-
-      return response.json();
-   } catch (error) {
-      console.log(error);
-   }
-}; */
-
 const page = () => {
-   //const data = await getData();
    const { data, error, isLoading } = useSWR('/api/cars', fetcher);
 
    return (

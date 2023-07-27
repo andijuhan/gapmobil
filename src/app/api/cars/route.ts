@@ -8,7 +8,6 @@ export const GET = async (req: Request, res: Response) => {
    const search = searchParams.get('search')?.toLowerCase() || '';
    let page = Number(searchParams.get('page')) || 0;
    const take = Number(searchParams.get('take')) || 10;
-   console.log(search);
 
    if (page !== 0) {
       page = (page - 1) * take;
@@ -33,12 +32,17 @@ export const GET = async (req: Request, res: Response) => {
          skip: page,
          take,
          where: {
-            title: { contains: search },
+            OR: [
+               { merek: { contains: search } },
+               { model_: { contains: search } },
+            ],
          },
          select: {
             id: true,
             images: true,
-            title: true,
+            merek: true,
+            model_: true,
+            tahun: true,
             published: true,
             updateAt: true,
             harga: true,
@@ -61,7 +65,9 @@ export const GET = async (req: Request, res: Response) => {
 
 export const POST = async (req: Request, res: Response) => {
    const {
-      title,
+      merek,
+      model,
+      tahun,
       slug,
       published,
       harga,
@@ -83,7 +89,9 @@ export const POST = async (req: Request, res: Response) => {
    try {
       const data = await prisma.car.create({
          data: {
-            title: (title as string).toLowerCase(),
+            merek: (merek as string).toLowerCase(),
+            model_: (model as string).toLowerCase(),
+            tahun,
             slug,
             published,
             harga,

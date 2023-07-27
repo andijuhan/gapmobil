@@ -40,3 +40,15 @@ export const fetcher = async (url: string) => {
    }
    return response.json();
 };
+
+export const generateCarModelYear = () => {
+   const startYear = 2000;
+   const endYear = new Date().getFullYear();
+
+   const years = Array.from(
+      { length: endYear - startYear + 1 },
+      (_, index) => startYear + index
+   );
+
+   return years;
+};

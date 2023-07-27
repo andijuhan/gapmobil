@@ -1,16 +1,13 @@
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { Transition } from '@headlessui/react';
 
-const transitionStyles = {
-   appear: 'opacity-0',
-   appearActive: 'transition-opacity duration-300 opacity-100',
-   enter: 'opacity-0',
-   enterActive: 'transition-opacity duration-300 opacity-100',
-   // exit: "opacity-100",  // this breaks the exit transition
-   exitActive: 'transition-opacity duration-200 opacity-0',
-};
-
-const LoadingToast = ({ show }: { show: boolean }) => {
+const LoadingToast = ({
+   show,
+   message,
+}: {
+   show: boolean;
+   message: string;
+}) => {
    return (
       <Transition
          show={show}
@@ -22,10 +19,10 @@ const LoadingToast = ({ show }: { show: boolean }) => {
          leaveTo='opacity-0'
       >
          <div
-            className={`w-[320px] fixed top-5 left-1/2 transform -translate-x-1/2 flex justify-center gap-4 items-center font-semibold text-white bg-blue-400 p-5 rounded-lg ${transitionStyles}`}
+            className={`w-[320px] fixed top-5 left-1/2 transform -translate-x-1/2 flex justify-center gap-4 items-center font-semibold text-white bg-blue-400 p-5 rounded-lg`}
          >
             <AiOutlineLoading3Quarters className='animate-spin' size={30} />
-            <span>Menambahkan data</span>
+            <span>{message}</span>
          </div>
       </Transition>
    );

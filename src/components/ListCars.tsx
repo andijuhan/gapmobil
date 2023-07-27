@@ -13,7 +13,9 @@ export interface IApiResponse {
    id: string;
    published: boolean;
    slug: string;
-   title: string;
+   merek: string;
+   model_: string;
+   tahun: number;
    harga: number;
    jarakTempuh: number;
    tipeRegistrasi: string;
@@ -50,6 +52,7 @@ const ListCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
    const [take, setTake] = useState<number>(10);
 
    let page = Number(searchParam.get('page')) || 0;
+   console.log(totalPage);
 
    useEffect(() => {
       if (!loading) {
@@ -116,7 +119,7 @@ const ListCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
             setCar(data.cars);
          }
       };
-      if (debounceSearch !== '' && debounceSearch.length > 3) {
+      if (debounceSearch !== '' && debounceSearch.length > 2) {
          handleSearch();
       } else {
          setCar(apiResponse);
@@ -124,22 +127,21 @@ const ListCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
    }, [debounceSearch]);
 
    useEffect(() => {
+      const handlePagination = async () => {
+         const response = await fetch(
+            `/api/cars/?sortby=${sort}&&order=${order}&&page=${page}&&take=${take}`,
+            {
+               headers: {
+                  'Content-Type': 'application/json',
+               },
+            }
+         );
+
+         const data = await response.json();
+         setCar(data.cars);
+      };
       if (page > 1) handlePagination();
    }, [page]);
-
-   const handlePagination = async () => {
-      const response = await fetch(
-         `/api/cars/?sortby=${sort}&&order=${order}&&page=${page}&&take=${take}`,
-         {
-            headers: {
-               'Content-Type': 'application/json',
-            },
-         }
-      );
-
-      const data = await response.json();
-      setCar(data.cars);
-   };
 
    const handleNextNavigation = () => {
       if (page === 0) {
@@ -265,7 +267,9 @@ const ListCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
                                  <div>
                                     <div className='capitalize'>
                                        <Link href={`/cars/edit-car/${item.id}`}>
-                                          {item.title}
+                                          {item.merek}{' '}
+                                          {item.model_.toUpperCase()}{' '}
+                                          {item.tahun}
                                        </Link>
                                     </div>
                                  </div>

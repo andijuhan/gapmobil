@@ -28,7 +28,9 @@ export const PATCH = async (
 ) => {
    const id = params.id;
    const {
-      title,
+      merek,
+      model,
+      tahun,
       slug,
       published,
       harga,
@@ -50,7 +52,9 @@ export const PATCH = async (
    try {
       await prisma.car.update({
          data: {
-            title: (title as string).toLowerCase(),
+            merek: (merek as string).toLowerCase(),
+            model_: (model as string).toLowerCase(),
+            tahun,
             harga,
             published,
             slug,
