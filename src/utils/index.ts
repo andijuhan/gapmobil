@@ -52,3 +52,13 @@ export const generateCarModelYear = () => {
 
    return years;
 };
+
+export const convertISOdateToStandar = (dateString: string) => {
+   const date = dateString.split('T');
+   return date[0];
+};
+
+export const convertSimpleDateToISO = (dateString: string) => {
+   const date = dateString + 'T00:00:00.000Z';
+   return date;
+};

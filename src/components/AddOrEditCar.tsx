@@ -1,14 +1,17 @@
 'use client';
 /* eslint-disable @next/next/no-img-element */
 import { ICarApiResponse } from '@/types';
-import { createSlug, generateCarModelYear } from '@/utils';
+import {
+   convertISOdateToStandar,
+   convertSimpleDateToISO,
+   createSlug,
+   generateCarModelYear,
+} from '@/utils';
 import MDEditor from '@uiw/react-md-editor';
 import { useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import CloudinaryMediaLiblaryWidget from './CloudinaryMediaLiblaryWidget';
-import SuccessToast from './SuccessToast';
-import WarningToast from './WarningToast';
-import LoadingToast from './LoadingToast';
+import Toast from './Toast';
 
 interface IAddOrEditCarProps {
    carData?: ICarApiResponse;
@@ -35,9 +38,11 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
    const [tanganKe, setTanganKe] = useState(carData?.tanganKe || 1);
    const [tempatDuduk, setTempatDuduk] = useState(carData?.tempatDuduk || 7);
    const [warna, setWarna] = useState(carData?.warna || '');
-   const [tglReg, setTglReg] = useState(carData?.tglReg || '');
+   const [tglReg, setTglReg] = useState(
+      convertISOdateToStandar(carData?.tglReg || '')
+   );
    const [masaBerlakuStnk, setMasaBerlakuStnk] = useState(
-      carData?.masaBerlakuStnk || ''
+      convertISOdateToStandar(carData?.masaBerlakuStnk || '')
    );
    const [statusOdo, setStatusOdo] = useState(carData?.statusOdo || 'Asli');
    const [images, setImages] = useState<string[]>(carData?.images || []);
@@ -178,6 +183,8 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
       }
    };
 
+   console.log(tglReg);
+
    const handleRemoveImages = (imgUrl: string) => {
       // Filter out the elements that don't match the value to remove
       const updatedArray = images.filter((element) => element !== imgUrl);
@@ -187,19 +194,22 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
    };
    return (
       <div className='p-2 lg:p-7 rounded-lg h-full'>
-         <SuccessToast
+         <Toast
             show={sumbited}
+            mode='SUKSES'
             message={
                mode == 'ADD_NEW'
-                  ? 'Data berhasil ditambahkan'
-                  : 'Data berhasil diupdate'
+                  ? 'Sukses menambahkan data'
+                  : 'Sukses mengupdate data'
             }
          />
-         <WarningToast show={warning} />
-         <LoadingToast
-            show={isLoading}
-            message={mode == 'ADD_NEW' ? 'Menambahkan data' : 'Mengupdate data'}
+         <Toast
+            show={warning}
+            mode='WARNING'
+            message='Silahkan lengkapi data'
          />
+         <Toast show={isLoading} mode='LOADING' message='Mohon tunggu' />
+
          <h1 className='text-xl font-medium mb-7'>
             {mode === 'ADD_NEW' ? 'Tambah mobil' : 'Update mobil'}
          </h1>

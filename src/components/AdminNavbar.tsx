@@ -2,7 +2,7 @@ import React from 'react';
 
 const AdminNavbar = () => {
    return (
-      <div className='navbar bg-primary text-neutral-content shadow-sm fixed z-50'>
+      <div className='navbar bg-primary text-neutral-content shadow-sm fixed z-20'>
          <div className='flex-none'>
             <button className='btn btn-square btn-ghost'>
                <svg

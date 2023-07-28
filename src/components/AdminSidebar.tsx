@@ -3,13 +3,13 @@ import Link from 'next/link';
 /* eslint-disable @next/next/no-img-element */
 import { useState } from 'react';
 import {
-   AiOutlineDashboard,
-   AiOutlineCar,
-   AiOutlineEdit,
-} from 'react-icons/ai';
-import { BsGear } from 'react-icons/bs';
+   BsGearFill,
+   BsFillHouseDoorFill,
+   BsCarFrontFill,
+   BsPencilFill,
+   BsChevronDown,
+} from 'react-icons/bs';
 import { usePathname } from 'next/navigation';
-import { BsChevronDown } from 'react-icons/bs';
 
 const AdminSidebar = () => {
    const [carToggle, setCarToggle] = useState(false);
@@ -19,7 +19,7 @@ const AdminSidebar = () => {
 
    return (
       <div className='fixed lg:relative z-40 w-[50vw] lg:w-[250px] bg-neutral min-h-screen text-neutral-content pt-[30px] px-7 mt-[60px]'>
-         <div className='flex flex-col gap-5 dropdown text-base'>
+         <div className='flex flex-col gap-6 dropdown text-base'>
             {/* MANAGE DASHBOARD */}
             <Link href='/dashboard'>
                <div
@@ -27,7 +27,7 @@ const AdminSidebar = () => {
                      path === '/dashboard' && 'font-medium text-base-100'
                   } hover:text-base-100 cursor-pointer`}
                >
-                  <AiOutlineDashboard size={15} />
+                  <BsFillHouseDoorFill size={18} />
                   <span>Dashboard</span>
                </div>
             </Link>
@@ -45,7 +45,7 @@ const AdminSidebar = () => {
                      } `}
                   >
                      <div className='flex items-center gap-3'>
-                        <AiOutlineCar size={15} />
+                        <BsCarFrontFill size={18} />
                         <span>Cars</span>
                      </div>
                      <BsChevronDown
@@ -56,9 +56,9 @@ const AdminSidebar = () => {
                   </div>
                </Link>
 
-               <ul className={`mt-2 ml-4 ${!carToggle && 'hidden'}`}>
+               <ul className={`mt-2 ml-5 font-light ${!carToggle && 'hidden'}`}>
                   <li
-                     className={`p-2 hover:text-base-100  cursor-pointer ${
+                     className={`p-2 hover:text-base-100 cursor-pointer ${
                         (path.includes('manage-car') ||
                            path.includes('edit-car')) &&
                         'text-base-100 font-medium'
@@ -100,7 +100,7 @@ const AdminSidebar = () => {
                      } `}
                   >
                      <div className='flex items-center gap-3'>
-                        <AiOutlineEdit size={15} />
+                        <BsPencilFill size={18} />
                         <span>Posts</span>
                      </div>
                      <BsChevronDown
@@ -112,7 +112,9 @@ const AdminSidebar = () => {
                   </div>
                </Link>
 
-               <ul className={`mt-2 ml-4 ${!postToggle && 'hidden'}`}>
+               <ul
+                  className={`mt-2 ml-5 font-light ${!postToggle && 'hidden'}`}
+               >
                   <li
                      className={`p-2 hover:text-base-100  cursor-pointer ${
                         path.includes('manage-posts') &&
@@ -145,7 +147,7 @@ const AdminSidebar = () => {
                      } `}
                   >
                      <div className='flex items-center gap-3'>
-                        <BsGear size={15} />
+                        <BsGearFill size={18} />
                         <span>Settings</span>
                      </div>
                      <BsChevronDown
@@ -157,7 +159,11 @@ const AdminSidebar = () => {
                   </div>
                </Link>
 
-               <ul className={`mt-2 ml-4 ${!settingToggle && 'hidden'}`}>
+               <ul
+                  className={`mt-2 ml-5 font-light ${
+                     !settingToggle && 'hidden'
+                  }`}
+               >
                   <li
                      className={`p-2 hover:text-base-100  cursor-pointer ${
                         path.includes('general') && 'text-base-100 font-medium'
