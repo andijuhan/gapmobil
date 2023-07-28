@@ -6,12 +6,10 @@ export const GET = async (req: Request, res: Response) => {
    const sort = searchParams.get('sortby');
    const order = searchParams.get('order');
    const search = searchParams.get('search')?.toLowerCase() || '';
-   let page = Number(searchParams.get('page')) || 0;
+   let page = Number(searchParams.get('page')) || 1;
    const take = Number(searchParams.get('take')) || 10;
 
-   if (page !== 0) {
-      page = (page - 1) * take;
-   }
+   page = (page - 1) * take;
 
    try {
       let orderBy: any;

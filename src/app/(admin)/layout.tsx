@@ -1,6 +1,8 @@
 import '../globals.css';
 import type { Metadata } from 'next';
 import AdminSidebar from '@/components/AdminSidebar';
+import AdminNavbar from '@/components/AdminNavbar';
+import Drawer from '@/components/Drawer';
 
 export const metadata: Metadata = {
    title: 'Create Next App',
@@ -14,11 +16,9 @@ export default function RootLayout({
 }) {
    return (
       <html lang='en'>
-         <body className='font-secondaryFont text-black bg-gray-100 min-h-screen flex'>
-            <AdminSidebar />
-            <div className='w-full min-h-[100vh] overflow-x-auto'>
-               {children}
-            </div>
+         <body className='font-secondaryFont text-black bg-gray-100 min-h-screen flex flex-col'>
+            <AdminNavbar />
+            <Drawer contentPage={children} menu={<AdminSidebar />} />
          </body>
       </html>
    );

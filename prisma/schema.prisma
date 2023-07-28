@@ -36,3 +36,22 @@ model Car {
 
   @@map("cars")
 }
+
+model CarBrand {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  brandName String @unique
+
+  carModel CarModel?
+
+  @@map("car_brands")
+}
+
+model CarModel {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  modelName String
+
+  carBrand CarBrand @relation(fields: [carBrandName], references: [brandName])
+  carBrandName String @unique
+
+  @@map("car_models")
+}

@@ -8,40 +8,16 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { formatPrice } from '@/utils';
-
-export interface IApiResponse {
-   id: string;
-   published: boolean;
-   slug: string;
-   merek: string;
-   model_: string;
-   tahun: number;
-   harga: number;
-   jarakTempuh: number;
-   tipeRegistrasi: string;
-   transmisi: string;
-   garansi: boolean;
-   bahanBakar: string;
-   tanganKe: number;
-   tempatDuduk: number;
-   warna: string;
-   tglReg: string;
-   masaBerlakuStnk: string;
-   statusOdo: string;
-   images: string[];
-   detailModifikasi: string;
-   createAt: string;
-   updateAt: string;
-}
+import { ICarApiResponse } from '@/types';
 
 interface IListCarsProps {
-   apiResponse: IApiResponse[];
+   apiResponse: ICarApiResponse[];
    totalPage: number;
    loading: boolean;
 }
 
 const ListCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
-   const [cars, setCar] = useState<IApiResponse[]>([]);
+   const [cars, setCar] = useState<ICarApiResponse[]>([]);
    const [carId, setCarId] = useState<String[]>([]);
    const [sort, setSort] = useState<string>('');
    const [order, setOrder] = useState<string>('desc');
@@ -51,7 +27,7 @@ const ListCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
    const router = useRouter();
    const [take, setTake] = useState<number>(10);
 
-   let page = Number(searchParam.get('page')) || 0;
+   let page = Number(searchParam.get('page')) || 1;
    console.log(totalPage);
 
    useEffect(() => {
@@ -144,9 +120,6 @@ const ListCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
    }, [page]);
 
    const handleNextNavigation = () => {
-      if (page === 0) {
-         page += 1;
-      }
       router.push(`?page=${page + 1}`);
    };
    const handlePrevNavigation = () => {
@@ -313,7 +286,7 @@ const ListCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
             ) : null}
             <div className='join flex justify-center mt-[40px]'>
                <button
-                  disabled={page === 0}
+                  disabled={page === 1}
                   onClick={handlePrevNavigation}
                   className='join-item btn'
                >

@@ -18,7 +18,7 @@ const AdminSidebar = () => {
    const path = usePathname();
 
    return (
-      <div className='fixed lg:relative z-40 w-[50vw] lg:w-[250px] bg-gray-800 min-h-screen text-slate-400 py-4 px-7'>
+      <div className='fixed lg:relative z-40 w-[50vw] lg:w-[250px] bg-neutral min-h-screen text-neutral-content py-4 px-7'>
          <div className='py-3 mb-[30px]'>
             <h1 className='text-xl font-medium text-white'>Admin Panel</h1>
          </div>
@@ -74,6 +74,16 @@ const AdminSidebar = () => {
                      }`}
                   >
                      <Link href='/cars/add-new-car'>Add New Car</Link>
+                  </li>
+                  <li
+                     className={`p-2 hover:font-medium  cursor-pointer ${
+                        path.includes('manage-car-brand') &&
+                        'text-white font-medium'
+                     }`}
+                  >
+                     <Link href='/cars/manage-car-brand'>
+                        Manage Car Brands
+                     </Link>
                   </li>
                </ul>
             </div>
