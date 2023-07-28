@@ -11,6 +11,7 @@ import MDEditor from '@uiw/react-md-editor';
 import { useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import CloudinaryMediaLiblaryWidget from './CloudinaryMediaLiblaryWidget';
+
 import Toast from './Toast';
 
 interface IAddOrEditCarProps {
@@ -225,7 +226,7 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
                      Merek*
                   </label>
                   <input
-                     className={`input input-bordered capitalize ${
+                     className={`input input-bordered capitalize col-span-2 ${
                         merek === '' && warning ? 'input-error' : ''
                      }`}
                      type='text'
@@ -242,7 +243,7 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
                      Model*
                   </label>
                   <input
-                     className={`input input-bordered uppercase ${
+                     className={`input input-bordered uppercase col-span-2 ${
                         model === '' && warning ? 'input-error' : ''
                      }`}
                      type='text'
