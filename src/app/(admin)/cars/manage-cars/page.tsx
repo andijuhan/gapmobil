@@ -1,7 +1,7 @@
 'use client';
 /* eslint-disable react-hooks/rules-of-hooks */
 
-import ListCars from '@/components/ListCars';
+import ManageCars from '@/components/ManageCars';
 import { fetcher } from '@/utils';
 import useSWR from 'swr';
 
@@ -10,9 +10,9 @@ const page = () => {
 
    return (
       <div className='p-2 lg:p-7 rounded-lg h-full w-full mt-[60px]'>
-         <h1 className='text-xl font-medium mb-7'>Kelola Mobil</h1>
+         <h1 className='text-xl font-medium mb-7 mt-5'>Kelola Mobil</h1>
          <div className='bg-white p-4 lg:p-7 rounded-lg'>
-            <ListCars
+            <ManageCars
                apiResponse={data?.cars}
                totalPage={data?.totalPage}
                loading={isLoading}

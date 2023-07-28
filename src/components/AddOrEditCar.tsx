@@ -3,7 +3,6 @@
 import { ICarApiResponse } from '@/types';
 import {
    convertISOdateToStandar,
-   convertSimpleDateToISO,
    createSlug,
    generateCarModelYear,
 } from '@/utils';
@@ -20,8 +19,8 @@ interface IAddOrEditCarProps {
 }
 
 const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
-   const [detailModifikasi, setDetailModifikasi] = useState<string | undefined>(
-      carData?.detailModifikasi || ''
+   const [deskripsi, setDeskripsi] = useState<string | undefined>(
+      carData?.deskripsi || ''
    );
    const [merek, setMerek] = useState(carData?.merek || '');
    const [model, setModel] = useState(carData?.model_ || '');
@@ -65,7 +64,7 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
       setMasaBerlakuStnk('');
       setStatusOdo('Asli');
       setImages([]);
-      setDetailModifikasi('');
+      setDeskripsi('');
    };
 
    const validateForm = () => {
@@ -76,7 +75,7 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
          !warna ||
          !tglReg ||
          !masaBerlakuStnk ||
-         !detailModifikasi ||
+         !deskripsi ||
          images.length === 0
       ) {
          setWarning(true);
@@ -118,7 +117,7 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
                   masaBerlakuStnk,
                   statusOdo,
                   images,
-                  detailModifikasi,
+                  deskripsi,
                }),
             });
 
@@ -166,7 +165,7 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
                   masaBerlakuStnk,
                   statusOdo,
                   images,
-                  detailModifikasi,
+                  deskripsi,
                }),
             });
 
@@ -184,8 +183,6 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
       }
    };
 
-   console.log(tglReg);
-
    const handleRemoveImages = (imgUrl: string) => {
       // Filter out the elements that don't match the value to remove
       const updatedArray = images.filter((element) => element !== imgUrl);
@@ -194,7 +191,7 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
       setImages(updatedArray);
    };
    return (
-      <div className='p-2 lg:p-7 rounded-lg h-full'>
+      <div className='p-2 lg:p-7 rounded-lg h-full mt-5'>
          <Toast
             show={sumbited}
             mode='SUKSES'
@@ -474,7 +471,7 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
             <div className='flex flex-col rounded-lg p-5 bg-white h-min'>
                <div
                   className={`h-[300px] border rounded-lg w-full flex flex-col justify-center items-center gap-4 ${
-                     images.length === 0 && warning ? 'ring-2 ring-red-300' : ''
+                     images.length === 0 && warning ? 'border-red-400' : ''
                   }`}
                >
                   <CloudinaryMediaLiblaryWidget
@@ -519,20 +516,18 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
                   </div>
                </div>
                <div className='flex flex-col mt-5 gap-5'>
-                  <label htmlFor='data_modifikasi'>Data Modifikasi*</label>
+                  <label htmlFor='deskripsi'>Deskripsi*</label>
                   <div
                      data-color-mode='light'
                      className={`font-normal p-3 rounded-md border focus:outline-none ${
-                        detailModifikasi === '' && warning
-                           ? 'ring-2 ring-red-300'
-                           : ''
+                        deskripsi === '' && warning ? 'border-red-400' : ''
                      }`}
                   >
                      <MDEditor
                         height={400}
                         preview='edit'
-                        value={detailModifikasi}
-                        onChange={setDetailModifikasi}
+                        value={deskripsi}
+                        onChange={setDeskripsi}
                      />
                   </div>
                </div>

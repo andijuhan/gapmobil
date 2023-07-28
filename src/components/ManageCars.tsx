@@ -16,7 +16,7 @@ interface IListCarsProps {
    loading: boolean;
 }
 
-const ListCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
+const ManageCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
    const [cars, setCar] = useState<ICarApiResponse[]>([]);
    const [carId, setCarId] = useState<String[]>([]);
    const [sort, setSort] = useState<string>('');
@@ -306,4 +306,4 @@ const ListCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
    );
 };
 
-export default ListCars;
+export default ManageCars;

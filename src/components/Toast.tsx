@@ -22,12 +22,12 @@ const Toast = ({ message, mode, show }: IToastProps) => {
          leaveFrom='opacity-100'
          leaveTo='opacity-0'
       >
-         <div className='toast toast-center toast-middle z-50'>
+         <div className='toast toast-center top-[7vh] z-50'>
             <div
                className={`alert ${mode === 'SUKSES' && 'alert-success'} ${
                   mode === 'LOADING' && 'alert-info'
                } ${
-                  mode === 'WARNING' && 'alert-warning'
+                  mode === 'WARNING' && 'alert-error'
                } flex gap-3 text-base-100`}
             >
                {mode === 'WARNING' && (

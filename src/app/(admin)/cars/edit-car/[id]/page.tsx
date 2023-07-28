@@ -1,16 +1,21 @@
 import AddOrEditCar from '@/components/AddOrEditCar';
 import { ICarApiResponse } from '@/types';
+import { redirect } from 'next/navigation';
 
 const getCarById = async (
    carId: string
 ): Promise<ICarApiResponse | undefined> => {
    try {
-      const response = await fetch(`http://localhost:3000/api/cars/${carId}`, {
-         cache: 'no-store',
-      });
+      const response = await fetch(
+         `${process.env.BASE_URL}/api/cars/${carId}`,
+         {
+            cache: 'no-store',
+         }
+      );
+      if (!response.ok) redirect(`${process.env.BASE_URL}/cars/manage-cars`);
       return response.json();
    } catch (error) {
-      console.log(error);
+      redirect(`${process.env.BASE_URL}/cars/manage-cars`);
    }
 };
 

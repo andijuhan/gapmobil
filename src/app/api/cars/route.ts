@@ -81,7 +81,7 @@ export const POST = async (req: Request, res: Response) => {
       masaBerlakuStnk,
       statusOdo,
       images,
-      detailModifikasi,
+      deskripsi,
    } = await req.json();
 
    try {
@@ -105,7 +105,7 @@ export const POST = async (req: Request, res: Response) => {
             masaBerlakuStnk: new Date(masaBerlakuStnk),
             statusOdo,
             images,
-            detailModifikasi,
+            deskripsi,
          },
       });
 

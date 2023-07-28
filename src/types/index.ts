@@ -18,7 +18,7 @@ export interface ICarApiResponse {
    masaBerlakuStnk: string;
    statusOdo: string;
    images: string[];
-   detailModifikasi: string;
+   deskripsi: string;
    createAt: string;
    updateAt: string;
 }

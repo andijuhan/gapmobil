@@ -46,7 +46,7 @@ export const PATCH = async (
       masaBerlakuStnk,
       statusOdo,
       images,
-      detailModifikasi,
+      deskripsi,
    } = await req.json();
 
    try {
@@ -70,7 +70,7 @@ export const PATCH = async (
             masaBerlakuStnk: new Date(masaBerlakuStnk),
             statusOdo,
             images,
-            detailModifikasi,
+            deskripsi,
          },
          where: {
             id,
