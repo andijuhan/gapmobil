@@ -481,13 +481,7 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
                   </CloudinaryMediaLiblaryWidget>
                   <p className='text-sm'>Car galery slider</p>
                   <div className='flex justify-center items-center gap-2'>
-                     {images.length === 0 ? (
-                        <img
-                           className='w-[100px]'
-                           src='/images/no-image.png'
-                           alt=''
-                        />
-                     ) : (
+                     {images.length === 0 ? null : (
                         <div className='flex gap-3 justify-center items-center p-[20px] overflow-x-hidden'>
                            {images.map((item, index) => (
                               <div className='relative' key={index}>
@@ -497,12 +491,12 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
                                     alt=''
                                  ></img>
                                  {index === 0 && (
-                                    <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white bg-opacity-80 rounded-[5px] text-black  text-xs p-1'>
+                                    <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  rounded-[5px] bg-success text-base-100 text-xs p-1'>
                                        Featured
                                     </div>
                                  )}
                                  <div
-                                    className='absolute -top-2 -right-2 bg-red-400 rounded-full p-1 text-white cursor-pointer'
+                                    className='absolute -top-2 -right-2 bg-warning text-base-100 rounded-full p-1 cursor-pointer'
                                     onClick={() => handleRemoveImages(item)}
                                  >
                                     <AiOutlineClose />

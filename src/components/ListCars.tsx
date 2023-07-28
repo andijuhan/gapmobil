@@ -176,9 +176,7 @@ const ListCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
                   Not available
                </h2>
                <Link href='/cars/add-new-car'>
-                  <button className='py-1 px-2 rounded-md text-white bg-gray-800'>
-                     Add new car
-                  </button>
+                  <button className='btn btn-neutral'>Add new car</button>
                </Link>
             </div>
          ) : null}
