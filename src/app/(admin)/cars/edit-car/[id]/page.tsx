@@ -19,7 +19,7 @@ const page = async ({ params }: any) => {
    const data = await getCarById(carId);
 
    return (
-      <div className='mt-[50px]'>
+      <div className='mt-[60px]'>
          <AddOrEditCar carData={data} mode='UPDATE' />
       </div>
    );

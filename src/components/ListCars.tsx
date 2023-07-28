@@ -137,7 +137,7 @@ const ListCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
          <div className='flex flex-col lg:flex-row justify-between items-center mb-[20px] gap-5 font-medium'>
             <div className='flex gap-5 items-center'>
                <select
-                  className='p-3 rounded-md border focus:outline-none focus:ring-4 focus:ring-violet-300 text-gray-600'
+                  className='select select-bordered'
                   name='sort'
                   id='sort'
                   value={sort}
@@ -150,7 +150,7 @@ const ListCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
                   <option value='harga'>Price</option>
                </select>
                <select
-                  className='p-3 rounded-md border focus:outline-none focus:ring-4 focus:ring-violet-300 text-gray-600'
+                  className='select select-bordered'
                   name='order'
                   id='order'
                   value={order}
@@ -164,7 +164,7 @@ const ListCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
                <input
                   value={searchKeyword}
                   onChange={(e) => setSearchKeyword(e.target.value)}
-                  className='p-3 lg:w-[480px] rounded-md border focus:outline-none text-gray-600 focus:ring-4 focus:ring-violet-300'
+                  className='input input-bordered'
                   type='search'
                   placeholder='Search Car'
                />
@@ -231,22 +231,22 @@ const ListCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
                               </label>
                            </th>
                            <td>
-                              <div className='flex items-center space-x-3'>
-                                 <div className='avatar'>
-                                    <div className='mask w-20 h-12 rounded-sm object-cover'>
-                                       <img src={item.images[0]} alt='' />
+                              <Link href={`/cars/edit-car/${item.id}`}>
+                                 <div className='flex items-center space-x-3'>
+                                    <div className='avatar'>
+                                       <div className='mask w-20 h-12 rounded-sm object-cover'>
+                                          <img src={item.images[0]} alt='' />
+                                       </div>
                                     </div>
-                                 </div>
-                                 <div>
-                                    <div className='capitalize'>
-                                       <Link href={`/cars/edit-car/${item.id}`}>
-                                          {item.merek}{' '}
+                                    <div>
+                                       <div className='capitalize'>
+                                          {item.merek.toUpperCase()}{' '}
                                           {item.model_.toUpperCase()}{' '}
                                           {item.tahun}
-                                       </Link>
+                                       </div>
                                     </div>
                                  </div>
-                              </div>
+                              </Link>
                            </td>
                            <td>
                               {item.published ? (

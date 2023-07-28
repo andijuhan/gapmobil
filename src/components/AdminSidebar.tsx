@@ -18,18 +18,14 @@ const AdminSidebar = () => {
    const path = usePathname();
 
    return (
-      <div className='fixed lg:relative z-40 w-[50vw] lg:w-[250px] bg-neutral min-h-screen text-neutral-content py-4 px-7'>
-         <div className='py-3 mb-[30px]'>
-            <h1 className='text-xl font-medium text-white'>Admin Panel</h1>
-         </div>
-
+      <div className='fixed lg:relative z-40 w-[50vw] lg:w-[250px] bg-neutral min-h-screen text-neutral-content pt-[30px] px-7 mt-[60px]'>
          <div className='flex flex-col gap-5 dropdown text-base'>
             {/* MANAGE DASHBOARD */}
             <Link href='/dashboard'>
                <div
                   className={`flex gap-3 items-center ${
-                     path === '/dashboard' && 'font-medium text-white'
-                  } hover:font-medium cursor-pointer`}
+                     path === '/dashboard' && 'font-medium text-base-100'
+                  } hover:text-base-100 cursor-pointer`}
                >
                   <AiOutlineDashboard size={15} />
                   <span>Dashboard</span>
@@ -44,8 +40,8 @@ const AdminSidebar = () => {
                   href='#'
                >
                   <div
-                     className={`flex justify-between items-center hover:font-medium ${
-                        path.includes('cars') && 'font-medium text-white'
+                     className={`flex justify-between items-center hover:text-base-100 ${
+                        path.includes('cars') && 'font-medium text-base-100'
                      } `}
                   >
                      <div className='flex items-center gap-3'>
@@ -62,23 +58,26 @@ const AdminSidebar = () => {
 
                <ul className={`mt-2 ml-4 ${!carToggle && 'hidden'}`}>
                   <li
-                     className={`p-2 hover:font-medium  cursor-pointer ${
-                        path.includes('manage-car') && 'text-white font-medium'
+                     className={`p-2 hover:text-base-100  cursor-pointer ${
+                        (path.includes('manage-car') ||
+                           path.includes('edit-car')) &&
+                        'text-base-100 font-medium'
                      }`}
                   >
                      <Link href='/cars/manage-cars'>Manage Cars</Link>
                   </li>
                   <li
-                     className={`p-2 hover:font-medium  cursor-pointer ${
-                        path.includes('add-new-car') && 'text-white font-medium'
+                     className={`p-2 hover:text-base-100  cursor-pointer ${
+                        path.includes('add-new-car') &&
+                        'text-base-100 font-medium'
                      }`}
                   >
                      <Link href='/cars/add-new-car'>Add New Car</Link>
                   </li>
                   <li
-                     className={`p-2 hover:font-medium  cursor-pointer ${
+                     className={`p-2 hover:text-base-100  cursor-pointer ${
                         path.includes('manage-car-brand') &&
-                        'text-white font-medium'
+                        'text-base-100 font-medium'
                      }`}
                   >
                      <Link href='/cars/manage-car-brand'>
@@ -96,8 +95,8 @@ const AdminSidebar = () => {
                   href='#'
                >
                   <div
-                     className={`flex justify-between items-center hover:font-medium ${
-                        path.includes('posts') && 'font-medium text-white'
+                     className={`flex justify-between items-center hover:text-base-100 ${
+                        path.includes('posts') && 'font-medium text-base-100'
                      } `}
                   >
                      <div className='flex items-center gap-3'>
@@ -115,17 +114,17 @@ const AdminSidebar = () => {
 
                <ul className={`mt-2 ml-4 ${!postToggle && 'hidden'}`}>
                   <li
-                     className={`p-2 hover:font-medium  cursor-pointer ${
+                     className={`p-2 hover:text-base-100  cursor-pointer ${
                         path.includes('manage-posts') &&
-                        'text-white font-medium'
+                        'text-base-100 font-medium'
                      }`}
                   >
                      <Link href='/posts/manage-posts'>Manage Posts</Link>
                   </li>
                   <li
-                     className={`p-2 hover:font-medium  cursor-pointer ${
+                     className={`p-2 hover:text-base-100  cursor-pointer ${
                         path.includes('add-new-post') &&
-                        'text-white font-medium'
+                        'text-base-100 font-medium'
                      }`}
                   >
                      <Link href='/posts/add-new-post'>Add New Post</Link>
@@ -141,8 +140,8 @@ const AdminSidebar = () => {
                   href='#'
                >
                   <div
-                     className={`flex justify-between items-center hover:font-medium ${
-                        path.includes('settings') && 'font-medium text-white'
+                     className={`flex justify-between items-center hover:text-base-100 ${
+                        path.includes('settings') && 'font-medium text-base-100'
                      } `}
                   >
                      <div className='flex items-center gap-3'>
@@ -160,15 +159,15 @@ const AdminSidebar = () => {
 
                <ul className={`mt-2 ml-4 ${!settingToggle && 'hidden'}`}>
                   <li
-                     className={`p-2 hover:font-medium  cursor-pointer ${
-                        path.includes('general') && 'text-white font-medium'
+                     className={`p-2 hover:text-base-100  cursor-pointer ${
+                        path.includes('general') && 'text-base-100 font-medium'
                      }`}
                   >
                      <Link href='/settings/car-info'>General</Link>
                   </li>
                   <li
-                     className={`p-2 hover:font-medium  cursor-pointer ${
-                        path.includes('car-info') && 'text-white font-medium'
+                     className={`p-2 hover:text-base-100  cursor-pointer ${
+                        path.includes('car-info') && 'text-base-100 font-medium'
                      }`}
                   >
                      <Link href='/settings/car-info'>Car info</Link>

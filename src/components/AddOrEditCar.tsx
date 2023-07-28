@@ -473,7 +473,7 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
                      {(handleGalery) => (
                         <button
                            onClick={handleGalery}
-                           className=' bg-gray-800 text-white rounded-lg p-3'
+                           className='btn btn-neutral'
                         >
                            Add Image
                         </button>

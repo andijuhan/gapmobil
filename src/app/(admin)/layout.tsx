@@ -16,7 +16,7 @@ export default function RootLayout({
 }) {
    return (
       <html lang='en'>
-         <body className='font-secondaryFont text-black bg-gray-100 min-h-screen flex flex-col'>
+         <body className='font-secondaryFont text-black bg-base-200 min-h-screen flex flex-col'>
             <AdminNavbar />
             <Drawer contentPage={children} menu={<AdminSidebar />} />
          </body>
