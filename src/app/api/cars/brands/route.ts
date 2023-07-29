@@ -31,7 +31,7 @@ export const POST = async (req: Request, res: Response) => {
 
       if (checkBrandName) {
          return NextResponse.json(
-            { message: 'Merek mobil sudah ada' },
+            { message: `Merek mobil ${checkBrandName.brandName} sudah ada` },
             { status: 409 }
          );
       }

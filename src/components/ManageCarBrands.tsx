@@ -33,6 +33,9 @@ const ManageCarBrands = () => {
       setBrandName(value);
       setBrandId(id);
       setEditMode(!editMode);
+      if (editMode) {
+         setBrandName('');
+      }
    };
 
    const handleEdite = async () => {

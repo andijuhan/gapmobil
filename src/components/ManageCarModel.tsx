@@ -32,6 +32,9 @@ const ManageCarModel = () => {
       setModelName(value);
       setModelId(id);
       setEditMode(!editMode);
+      if (editMode) {
+         setModelName('');
+      }
    };
 
    const handleEdite = async () => {

@@ -42,7 +42,7 @@ export const PATCH = async (
       });
       if (checkBrandName) {
          return NextResponse.json(
-            { message: 'Merek mobil sudah ada' },
+            { message: `Merek mobil ${brandName} sudah ada` },
             { status: 409 }
          );
       }
