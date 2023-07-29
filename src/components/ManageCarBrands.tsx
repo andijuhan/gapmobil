@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import useSWR, { mutate } from 'swr';
 import { fetcher } from '@/utils';
 import Toast from './Toast';
@@ -15,10 +15,6 @@ const ManageCarBrands = () => {
    const [errorMessage, setErrorMessage] = useState('');
    const { data, isLoading } = useSWR('/api/cars/brands', fetcher);
    const [dialog, setDialog] = useState(false);
-
-   useEffect(() => {
-      if (brandName === '') setEditMode(false);
-   }, [brandName]);
 
    const handleDelete = async () => {
       const response = await fetch(`/api/cars/brands/${brandId}`, {
@@ -36,7 +32,7 @@ const ManageCarBrands = () => {
    const handleClickEdit = (id: string, value: string) => {
       setBrandName(value);
       setBrandId(id);
-      setEditMode(true);
+      setEditMode(!editMode);
    };
 
    const handleEdite = async () => {
@@ -135,7 +131,9 @@ const ManageCarBrands = () => {
                   <button
                      onClick={() => handleClickEdit(item.id, item?.brandName)}
                      className={`btn btn-sm ${
-                        brandId === item?.id ? 'btn-info text-base-100' : ''
+                        brandId === item?.id && editMode
+                           ? 'btn-info text-base-100'
+                           : ''
                      }`}
                   >
                      {item?.brandName}
@@ -161,7 +159,9 @@ const ManageCarBrands = () => {
          <button
             onClick={editMode ? handleEdite : handleAddNew}
             type='button'
-            className='btn btn-primary w-min'
+            className={`btn ${
+               editMode ? 'btn-secondary' : 'btn-primary'
+            } w-min`}
          >
             {editMode ? 'Update' : 'Add'}
          </button>
