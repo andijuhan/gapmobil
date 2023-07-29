@@ -1,25 +1,74 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useSWR, { mutate } from 'swr';
 import { fetcher } from '@/utils';
 import Toast from './Toast';
 
 const ManageCarModel = () => {
-   const [carBrandName, setCarBrandName] = useState('');
+   const [brandName, setBrandName] = useState('');
    const [modelName, setModelName] = useState('');
+   const [modelId, setModelId] = useState<string | null>(null);
    const [warning, setWarning] = useState(false);
+   const [error, setError] = useState(false);
+   const [errorMessage, setErrorMessage] = useState('');
    const [editMode, setEditMode] = useState(false);
    const { data: carBrandOption } = useSWR('/api/cars/brands', fetcher);
    const { data: carModel } = useSWR(
-      `/api/cars/brands/model?brand=${carBrandName}`,
+      `/api/cars/brands/model?brand=${brandName}`,
       fetcher
    );
 
-   console.log(carModel);
-   console.log('carBrandNaem:' + carBrandName);
+   useEffect(() => {
+      if (modelName === '') setEditMode(false);
+   }, [modelName]);
+
+   const handleDelete = async (id: string) => {
+      const response = await fetch(`/api/cars/brands/model/${id}`, {
+         method: 'DELETE',
+      });
+
+      if (response.ok) {
+         mutate(`/api/cars/brands/model?brand=${brandName}`);
+      }
+   };
+
+   const handleClickEdit = (id: string, value: string) => {
+      setModelName(value);
+      setModelId(id);
+      setEditMode(true);
+   };
+
+   const handleEdite = async () => {
+      try {
+         const response = await fetch(`/api/cars/brands/model/${modelId}`, {
+            method: 'PATCH',
+            headers: {
+               'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ modelName }),
+         });
+
+         if (response.ok) {
+            mutate(`/api/cars/brands/model?brand=${brandName}`);
+            setModelName('');
+            setEditMode(false);
+            setModelId(null);
+         }
+         if (response.status === 409) {
+            const data = await response.json();
+            setErrorMessage(data.message);
+            setError(true);
+            setTimeout(() => {
+               setError(false);
+            }, 3000);
+         }
+      } catch (error) {
+         console.log('Gagal mengedit data:' + error);
+      }
+   };
 
    const handleAddNew = async () => {
-      if (modelName === '' || carBrandName === '') {
+      if (modelName === '' || brandName === '') {
          setWarning(true);
          setTimeout(() => {
             setWarning(false);
@@ -32,12 +81,23 @@ const ManageCarModel = () => {
             headers: {
                'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ modelName, carBrandName }),
+            body: JSON.stringify({
+               modelName: modelName,
+               carBrandName: brandName,
+            }),
          });
 
          if (response.ok) {
-            mutate(`/api/cars/brands/model?brand=${carBrandName}`);
+            mutate(`/api/cars/brands/model?brand=${brandName}`);
             setModelName('');
+         }
+         if (response.status === 409) {
+            const data = await response.json();
+            setErrorMessage(data.message);
+            setError(true);
+            setTimeout(() => {
+               setError(false);
+            }, 3000);
          }
       } catch (error) {
          console.log('Gagal menambah data:' + error);
@@ -55,12 +115,19 @@ const ManageCarModel = () => {
                   data-tip='Click to edit'
                >
                   <button
-                     onClick={() => {}}
+                     onClick={() => handleDelete(item?.id)}
                      className='absolute -top-2 -right-2 z-10 text-base-100 btn btn-circle btn-xs btn-warning hidden group-hover:block'
                   >
                      x
                   </button>
-                  <button onClick={() => {}} className='btn btn-sm'>
+                  <button
+                     onClick={() => {
+                        handleClickEdit(item?.id, item?.modelName);
+                     }}
+                     className={`btn btn-sm ${
+                        modelId === item?.id ? 'btn-info text-base-100' : ''
+                     }`}
+                  >
                      {item?.modelName}
                   </button>
                </div>
@@ -72,8 +139,8 @@ const ManageCarModel = () => {
             }`}
             name='model'
             id='model'
-            value={carBrandName}
-            onChange={(e) => setCarBrandName(e.target.value)}
+            value={brandName}
+            onChange={(e) => setBrandName(e.target.value)}
          >
             <option value=''>Select brand</option>
             {(carBrandOption as any[])?.map((item) => (
@@ -90,22 +157,23 @@ const ManageCarModel = () => {
             onChange={(e) => setModelName(e.target.value)}
             onKeyUp={(e) => {
                if (e.key === 'Enter') {
-                  editMode ? () => {} : handleAddNew();
+                  editMode ? handleEdite() : handleAddNew();
                }
             }}
          />
          <button
             type='button'
-            onClick={handleAddNew}
+            onClick={editMode ? handleEdite : handleAddNew}
             className='btn btn-primary w-min'
          >
-            Add
+            {editMode ? 'Update' : 'Add'}
          </button>
          <Toast
             show={warning}
             mode='WARNING'
             message='Silahkan pilih merek mobil'
          />
+         <Toast show={error} mode='WARNING' message={errorMessage} />
       </div>
    );
 };

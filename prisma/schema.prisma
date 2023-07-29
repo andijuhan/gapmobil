@@ -48,7 +48,7 @@ model CarBrand {
 
 model CarModel {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  modelName String
+  modelName String @unique
 
   carBrand CarBrand @relation(fields: [carBrandName], references: [brandName])
   carBrandName String @unique

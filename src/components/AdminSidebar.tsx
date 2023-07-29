@@ -18,8 +18,8 @@ const AdminSidebar = () => {
    const path = usePathname();
 
    return (
-      <div className='fixed lg:relative z-40 w-[50vw] lg:w-[250px] bg-neutral min-h-screen text-neutral-content pt-[30px] px-7 mt-[60px]'>
-         <div className='flex flex-col gap-6 dropdown text-base mt-5'>
+      <div className='w-[250px] lg:relative z-40 bg-neutral min-h-screen text-neutral-content pt-[30px] px-10 mt-[60px]'>
+         <div className='flex flex-col gap-6 dropdown mt-5'>
             {/* MANAGE DASHBOARD */}
             <Link href='/dashboard'>
                <div
@@ -56,7 +56,13 @@ const AdminSidebar = () => {
                   </div>
                </Link>
 
-               <ul className={`mt-2 ml-5 font-light ${!carToggle && 'hidden'}`}>
+               <ul
+                  className={`mt-2 ml-5 font-light h-auto max-h-auto overflow-hidden ${
+                     carToggle
+                        ? 'max-h-[500px] opacity-100'
+                        : 'max-h-0 opacity-0'
+                  } transition-all duration-500 ease-in-out`}
+               >
                   <li
                      className={`p-2 hover:text-base-100 cursor-pointer ${
                         (path.includes('manage-car') ||
@@ -111,7 +117,11 @@ const AdminSidebar = () => {
                </Link>
 
                <ul
-                  className={`mt-2 ml-5 font-light ${!postToggle && 'hidden'}`}
+                  className={`mt-2 ml-5 font-light h-auto max-h-auto overflow-hidden ${
+                     postToggle
+                        ? 'max-h-[500px] opacity-100'
+                        : 'max-h-0 opacity-0'
+                  } transition-all duration-500 ease-in-out`}
                >
                   <li
                      className={`p-2 hover:text-base-100  cursor-pointer ${
@@ -158,9 +168,11 @@ const AdminSidebar = () => {
                </Link>
 
                <ul
-                  className={`mt-2 ml-5 font-light ${
-                     !settingToggle && 'hidden'
-                  }`}
+                  className={`mt-2 ml-5 font-light h-auto max-h-auto overflow-hidden ${
+                     settingToggle
+                        ? 'max-h-[500px] opacity-100'
+                        : 'max-h-0 opacity-0'
+                  } transition-all duration-500 ease-in-out`}
                >
                   <li
                      className={`p-2 hover:text-base-100  cursor-pointer ${

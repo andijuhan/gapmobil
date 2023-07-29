@@ -4,7 +4,9 @@ import prisma from '@/utils/prisma';
 
 export const GET = async (req: Request, res: Response) => {
    try {
-      const data = await prisma.carBrand.findMany();
+      const data = await prisma.carBrand.findMany({
+         orderBy: { brandName: 'asc' },
+      });
       return NextResponse.json(data);
    } catch (error) {
       console.log(error);
@@ -21,6 +23,18 @@ export const POST = async (req: Request, res: Response) => {
    const { brandName } = await req.json();
 
    try {
+      const checkBrandName = await prisma.carBrand.findFirst({
+         where: {
+            brandName,
+         },
+      });
+
+      if (checkBrandName) {
+         return NextResponse.json(
+            { message: 'Merek mobil sudah ada' },
+            { status: 409 }
+         );
+      }
       const data = await prisma.carBrand.create({
          data: { brandName: (brandName as string).toLowerCase() },
       });

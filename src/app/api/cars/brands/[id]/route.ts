@@ -8,9 +8,20 @@ export const DELETE = async (
    const id = params.id;
 
    try {
-      const data = await prisma.carBrand.delete({ where: { id } });
-      return NextResponse.json(data);
+      const brandNameById = await prisma.carBrand.findUnique({ where: { id } });
+
+      const deleteCarModel = await prisma.carModel.deleteMany({
+         where: {
+            carBrandName: brandNameById?.brandName,
+         },
+      });
+
+      const deleteCarBrand = await prisma.carBrand.delete({
+         where: { id },
+      });
+      return NextResponse.json(deleteCarBrand);
    } catch (error) {
+      console.log(error);
       return NextResponse.json(
          { message: 'Gagal menghapus data:' + error },
          { status: 500 }
@@ -26,6 +37,15 @@ export const PATCH = async (
    const { brandName } = await req.json();
 
    try {
+      const checkBrandName = await prisma.carBrand.findUnique({
+         where: { id },
+      });
+      if (checkBrandName) {
+         return NextResponse.json(
+            { message: 'Merek mobil sudah ada' },
+            { status: 409 }
+         );
+      }
       const data = await prisma.carBrand.update({
          data: {
             brandName,

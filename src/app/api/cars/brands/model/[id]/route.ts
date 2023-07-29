@@ -8,7 +8,7 @@ export const DELETE = async (
    const id = params.id;
 
    try {
-      const data = await prisma.carBrand.delete({ where: { id } });
+      const data = await prisma.carModel.delete({ where: { id } });
       return NextResponse.json(data);
    } catch (error) {
       return NextResponse.json(
@@ -23,12 +23,22 @@ export const PATCH = async (
    { params }: { params: { id: string } }
 ) => {
    const id = params.id;
-   const { brandName } = await req.json();
+   const { modelName } = await req.json();
 
    try {
-      const data = await prisma.carBrand.update({
+      const checkModelName = await prisma.carModel.findFirst({
+         where: { modelName },
+      });
+
+      if (checkModelName) {
+         return NextResponse.json(
+            { message: 'Model mobil sudah ada' },
+            { status: 409 }
+         );
+      }
+      const data = await prisma.carModel.update({
          data: {
-            brandName,
+            modelName,
          },
          where: {
             id,

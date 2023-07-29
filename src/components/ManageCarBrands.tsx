@@ -3,25 +3,33 @@ import React, { useEffect, useState } from 'react';
 import useSWR, { mutate } from 'swr';
 import { fetcher } from '@/utils';
 import Toast from './Toast';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import Dialog from './Dialog';
 
 const ManageCarBrands = () => {
    const [brandName, setBrandName] = useState('');
    const [brandId, setBrandId] = useState<string | null>(null);
    const [editMode, setEditMode] = useState(false);
    const [warning, setWarning] = useState(false);
-   const { data } = useSWR('/api/cars/brands', fetcher);
+   const [error, setError] = useState(false);
+   const [errorMessage, setErrorMessage] = useState('');
+   const { data, isLoading } = useSWR('/api/cars/brands', fetcher);
+   const [dialog, setDialog] = useState(false);
 
    useEffect(() => {
       if (brandName === '') setEditMode(false);
    }, [brandName]);
 
-   const handleDelete = async (id: string) => {
-      const response = await fetch(`/api/cars/brands/${id}`, {
+   const handleDelete = async () => {
+      const response = await fetch(`/api/cars/brands/${brandId}`, {
          method: 'DELETE',
       });
 
       if (response.ok) {
          mutate('/api/cars/brands');
+         mutate(`/api/cars/brands/model?brand=${brandName}`);
+         setBrandName('');
+         setBrandId(null);
       }
    };
 
@@ -46,6 +54,14 @@ const ManageCarBrands = () => {
             setBrandName('');
             setEditMode(false);
             setBrandId(null);
+         }
+         if (response.status === 409) {
+            const data = await response.json();
+            setErrorMessage(data.message);
+            setError(true);
+            setTimeout(() => {
+               setError(false);
+            }, 3000);
          }
       } catch (error) {
          console.log('Gagal mengedit data:' + error);
@@ -73,14 +89,37 @@ const ManageCarBrands = () => {
             mutate('/api/cars/brands');
             setBrandName('');
          }
+         if (response.status === 409) {
+            const data = await response.json();
+            setErrorMessage(data.message);
+            setError(true);
+            setTimeout(() => {
+               setError(false);
+            }, 3000);
+         }
       } catch (error) {
          console.log('Gagal menambah data:' + error);
       }
    };
+
+   const confirmDelete = (id: string, brandNameToDelete: string) => {
+      setDialog(true);
+      setBrandId(id);
+      setBrandName(brandNameToDelete);
+   };
+
    return (
       <div className='bg-white p-4 lg:p-7 rounded-lg flex flex-col gap-5'>
          <h2 className='text-lg'>Merek mobil</h2>
          <div className='flex gap-2 flex-wrap'>
+            {isLoading && (
+               <div className='flex w-full justify-center items-center py-5'>
+                  <AiOutlineLoading3Quarters
+                     className='animate-spin'
+                     size={30}
+                  />
+               </div>
+            )}
             {(data as any[])?.map((item: any) => (
                <div
                   key={item?.id}
@@ -88,14 +127,16 @@ const ManageCarBrands = () => {
                   data-tip='Click to edit'
                >
                   <button
-                     onClick={() => handleDelete(item.id)}
+                     onClick={() => confirmDelete(item?.id, item?.brandName)}
                      className='absolute -top-2 -right-2 z-10 text-base-100 btn btn-circle btn-xs btn-warning hidden group-hover:block'
                   >
                      x
                   </button>
                   <button
-                     onClick={() => handleClickEdit(item.id, item.brandName)}
-                     className='btn btn-sm'
+                     onClick={() => handleClickEdit(item.id, item?.brandName)}
+                     className={`btn btn-sm ${
+                        brandId === item?.id ? 'btn-info text-base-100' : ''
+                     }`}
                   >
                      {item?.brandName}
                   </button>
@@ -128,6 +169,14 @@ const ManageCarBrands = () => {
             show={warning}
             mode='WARNING'
             message='Silahkan lengkapi data'
+         />
+         <Toast show={error} mode='WARNING' message={errorMessage} />
+         <Dialog
+            show={dialog}
+            setShow={setDialog}
+            title={`Hapus merek ${brandName} ?`}
+            message={`Menghapus ${brandName} akan menghapus semua model mobil ${brandName}`}
+            callback={handleDelete}
          />
       </div>
    );

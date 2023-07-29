@@ -10,6 +10,9 @@ export const GET = async (req: Request, res: Response) => {
          where: {
             carBrandName: brand,
          },
+         orderBy: {
+            modelName: 'asc',
+         },
       });
       return NextResponse.json(data);
    } catch (error) {
@@ -27,6 +30,18 @@ export const POST = async (req: Request, res: Response) => {
    const { modelName, carBrandName } = await req.json();
 
    try {
+      const checkModelName = await prisma.carModel.findFirst({
+         where: {
+            modelName,
+         },
+      });
+
+      if (checkModelName) {
+         return NextResponse.json(
+            { message: 'Model mobil sudah ada' },
+            { status: 409 }
+         );
+      }
       const data = await prisma.carModel.create({
          data: {
             carBrandName,
