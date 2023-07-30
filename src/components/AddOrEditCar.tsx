@@ -12,46 +12,70 @@ import { AiOutlineClose } from 'react-icons/ai';
 import CloudinaryMediaLiblaryWidget from './CloudinaryMediaLiblaryWidget';
 import Toast from './Toast';
 
+import useSWR from 'swr';
+import { fetcher } from '@/utils';
+
 interface IAddOrEditCarProps {
-   carData?: ICarApiResponse;
-   carBrands: string[];
    mode: 'ADD_NEW' | 'UPDATE';
+   carId?: string;
 }
 
-const AddOrEditCar = ({ carData, carBrands, mode }: IAddOrEditCarProps) => {
-   const [deskripsi, setDeskripsi] = useState<string | undefined>(
-      carData?.deskripsi || ''
-   );
-   const [merek, setMerek] = useState(carData?.merek || '');
-   const [model, setModel] = useState(carData?.model_ || '');
-   const [tahun, setTahun] = useState<number>(carData?.tahun || 2000);
-   const [harga, setHarga] = useState(carData?.harga || 0);
-   const [jarakTempuh, setJarakTempuh] = useState(carData?.jarakTempuh || 0);
-   const [tipeRegistrasi, setTipeRegistrasi] = useState(
-      carData?.tipeRegistrasi || ''
-   );
-   const [transmisi, setTransmisi] = useState(carData?.transmisi || 'AT');
-   const [garansi, setGaransi] = useState(carData?.garansi || false);
-   const [bahanBakar, setBahanBakar] = useState(
-      carData?.bahanBakar || 'bensin'
-   );
-   const [tanganKe, setTanganKe] = useState(carData?.tanganKe || 1);
-   const [tempatDuduk, setTempatDuduk] = useState(carData?.tempatDuduk || 7);
-   const [warna, setWarna] = useState(carData?.warna || '');
-   const [tglReg, setTglReg] = useState(
-      convertISOdateToStandar(carData?.tglReg || '')
-   );
+const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
+   const [merek, setMerek] = useState('');
+   const [model, setModel] = useState('');
+   const [tahun, setTahun] = useState<number>(2000);
+   const [harga, setHarga] = useState(0);
+   const [jarakTempuh, setJarakTempuh] = useState(0);
+   const [tipeRegistrasi, setTipeRegistrasi] = useState('');
+   const [transmisi, setTransmisi] = useState('AT');
+   const [garansi, setGaransi] = useState(false);
+   const [bahanBakar, setBahanBakar] = useState('bensin');
+   const [tanganKe, setTanganKe] = useState(1);
+   const [tempatDuduk, setTempatDuduk] = useState(7);
+   const [warna, setWarna] = useState('');
+   const [tglReg, setTglReg] = useState(convertISOdateToStandar(''));
    const [masaBerlakuStnk, setMasaBerlakuStnk] = useState(
-      convertISOdateToStandar(carData?.masaBerlakuStnk || '')
+      convertISOdateToStandar('')
    );
-   const [statusOdo, setStatusOdo] = useState(carData?.statusOdo || 'Asli');
-   const [images, setImages] = useState<string[]>(carData?.images || []);
-   const [slug, setSlug] = useState<string>(carData?.slug || '');
+   const [statusOdo, setStatusOdo] = useState('Asli');
+   const [images, setImages] = useState<string[]>([]);
+   const [deskripsi, setDeskripsi] = useState<string | undefined>('');
+   const [slug, setSlug] = useState<string>('');
    const [sumbited, setSumbited] = useState(false);
    const [warning, setWarning] = useState(false);
    const [isLoading, setIsloading] = useState(false);
    const generateYear = generateCarModelYear();
    const [carModels, setCarModels] = useState<string[]>([]);
+   const { data: carBrands } = useSWR('/api/cars/brands', fetcher);
+
+   useEffect(() => {
+      const getCarBrandById = async () => {
+         try {
+            const response = await fetch(`/api/cars/${carId}`);
+            const data: ICarApiResponse = await response.json();
+            setMerek(data?.merek);
+            setModel(data?.model_);
+            setTahun(data?.tahun);
+            setHarga(data?.harga);
+            setJarakTempuh(data?.jarakTempuh);
+            setTipeRegistrasi(data?.tipeRegistrasi);
+            setTransmisi(data?.transmisi);
+            setGaransi(data?.garansi);
+            setBahanBakar(data?.bahanBakar);
+            setTanganKe(data?.tanganKe);
+            setTempatDuduk(data?.tempatDuduk);
+            setWarna(data?.warna);
+            setTglReg(convertISOdateToStandar(data?.tglReg));
+            setMasaBerlakuStnk(convertISOdateToStandar(data?.masaBerlakuStnk));
+            setStatusOdo(data?.statusOdo);
+            setImages(data?.images);
+            setDeskripsi(data?.deskripsi);
+         } catch (error) {
+            console.log(error);
+         }
+      };
+      if (mode === 'UPDATE') getCarBrandById();
+   }, []);
 
    useEffect(() => {
       const getCarModelByCarBrand = async () => {
@@ -67,8 +91,6 @@ const AddOrEditCar = ({ carData, carBrands, mode }: IAddOrEditCarProps) => {
       };
       if (merek !== '') getCarModelByCarBrand();
    }, [merek]);
-   console.log(merek);
-   console.log(carModels);
 
    const resetForm = () => {
       setMerek('');
@@ -159,7 +181,7 @@ const AddOrEditCar = ({ carData, carBrands, mode }: IAddOrEditCarProps) => {
          try {
             // Send data to the API endpoint using fetch or Axios
             setIsloading(true);
-            const response = await fetch(`/api/cars/${carData?.id}`, {
+            const response = await fetch(`/api/cars/${carId}`, {
                method: 'PATCH',
                headers: {
                   'Content-Type': 'application/json',
@@ -263,7 +285,7 @@ const AddOrEditCar = ({ carData, carBrands, mode }: IAddOrEditCarProps) => {
                      Model*
                   </label>
                   <select
-                     className={`select select-bordered capitalize col-span-2 ${
+                     className={`select select-bordered uppercase col-span-2 ${
                         model === '' && warning ? 'input-error' : ''
                      }`}
                      id='model'
