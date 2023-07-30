@@ -32,7 +32,7 @@ export const PATCH = async (
 
       if (checkModelName) {
          return NextResponse.json(
-            { message: 'Model mobil sudah ada' },
+            { message: `Model mobil ${modelName} sudah ada` },
             { status: 409 }
          );
       }
@@ -48,7 +48,7 @@ export const PATCH = async (
       return NextResponse.json(data);
    } catch (error) {
       return NextResponse.json(
-         { message: 'Gagal mengupdate data:' + error },
+         { message: 'Gagal mengupdate data' },
          { status: 500 }
       );
    }

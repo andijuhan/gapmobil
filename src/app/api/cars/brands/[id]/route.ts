@@ -23,7 +23,7 @@ export const DELETE = async (
    } catch (error) {
       console.log(error);
       return NextResponse.json(
-         { message: 'Gagal menghapus data:' + error },
+         { message: 'Gagal menghapus data' },
          { status: 500 }
       );
    }
@@ -37,8 +37,8 @@ export const PATCH = async (
    const { brandName } = await req.json();
 
    try {
-      const checkBrandName = await prisma.carBrand.findUnique({
-         where: { id },
+      const checkBrandName = await prisma.carBrand.findFirst({
+         where: { brandName },
       });
       if (checkBrandName) {
          return NextResponse.json(
@@ -58,7 +58,7 @@ export const PATCH = async (
       return NextResponse.json(data);
    } catch (error) {
       return NextResponse.json(
-         { message: 'Gagal mengupdate data:' + error },
+         { message: 'Gagal mengupdate data:' },
          { status: 500 }
       );
    }

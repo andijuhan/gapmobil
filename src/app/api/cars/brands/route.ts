@@ -45,7 +45,7 @@ export const POST = async (req: Request, res: Response) => {
       return NextResponse.json(
          { message: 'Gagal menambah data brand car:' + error },
          {
-            status: 500,
+            status: 409,
          }
       );
    }

@@ -53,7 +53,7 @@ export const POST = async (req: Request, res: Response) => {
    } catch (error) {
       console.log(error);
       return NextResponse.json(
-         { message: 'Gagal menambah data model car:' + error },
+         { message: 'Gagal menambah data model car:' },
          {
             status: 500,
          }

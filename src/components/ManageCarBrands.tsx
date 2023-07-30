@@ -8,6 +8,7 @@ import Dialog from './Dialog';
 
 const ManageCarBrands = () => {
    const [brandName, setBrandName] = useState('');
+   const [selectedBrandName, setSelectedBrandName] = useState('');
    const [brandId, setBrandId] = useState<string | null>(null);
    const [editMode, setEditMode] = useState(false);
    const [warning, setWarning] = useState(false);
@@ -23,19 +24,17 @@ const ManageCarBrands = () => {
 
       if (response.ok) {
          mutate('/api/cars/brands');
-         mutate(`/api/cars/brands/model?brand=${brandName}`);
+         mutate(`/api/cars/brands/model?brand=${selectedBrandName}`);
          setBrandName('');
          setBrandId(null);
       }
    };
 
    const handleClickEdit = (id: string, value: string) => {
+      setSelectedBrandName(value);
       setBrandName(value);
       setBrandId(id);
-      setEditMode(!editMode);
-      if (editMode) {
-         setBrandName('');
-      }
+      setEditMode(true);
    };
 
    const handleEdite = async () => {
@@ -50,7 +49,6 @@ const ManageCarBrands = () => {
 
          if (response.ok) {
             mutate('/api/cars/brands');
-            setBrandName('');
             setEditMode(false);
             setBrandId(null);
          }
@@ -104,7 +102,7 @@ const ManageCarBrands = () => {
    const confirmDelete = (id: string, brandNameToDelete: string) => {
       setDialog(true);
       setBrandId(id);
-      setBrandName(brandNameToDelete);
+      setSelectedBrandName(brandNameToDelete);
    };
 
    return (
@@ -144,7 +142,13 @@ const ManageCarBrands = () => {
                </div>
             ))}
          </div>
+         {editMode && (
+            <label htmlFor='brandName'>
+               Edit {selectedBrandName} to {brandName}
+            </label>
+         )}
          <input
+            id='brandName'
             name='brandName'
             value={brandName}
             onChange={(e) => setBrandName(e.target.value)}
@@ -156,18 +160,26 @@ const ManageCarBrands = () => {
             className={`input input-bordered w-full max-w-xs ${
                warning && 'input-error'
             }`}
-            type='text'
+            type='search'
             placeholder='Merek mobil'
          />
-         <button
-            onClick={editMode ? handleEdite : handleAddNew}
-            type='button'
-            className={`btn ${
-               editMode ? 'btn-secondary' : 'btn-primary'
-            } w-min`}
-         >
-            {editMode ? 'Update' : 'Add'}
-         </button>
+         <div className='flex gap-2'>
+            <button
+               onClick={editMode ? handleEdite : handleAddNew}
+               type='button'
+               className={`btn ${
+                  editMode ? 'btn-secondary' : 'btn-primary'
+               } w-min`}
+            >
+               {editMode ? 'Update' : 'Add'}
+            </button>
+            <button
+               onClick={() => setEditMode(false)}
+               className={`${!editMode && 'hidden'} btn w-min`}
+            >
+               Cancel
+            </button>
+         </div>
          <Toast
             show={warning}
             mode='WARNING'

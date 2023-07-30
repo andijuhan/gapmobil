@@ -7,6 +7,7 @@ import Toast from './Toast';
 const ManageCarModel = () => {
    const [brandName, setBrandName] = useState('');
    const [modelName, setModelName] = useState('');
+   const [selectedModelName, setSelectedModelName] = useState('');
    const [modelId, setModelId] = useState<string | null>(null);
    const [warning, setWarning] = useState(false);
    const [error, setError] = useState(false);
@@ -29,12 +30,10 @@ const ManageCarModel = () => {
    };
 
    const handleClickEdit = (id: string, value: string) => {
+      setSelectedModelName(value);
       setModelName(value);
       setModelId(id);
-      setEditMode(!editMode);
-      if (editMode) {
-         setModelName('');
-      }
+      setEditMode(true);
    };
 
    const handleEdite = async () => {
@@ -53,7 +52,7 @@ const ManageCarModel = () => {
             setEditMode(false);
             setModelId(null);
          }
-         if (response.status === 409) {
+         if (response.status === 409 || response.status === 500) {
             const data = await response.json();
             setErrorMessage(data.message);
             setError(true);
@@ -61,8 +60,8 @@ const ManageCarModel = () => {
                setError(false);
             }, 3000);
          }
-      } catch (error) {
-         console.log('Gagal mengedit data:' + error);
+      } catch (error: any) {
+         console.log('Gagal menambah data:' + error);
       }
    };
 
@@ -90,6 +89,7 @@ const ManageCarModel = () => {
             mutate(`/api/cars/brands/model?brand=${brandName}`);
             setModelName('');
          }
+
          if (response.status === 409) {
             const data = await response.json();
             setErrorMessage(data.message);
@@ -98,7 +98,7 @@ const ManageCarModel = () => {
                setError(false);
             }, 3000);
          }
-      } catch (error) {
+      } catch (error: any) {
          console.log('Gagal menambah data:' + error);
       }
    };
@@ -150,9 +150,14 @@ const ManageCarModel = () => {
                </option>
             ))}
          </select>
+         {editMode && (
+            <label htmlFor='brandName'>
+               Edit {selectedModelName} to {modelName}
+            </label>
+         )}
          <input
             className='input input-bordered w-full max-w-xs'
-            type='text'
+            type='search'
             placeholder='Brand Model'
             value={modelName}
             onChange={(e) => setModelName(e.target.value)}
@@ -162,15 +167,23 @@ const ManageCarModel = () => {
                }
             }}
          />
-         <button
-            type='button'
-            onClick={editMode ? handleEdite : handleAddNew}
-            className={`btn ${
-               editMode ? 'btn-secondary' : 'btn-primary'
-            } w-min`}
-         >
-            {editMode ? 'Update' : 'Add'}
-         </button>
+         <div className='flex gap-2'>
+            <button
+               type='button'
+               onClick={editMode ? handleEdite : handleAddNew}
+               className={`btn ${
+                  editMode ? 'btn-secondary' : 'btn-primary'
+               } w-min`}
+            >
+               {editMode ? 'Update' : 'Add'}
+            </button>
+            <button
+               onClick={() => setEditMode(false)}
+               className={`${!editMode && 'hidden'} btn w-min`}
+            >
+               Cancel
+            </button>
+         </div>
 
          <Toast
             show={warning}
