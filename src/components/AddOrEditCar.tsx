@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import CloudinaryMediaLiblaryWidget from './CloudinaryMediaLiblaryWidget';
 import Toast from './Toast';
-
+import { useRouter } from 'next/navigation';
 import useSWR from 'swr';
 import { fetcher } from '@/utils';
 
@@ -47,11 +47,15 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
    const generateYear = generateCarModelYear();
    const [carModels, setCarModels] = useState<string[]>([]);
    const { data: carBrands } = useSWR('/api/cars/brands', fetcher);
+   const router = useRouter();
 
    useEffect(() => {
       const getCarBrandById = async () => {
          try {
             const response = await fetch(`/api/cars/${carId}`);
+            if (!response.ok) {
+               router.push('/cars/manage-cars');
+            }
             const data: ICarApiResponse = await response.json();
             setMerek(data?.merek);
             setModel(data?.model_);

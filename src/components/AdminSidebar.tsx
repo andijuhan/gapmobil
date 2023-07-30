@@ -8,17 +8,20 @@ import {
    BsCarFrontFill,
    BsPencilFill,
    BsChevronDown,
+   BsFillPersonFill,
 } from 'react-icons/bs';
 import { usePathname } from 'next/navigation';
 
 const AdminSidebar = () => {
-   const [carToggle, setCarToggle] = useState(false);
-   const [postToggle, setPostToggle] = useState(false);
-   const [settingToggle, setSettingToggle] = useState(false);
+   const [carToggle, setCarToggle] = useState(true);
+   const [postToggle, setPostToggle] = useState(true);
+   const [settingToggle, setSettingToggle] = useState(true);
+   const [userToggle, setUserToggle] = useState(true);
    const path = usePathname();
 
    useEffect(() => {
       if (path.includes('cars') || path.includes('brands')) setCarToggle(true);
+      if (path.includes('users')) setUserToggle(true);
    }, [path]);
 
    return (
@@ -142,6 +145,57 @@ const AdminSidebar = () => {
                      }`}
                   >
                      <Link href='/posts/add-new-post'>Add New Post</Link>
+                  </li>
+               </ul>
+            </div>
+            {/* MANAGE USER */}
+            <div>
+               <Link
+                  onClick={() => {
+                     setUserToggle(!userToggle);
+                  }}
+                  href='#'
+               >
+                  <div
+                     className={`flex justify-between items-center hover:text-base-100 ${
+                        path.includes('user') && 'font-medium text-base-100'
+                     } `}
+                  >
+                     <div className='flex items-center gap-3'>
+                        <BsFillPersonFill size={18} />
+                        <span>Users</span>
+                     </div>
+                     <BsChevronDown
+                        className={` ${
+                           userToggle &&
+                           'transition-all rotate-180 duration-300'
+                        }`}
+                     />
+                  </div>
+               </Link>
+
+               <ul
+                  className={`mt-2 ml-5 font-light h-auto max-h-auto overflow-hidden ${
+                     userToggle
+                        ? 'max-h-[500px] opacity-100'
+                        : 'max-h-0 opacity-0'
+                  } transition-all duration-500 ease-in-out`}
+               >
+                  <li
+                     className={`p-2 hover:text-base-100  cursor-pointer ${
+                        path.includes('manage-users') &&
+                        'text-base-100 font-medium'
+                     }`}
+                  >
+                     <Link href='/users/manage-users'>Manage Users</Link>
+                  </li>
+                  <li
+                     className={`p-2 hover:text-base-100  cursor-pointer ${
+                        path.includes('add-new-post') &&
+                        'text-base-100 font-medium'
+                     }`}
+                  >
+                     <Link href='/users/add-new-user'>Your Account</Link>
                   </li>
                </ul>
             </div>

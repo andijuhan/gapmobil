@@ -34,6 +34,8 @@ model Car {
   createAt DateTime @default(now()) @map("create_At")
   updateAt DateTime @updatedAt @map("update_at")
 
+  user User? @relation(fields: [userId], references: [id])
+  userId String? @db.ObjectId
   carBrand CarBrand @relation(fields: [merek], references: [brandName])
 
   @@map("cars")
@@ -57,4 +59,20 @@ model CarModel {
   carBrandName String @unique
 
   @@map("car_models")
+}
+
+model User {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  role String
+  username String @unique
+  password String @unique
+  token String
+  email String @unique
+  phone String? @unique
+  users Car[]
+  image String?
+  createAt DateTime @default(now()) @map("create_At")
+  updateAt DateTime @updatedAt @map("update_at")
+
+  @@map("users")
 }
