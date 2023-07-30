@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 /* eslint-disable @next/next/no-img-element */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
    BsGearFill,
    BsFillHouseDoorFill,
@@ -16,6 +16,10 @@ const AdminSidebar = () => {
    const [postToggle, setPostToggle] = useState(false);
    const [settingToggle, setSettingToggle] = useState(false);
    const path = usePathname();
+
+   useEffect(() => {
+      if (path.includes('cars') || path.includes('brands')) setCarToggle(true);
+   }, [path]);
 
    return (
       <div className='w-[250px] lg:relative z-40 bg-neutral min-h-screen text-neutral-content pt-[30px] px-10 mt-[60px]'>
@@ -82,7 +86,7 @@ const AdminSidebar = () => {
                   </li>
                   <li
                      className={`p-2 hover:text-base-100  cursor-pointer ${
-                        path.includes('manage-car-brand') &&
+                        path.includes('manage-brands') &&
                         'text-base-100 font-medium'
                      }`}
                   >

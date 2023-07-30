@@ -13,8 +13,8 @@ export const GET = async (req: Request, res: Response) => {
 
    try {
       let orderBy: any;
-      if (sort === 'title') {
-         orderBy = { title: order === 'desc' ? 'desc' : 'asc' };
+      if (sort === 'merek') {
+         orderBy = { merek: order === 'desc' ? 'desc' : 'asc' };
       } else if (sort === 'status') {
          orderBy = { published: order === 'desc' ? 'desc' : 'asc' };
       } else if (sort === 'updateAt') {

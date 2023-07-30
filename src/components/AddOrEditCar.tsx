@@ -7,18 +7,18 @@ import {
    generateCarModelYear,
 } from '@/utils';
 import MDEditor from '@uiw/react-md-editor';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import CloudinaryMediaLiblaryWidget from './CloudinaryMediaLiblaryWidget';
-
 import Toast from './Toast';
 
 interface IAddOrEditCarProps {
    carData?: ICarApiResponse;
+   carBrands: string[];
    mode: 'ADD_NEW' | 'UPDATE';
 }
 
-const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
+const AddOrEditCar = ({ carData, carBrands, mode }: IAddOrEditCarProps) => {
    const [deskripsi, setDeskripsi] = useState<string | undefined>(
       carData?.deskripsi || ''
    );
@@ -51,6 +51,24 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
    const [warning, setWarning] = useState(false);
    const [isLoading, setIsloading] = useState(false);
    const generateYear = generateCarModelYear();
+   const [carModels, setCarModels] = useState<string[]>([]);
+
+   useEffect(() => {
+      const getCarModelByCarBrand = async () => {
+         try {
+            const response = await fetch(
+               `/api/cars/brands/model?brand=${merek}`
+            );
+            const data = await response.json();
+            setCarModels(data);
+         } catch (error) {
+            console.log(error);
+         }
+      };
+      if (merek !== '') getCarModelByCarBrand();
+   }, [merek]);
+   console.log(merek);
+   console.log(carModels);
 
    const resetForm = () => {
       setMerek('');
@@ -222,34 +240,46 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
                   <label className='' htmlFor='title'>
                      Merek*
                   </label>
-                  <input
-                     className={`input input-bordered capitalize col-span-2 ${
+                  <select
+                     className={`select select-bordered uppercase col-span-2 ${
                         merek === '' && warning ? 'input-error' : ''
                      }`}
-                     type='text'
                      id='merek'
                      name='merek'
-                     placeholder='Honda'
                      value={merek}
                      onChange={(e) => setMerek(e.target.value)}
-                  />
+                  >
+                     <option value=''>Pilih merek</option>
+                     {(carBrands as any[])?.map((item) => (
+                        <option key={item?.id} value={item?.brandName}>
+                           {item?.brandName}
+                        </option>
+                     ))}
+                  </select>
                </div>
 
                <div className='grid grid-cols-3 items-center mt-2'>
                   <label className='' htmlFor='title'>
                      Model*
                   </label>
-                  <input
-                     className={`input input-bordered uppercase col-span-2 ${
+                  <select
+                     className={`select select-bordered capitalize col-span-2 ${
                         model === '' && warning ? 'input-error' : ''
                      }`}
-                     type='text'
                      id='model'
                      name='model'
-                     placeholder='CRV'
                      value={model}
                      onChange={(e) => setModel(e.target.value)}
-                  />
+                  >
+                     {(carModels as any[])?.length === 0 ? (
+                        <option value=''>Belum ada data</option>
+                     ) : null}
+                     {(carModels as any[])?.map((item) => (
+                        <option key={item?.id} value={item?.modelName}>
+                           {item?.modelName}
+                        </option>
+                     ))}
+                  </select>
                </div>
 
                <div className='grid grid-cols-3 items-center mt-2'>
@@ -257,7 +287,7 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
                      Tahun*
                   </label>
                   <select
-                     className={`select select-bordered ${
+                     className={`select select-bordered col-span-2 ${
                         model === '' && warning ? 'select-error' : ''
                      }`}
                      id='tahun'
@@ -278,7 +308,7 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
                      Harga*
                   </label>
                   <input
-                     className={`input input-bordered ${
+                     className={`input input-bordered col-span-2 ${
                         harga === 0 && warning ? 'input-error' : ''
                      }`}
                      type='number'
@@ -296,7 +326,7 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
                            Jarak Tempuh*
                         </label>
                         <input
-                           className={`input input-bordered ${
+                           className={`input input-bordered col-span-2 ${
                               jarakTempuh === 0 && warning ? 'input-error' : ''
                            }`}
                            type='number'
@@ -314,7 +344,7 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
                            Tipe Registrasi
                         </label>
                         <input
-                           className='input input-bordered'
+                           className='input input-bordered col-span-2'
                            type='text'
                            id='tipeRegistrasi'
                            name='tipeRegistrasi'
@@ -327,7 +357,7 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
                            Transmisi
                         </label>
                         <select
-                           className='select select-bordered'
+                           className='select select-bordered col-span-2'
                            name='transmisi'
                            id='transmisi'
                            value={transmisi}
@@ -342,7 +372,7 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
                            Garansi
                         </label>
                         <select
-                           className='select select-bordered'
+                           className='select select-bordered col-span-2'
                            name='garansi'
                            id='garansi'
                            value={garansi ? 'Ya' : 'Tidak'}
@@ -359,7 +389,7 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
                            Bahan Bakar
                         </label>
                         <select
-                           className='select select-bordered'
+                           className='select select-bordered col-span-2'
                            name='bahanBakar'
                            id='bahanBakar'
                            value={bahanBakar}
@@ -374,7 +404,7 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
                            Tangan Ke*
                         </label>
                         <input
-                           className='input input-bordered'
+                           className='input input-bordered col-span-2'
                            type='number'
                            id='tanganKe'
                            name='tanganKe'
@@ -389,7 +419,7 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
                            Tempat Duduk
                         </label>
                         <select
-                           className='select select-bordered'
+                           className='select select-bordered col-span-2'
                            name='tempatDuduk'
                            id='tempatDuduk'
                            value={tempatDuduk}
@@ -407,7 +437,7 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
                            Warna*
                         </label>
                         <input
-                           className={`input input-bordered ${
+                           className={`input input-bordered col-span-2 ${
                               warna === '' && warning ? 'input-error' : ''
                            }`}
                            type='text'
@@ -418,12 +448,12 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
                            onChange={(e) => setWarna(e.target.value)}
                         />
                      </div>
-                     <div className='grid grid-cols-3  items-center'>
+                     <div className='grid grid-cols-3 items-center'>
                         <label className='' htmlFor='tglReg'>
                            Tanggal Registrasi*
                         </label>
                         <input
-                           className={`input input-bordered ${
+                           className={`input input-bordered col-span-2 ${
                               tglReg === '' && warning ? 'input-error' : ''
                            }`}
                            type='date'
@@ -438,7 +468,7 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
                            Masa Berlaku STNK*
                         </label>
                         <input
-                           className={`input input-bordered ${
+                           className={`input input-bordered col-span-2 ${
                               masaBerlakuStnk === '' && warning
                                  ? 'input-error'
                                  : ''
@@ -455,7 +485,7 @@ const AddOrEditCar = ({ carData, mode }: IAddOrEditCarProps) => {
                            Status Odomoter*
                         </label>
                         <select
-                           className='select select-bordered'
+                           className='select select-bordered col-span-2'
                            name='statusOdo'
                            id='statusOdo'
                            value={statusOdo}

@@ -24,11 +24,14 @@ const Dialog = ({ show, setShow, title, message, callback }: IDialogProps) => {
                         callback();
                         setShow(false);
                      }}
+                     className='btn'
+                  >
+                     delete
+                  </button>
+                  <button
+                     onClick={() => setShow(false)}
                      className='btn btn-primary'
                   >
-                     Oke
-                  </button>
-                  <button onClick={() => setShow(false)} className='btn'>
                      Close
                   </button>
                </div>

@@ -14,7 +14,7 @@ model Car {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   published Boolean
   slug String @unique
-  merek String
+  merek String @unique
   model_ String
   tahun Int
   harga Int
@@ -34,6 +34,8 @@ model Car {
   createAt DateTime @default(now()) @map("create_At")
   updateAt DateTime @updatedAt @map("update_at")
 
+  carBrand CarBrand @relation(fields: [merek], references: [brandName])
+
   @@map("cars")
 }
 
@@ -42,6 +44,7 @@ model CarBrand {
   brandName String @unique
 
   carModel CarModel?
+  car Car?
 
   @@map("car_brands")
 }

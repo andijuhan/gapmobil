@@ -144,7 +144,7 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
                   onChange={(e) => setSort(e.target.value)}
                >
                   <option value=''>Sort by</option>
-                  <option value='title'>Title</option>
+                  <option value='merek'>Merek</option>
                   <option value='status'>Status</option>
                   <option value='updateAt'>Last Update</option>
                   <option value='harga'>Price</option>

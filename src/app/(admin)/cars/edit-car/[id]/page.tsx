@@ -19,13 +19,26 @@ const getCarById = async (
    }
 };
 
+const getCarBrand = async () => {
+   try {
+      const response = await fetch(`${process.env.BASE_URL}/api/cars/brands`, {
+         cache: 'no-store',
+      });
+      if (!response.ok) redirect(`${process.env.BASE_URL}/cars/manage-cars`);
+      return response.json();
+   } catch (error) {
+      redirect(`${process.env.BASE_URL}/cars/manage-cars`);
+   }
+};
+
 const page = async ({ params }: any) => {
    const carId = params.id;
    const data = await getCarById(carId);
+   const carBrands = await getCarBrand();
 
    return (
       <div className='mt-[60px] w-full'>
-         <AddOrEditCar carData={data} mode='UPDATE' />
+         <AddOrEditCar carData={data} carBrands={carBrands} mode='UPDATE' />
       </div>
    );
 };
