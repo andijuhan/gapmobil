@@ -13,10 +13,10 @@ import {
 import { usePathname } from 'next/navigation';
 
 const AdminSidebar = () => {
-   const [carToggle, setCarToggle] = useState(true);
-   const [postToggle, setPostToggle] = useState(true);
-   const [settingToggle, setSettingToggle] = useState(true);
-   const [userToggle, setUserToggle] = useState(true);
+   const [carToggle, setCarToggle] = useState(false);
+   const [postToggle, setPostToggle] = useState(false);
+   const [settingToggle, setSettingToggle] = useState(false);
+   const [userToggle, setUserToggle] = useState(false);
    const path = usePathname();
 
    useEffect(() => {

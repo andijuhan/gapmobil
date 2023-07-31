@@ -22,3 +22,11 @@ export interface ICarApiResponse {
    createAt: string;
    updateAt: string;
 }
+
+export interface IUserData {
+   id: string;
+   username: string;
+   email: string;
+   phone: string;
+   role: string;
+}

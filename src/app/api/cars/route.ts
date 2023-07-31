@@ -61,6 +61,26 @@ export const GET = async (req: Request, res: Response) => {
    }
 };
 
+export const DELETE = async (req: Request, res: Response) => {
+   const { carId }: { carId: string[] } = await req.json();
+
+   try {
+      const deleteCar = await prisma.car.deleteMany({
+         where: {
+            id: {
+               in: carId,
+            },
+         },
+      });
+      return NextResponse.json(deleteCar);
+   } catch (error) {
+      return NextResponse.json(
+         { message: 'Gagal menghapus data' },
+         { status: 500 }
+      );
+   }
+};
+
 export const POST = async (req: Request, res: Response) => {
    const {
       merek,

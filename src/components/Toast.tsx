@@ -7,11 +7,15 @@ import { Transition } from '@headlessui/react';
 
 interface IToastProps {
    show: boolean;
+   setShow: React.Dispatch<React.SetStateAction<boolean>>;
    message: string;
    mode: 'SUKSES' | 'LOADING' | 'WARNING';
 }
 
-const Toast = ({ message, mode, show }: IToastProps) => {
+const Toast = ({ message, mode, show, setShow }: IToastProps) => {
+   setTimeout(() => {
+      setShow(false);
+   }, 5000);
    return (
       <Transition
          show={show}

@@ -1,10 +1,11 @@
 import prisma from '@/utils/prisma';
 import { NextResponse } from 'next/server';
 
-export const GET = async (
-   req: Request,
-   { params }: { params: { id: string } }
-) => {
+interface IParams {
+   params: { id: string };
+}
+
+export const GET = async (req: Request, { params }: IParams) => {
    const id = params.id;
 
    try {
@@ -22,10 +23,23 @@ export const GET = async (
    }
 };
 
-export const PATCH = async (
-   req: Request,
-   { params }: { params: { id: string } }
-) => {
+export const DELETE = async (req: Request, { params }: IParams) => {
+   const id = params.id;
+   console.log(id);
+
+   try {
+      await prisma.car.delete({ where: { id } });
+      return NextResponse.json({ message: 'Sukses menghapus data' });
+   } catch (error) {
+      console.log(error);
+      return NextResponse.json(
+         { message: 'Gagal menghapus data' },
+         { status: 500 }
+      );
+   }
+};
+
+export const PATCH = async (req: Request, { params }: IParams) => {
    const id = params.id;
    const {
       merek,

@@ -66,10 +66,10 @@ model User {
   role String
   username String @unique
   password String @unique
-  token String
+  token String?
   email String @unique
   phone String? @unique
-  users Car[]
+  cars Car[]
   image String?
   createAt DateTime @default(now()) @map("create_At")
   updateAt DateTime @updatedAt @map("update_at")

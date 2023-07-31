@@ -16,7 +16,7 @@ const Dialog = ({ show, setShow, title, message, callback }: IDialogProps) => {
          <dialog open={show} id='my_modal_2' className='modal'>
             <div className='modal-box'>
                <h3 className='font-bold text-lg capitalize'>{title}</h3>
-               <p className='py-4'>{message}</p>
+               <p className='py-4 capitalize'>{message}</p>
                <div className='modal-action'>
                   {/* if there is a button in form, it will close the modal */}
                   <button
@@ -30,7 +30,7 @@ const Dialog = ({ show, setShow, title, message, callback }: IDialogProps) => {
                   </button>
                   <button
                      onClick={() => setShow(false)}
-                     className='btn btn-primary'
+                     className='btn btn-secondary'
                   >
                      Close
                   </button>

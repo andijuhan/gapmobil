@@ -2,13 +2,19 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { format } from 'date-fns';
-import { AiOutlineEye, AiOutlineLoading3Quarters } from 'react-icons/ai';
+import {
+   AiFillDelete,
+   AiFillEye,
+   AiOutlineLoading3Quarters,
+} from 'react-icons/ai';
 import useDebounce from '@/hooks/useDebounce';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { formatPrice } from '@/utils';
 import { ICarApiResponse } from '@/types';
+import { mutate } from 'swr';
+import Dialog from './Dialog';
 
 interface IListCarsProps {
    apiResponse: ICarApiResponse[];
@@ -26,6 +32,9 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
    const searchParam = useSearchParams();
    const router = useRouter();
    const [take, setTake] = useState<number>(10);
+   const [deleteDialog, setDeleteDialog] = useState(false);
+   const [multiDeleteDialog, setMultiDeleteDialog] = useState(false);
+   const [selectedCar, setSelectedCar] = useState('');
 
    let page = Number(searchParam.get('page')) || 1;
    console.log(totalPage);
@@ -132,6 +141,38 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
       }
    };
 
+   const handleDelete = async () => {
+      const response = await fetch(`/api/cars/${carId[0]}`, {
+         method: 'DELETE',
+      });
+      if (response.ok) {
+         mutate('/api/cars');
+      }
+   };
+
+   const handleMultipleDelete = async () => {
+      const response = await fetch('/api/cars', {
+         method: 'DELETE',
+         headers: {
+            'Content-Type': 'application/json',
+         },
+         body: JSON.stringify({ carId }),
+      });
+      if (response.ok) {
+         mutate('/api/cars');
+      }
+   };
+
+   const confirmDelete = (id: string, carName: string) => {
+      setDeleteDialog(true);
+      setCarId([id]);
+      setSelectedCar(carName);
+   };
+
+   const confirmMultiDelete = () => {
+      setMultiDeleteDialog(true);
+   };
+
    return (
       <div>
          <div className='flex flex-col lg:flex-row justify-between items-center mb-[20px] gap-5 font-medium'>
@@ -159,6 +200,13 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
                   <option value='asc'>ASC</option>
                   <option value='desc'>DESC</option>
                </select>
+               <button
+                  disabled={carId.length === 0}
+                  className='btn capitalize'
+                  onClick={confirmMultiDelete}
+               >
+                  Delete {carId.length !== 0 && carId.length}
+               </button>
             </div>
             <div className='flex items-center gap-5'>
                <input
@@ -228,7 +276,7 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
                                  />
                               </label>
                            </th>
-                           <td>
+                           <td className='group'>
                               <Link href={`/cars/edit-car/${item.id}`}>
                                  <div className='flex items-center space-x-3'>
                                     <div className='avatar'>
@@ -243,6 +291,9 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
                                           {item.tahun}
                                        </div>
                                     </div>
+                                    <span className='opacity-0 group-hover:opacity-100 text-info text-xs'>
+                                       Edit
+                                    </span>
                                  </div>
                               </Link>
                            </td>
@@ -262,8 +313,17 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
                            <td>{formatPrice(item.harga)}</td>
 
                            <th>
-                              <div className='opacity-50 hover:opacity-40 cursor-pointer'>
-                                 <AiOutlineEye size={30} />
+                              <div className='opacity-50 hover:opacity-40 cursor-pointer flex gap-3'>
+                                 <AiFillEye size={30} />
+                                 <AiFillDelete
+                                    onClick={() =>
+                                       confirmDelete(
+                                          item.id,
+                                          `${item.merek} ${item.model_} ${item.tahun}`
+                                       )
+                                    }
+                                    size={27}
+                                 />
                               </div>
                            </th>
                         </tr>
@@ -282,6 +342,7 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
                   </tfoot>
                </table>
             ) : null}
+
             <div className='join flex justify-center mt-[40px]'>
                <button
                   disabled={page === 1}
@@ -302,6 +363,20 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
                </button>
             </div>
          </div>
+         <Dialog
+            show={deleteDialog}
+            setShow={setDeleteDialog}
+            title={`Hapus ${selectedCar} ?`}
+            message={`Apakah Anda ingin menghapus ${selectedCar} ?`}
+            callback={handleDelete}
+         />
+         <Dialog
+            show={multiDeleteDialog}
+            setShow={setMultiDeleteDialog}
+            title={`Hapus beberapa mobil ?`}
+            message={`Apakah Anda ingin menghapus beberapa mobil yang dipilih ?`}
+            callback={handleMultipleDelete}
+         />
       </div>
    );
 };

@@ -38,39 +38,30 @@ const ManageCarBrands = () => {
    };
 
    const handleEdite = async () => {
-      try {
-         const response = await fetch(`/api/cars/brands/${brandId}`, {
-            method: 'PATCH',
-            headers: {
-               'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ brandName }),
-         });
+      const response = await fetch(`/api/cars/brands/${brandId}`, {
+         method: 'PATCH',
+         headers: {
+            'Content-Type': 'application/json',
+         },
+         body: JSON.stringify({ brandName }),
+      });
 
-         if (response.ok) {
-            mutate('/api/cars/brands');
-            setEditMode(false);
-            setBrandId(null);
-         }
-         if (response.status === 409) {
-            const data = await response.json();
-            setErrorMessage(data.message);
-            setError(true);
-            setTimeout(() => {
-               setError(false);
-            }, 3000);
-         }
-      } catch (error) {
-         console.log('Gagal mengedit data:' + error);
+      if (response.ok) {
+         mutate('/api/cars/brands');
+         setEditMode(false);
+         setBrandId(null);
+      }
+      if (response.status === 409) {
+         const data = await response.json();
+         setErrorMessage(data.message);
+         setError(true);
       }
    };
 
    const handleAddNew = async () => {
       if (brandName === '') {
          setWarning(true);
-         setTimeout(() => {
-            setWarning(false);
-         }, 3000);
+
          return;
       }
       try {
@@ -90,9 +81,6 @@ const ManageCarBrands = () => {
             const data = await response.json();
             setErrorMessage(data.message);
             setError(true);
-            setTimeout(() => {
-               setError(false);
-            }, 3000);
          }
       } catch (error) {
          console.log('Gagal menambah data:' + error);
@@ -182,10 +170,16 @@ const ManageCarBrands = () => {
          </div>
          <Toast
             show={warning}
+            setShow={setWarning}
             mode='WARNING'
             message='Silahkan lengkapi data'
          />
-         <Toast show={error} mode='WARNING' message={errorMessage} />
+         <Toast
+            show={error}
+            setShow={setError}
+            mode='WARNING'
+            message={errorMessage}
+         />
          <Dialog
             show={dialog}
             setShow={setDialog}
