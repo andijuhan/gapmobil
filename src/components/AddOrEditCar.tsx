@@ -123,9 +123,6 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
          images.length === 0
       ) {
          setWarning(true);
-         setTimeout(() => {
-            setWarning(false);
-         }, 5000);
          return false;
       }
       return true;
@@ -168,9 +165,6 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
             if (response.ok) {
                setSumbited(true);
                setIsloading(false);
-               setTimeout(() => {
-                  setSumbited(false);
-               }, 5000);
                resetForm();
             }
          } catch (error) {
@@ -216,9 +210,6 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
             if (response.ok) {
                setSumbited(true);
                setIsloading(false);
-               setTimeout(() => {
-                  setSumbited(false);
-               }, 5000);
             }
          } catch (error) {
             setIsloading(false);
@@ -238,6 +229,7 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
       <div className='p-2 lg:p-7 rounded-lg h-full mt-5'>
          <Toast
             show={sumbited}
+            setShow={setSumbited}
             mode='SUKSES'
             message={
                mode == 'ADD_NEW'
@@ -247,10 +239,16 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
          />
          <Toast
             show={warning}
+            setShow={setWarning}
             mode='WARNING'
             message='Silahkan lengkapi data'
          />
-         <Toast show={isLoading} mode='LOADING' message='Mohon tunggu' />
+         <Toast
+            show={isLoading}
+            setShow={setIsloading}
+            mode='LOADING'
+            message='Mohon tunggu'
+         />
 
          <h1 className='text-xl font-medium mb-7'>
             {mode === 'ADD_NEW' ? 'Tambah mobil' : 'Update mobil'}

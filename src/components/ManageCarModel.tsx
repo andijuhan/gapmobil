@@ -56,9 +56,6 @@ const ManageCarModel = () => {
             const data = await response.json();
             setErrorMessage(data.message);
             setError(true);
-            setTimeout(() => {
-               setError(false);
-            }, 3000);
          }
       } catch (error: any) {
          console.log('Gagal menambah data:' + error);
@@ -68,9 +65,7 @@ const ManageCarModel = () => {
    const handleAddNew = async () => {
       if (modelName === '' || brandName === '') {
          setWarning(true);
-         setTimeout(() => {
-            setWarning(false);
-         }, 3000);
+
          return;
       }
       try {
@@ -94,9 +89,6 @@ const ManageCarModel = () => {
             const data = await response.json();
             setErrorMessage(data.message);
             setError(true);
-            setTimeout(() => {
-               setError(false);
-            }, 3000);
          }
       } catch (error: any) {
          console.log('Gagal menambah data:' + error);
@@ -145,7 +137,11 @@ const ManageCarModel = () => {
          >
             <option value=''>Select brand</option>
             {(carBrandOption as any[])?.map((item) => (
-               <option key={item?.id} value={item?.brandName}>
+               <option
+                  className='uppercase'
+                  key={item?.id}
+                  value={item?.brandName}
+               >
                   {item?.brandName}
                </option>
             ))}
@@ -187,10 +183,16 @@ const ManageCarModel = () => {
 
          <Toast
             show={warning}
+            setShow={setWarning}
             mode='WARNING'
             message='Silahkan pilih merek mobil'
          />
-         <Toast show={error} mode='WARNING' message={errorMessage} />
+         <Toast
+            show={error}
+            setShow={setError}
+            mode='WARNING'
+            message={errorMessage}
+         />
       </div>
    );
 };
