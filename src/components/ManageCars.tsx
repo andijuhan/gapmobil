@@ -37,7 +37,6 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
    const [selectedCar, setSelectedCar] = useState('');
 
    let page = Number(searchParam.get('page')) || 1;
-   console.log(totalPage);
 
    useEffect(() => {
       if (!loading) {
@@ -291,7 +290,7 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
                                           {item.tahun}
                                        </div>
                                     </div>
-                                    <span className='opacity-0 group-hover:opacity-100 text-info text-xs'>
+                                    <span className='opacity-0 group-hover:opacity-100 text-neutral text-xs'>
                                        Edit
                                     </span>
                                  </div>
@@ -314,7 +313,7 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
 
                            <th>
                               <div className='opacity-50 hover:opacity-40 cursor-pointer flex gap-3'>
-                                 <AiFillEye size={30} />
+                                 <AiFillEye size={22} />
                                  <AiFillDelete
                                     onClick={() =>
                                        confirmDelete(
@@ -322,7 +321,7 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
                                           `${item.merek} ${item.model_} ${item.tahun}`
                                        )
                                     }
-                                    size={27}
+                                    size={20}
                                  />
                               </div>
                            </th>

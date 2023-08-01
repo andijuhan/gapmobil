@@ -30,9 +30,7 @@ const Toast = ({ message, mode, show, setShow }: IToastProps) => {
             <div
                className={`alert ${mode === 'SUKSES' && 'alert-success'} ${
                   mode === 'LOADING' && 'alert-info'
-               } ${
-                  mode === 'WARNING' && 'alert-error'
-               } flex gap-3 text-base-100`}
+               } ${mode === 'WARNING' && 'alert-error'} flex text-base-100`}
             >
                {mode === 'WARNING' && (
                   <AiOutlineWarning size={30} className='animate-pulse' />

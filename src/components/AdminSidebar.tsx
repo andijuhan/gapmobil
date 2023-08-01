@@ -6,10 +6,10 @@ import {
    BsGearFill,
    BsFillHouseDoorFill,
    BsCarFrontFill,
-   BsPencilFill,
    BsChevronDown,
    BsFillPersonFill,
 } from 'react-icons/bs';
+import { MdArticle } from 'react-icons/md';
 import { usePathname } from 'next/navigation';
 
 const AdminSidebar = () => {
@@ -111,7 +111,7 @@ const AdminSidebar = () => {
                      } `}
                   >
                      <div className='flex items-center gap-3'>
-                        <BsPencilFill size={18} />
+                        <MdArticle size={18} />
                         <span>Posts</span>
                      </div>
                      <BsChevronDown

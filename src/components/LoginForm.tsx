@@ -1,61 +1,84 @@
 'use client';
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Toast from './Toast';
 
 const LoginForm = () => {
    const [username, setUsername] = useState('');
    const [password, setPassword] = useState('');
+   const [warningMessage, setWarningMessage] = useState('');
+   const [warning, setWarning] = useState(false);
+   const router = useRouter();
+
+   const validateInput = () => {
+      if (username === '' || password === '') {
+         setWarningMessage('Masukan username dan password');
+         setWarning(true);
+         return false;
+      }
+      return true;
+   };
 
    const handleLogin = async () => {
-      const response = await fetch('/api/auth/login', {
-         method: 'POST',
-         headers: {
-            'Content-Type': 'application/json',
-         },
-         body: JSON.stringify({ username, password }),
-      });
+      const isInputValidate = validateInput();
+      if (isInputValidate) {
+         const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username, password }),
+         });
 
-      const data = await response.json();
-      if (!response.ok) {
-         console.log(data.message);
+         const data = await response.json();
+
+         if (response.ok) {
+            router.push('/dashboard');
+         }
+
+         if (!response.ok) {
+            setWarningMessage(data.message);
+            setWarning(true);
+         }
       }
-      console.log(data);
    };
    return (
-      <div className='p-7 border rounded-lg bg-base-100 flex flex-col gap-5'>
-         <h2 className='text-2xl font-medium text-center mb-3'>Login Page</h2>
-         <div className='form-control gap-5'>
-            <label className='input-group'>
-               <span className='w-[120px]'>Username</span>
+      <>
+         <div className='p-7 border rounded-xl bg-base-100 flex flex-col gap-5 shadow-sm'>
+            <h2 className='text-xl font-medium text-center mb-3'>Login User</h2>
+            <div className='form-control gap-5'>
                <input
                   type='text'
-                  placeholder='Your username'
+                  placeholder='Username'
                   className='input input-bordered'
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                />
-            </label>
-            <label className='input-group'>
-               <span className='w-[120px]'>Password</span>
                <input
                   type='password'
-                  placeholder='secret'
+                  placeholder='Password'
                   className='input input-bordered'
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                />
-            </label>
-            <div className='flex items-center gap-3 mt-3'>
-               <button
-                  type='button'
-                  onClick={handleLogin}
-                  className='btn btn-primary'
-               >
-                  Login
-               </button>
-               <button className='btn'>Home</button>
+               <div className='flex items-center gap-3'>
+                  <button
+                     type='button'
+                     onClick={handleLogin}
+                     className='btn btn-primary w-full'
+                  >
+                     Login
+                  </button>
+               </div>
             </div>
          </div>
-      </div>
+         <Toast
+            message={warningMessage}
+            mode='WARNING'
+            show={warning}
+            setShow={setWarning}
+         />
+      </>
    );
 };
 

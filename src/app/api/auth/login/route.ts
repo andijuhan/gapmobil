@@ -47,8 +47,9 @@ export const POST = async (req: Request, res: Response) => {
       const MAX_AGE = 60 * 60 * 24 * 30; // days;
 
       //attach cookie
-      const serialized = serialize('jwt', sessionToken, {
+      const serialized = serialize('token', sessionToken, {
          httpOnly: true,
+         secure: false,
          sameSite: 'strict',
          maxAge: MAX_AGE,
          path: '/',
