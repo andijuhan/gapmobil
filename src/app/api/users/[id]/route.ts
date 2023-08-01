@@ -40,6 +40,8 @@ export const PATCH = async (req: Request, { params }: IParams) => {
    const userId = params.id;
    const { password, email, phone, role } = await req.json();
 
+   const isEmailExist = await prisma.user.findFirst({ where: { email } });
+
    const hash = await argon2.hash(password);
 
    try {
