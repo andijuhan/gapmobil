@@ -44,6 +44,7 @@ export const GET = async (req: Request, res: Response) => {
             published: true,
             updateAt: true,
             harga: true,
+            username: true,
          },
       });
 
@@ -84,6 +85,7 @@ export const DELETE = async (req: Request, res: Response) => {
 export const POST = async (req: Request, res: Response) => {
    const {
       merek,
+      username,
       model,
       tahun,
       slug,
@@ -110,6 +112,7 @@ export const POST = async (req: Request, res: Response) => {
             merek: (merek as string).toLowerCase(),
             model_: (model as string).toLowerCase(),
             tahun,
+            username,
             slug,
             published,
             harga,
@@ -131,6 +134,7 @@ export const POST = async (req: Request, res: Response) => {
 
       return NextResponse.json(data);
    } catch (error) {
+      console.log(error);
       return NextResponse.json(
          { message: 'errorrr: ' + error },
          {

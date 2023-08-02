@@ -3,11 +3,11 @@ import jwt, { Secret } from 'jsonwebtoken';
 const secretKey: Secret = process.env.SECRET || '';
 
 export const createSessionToken = (
-   userId: string,
+   username: string,
    email: string,
    role: string
 ): string => {
-   const payload = { userId, email, role };
+   const payload = { username, email, role };
 
    const option = {
       expiresIn: '1d',

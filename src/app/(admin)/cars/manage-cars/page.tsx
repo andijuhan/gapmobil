@@ -4,9 +4,12 @@
 import ManageCars from '@/components/ManageCars';
 import { fetcher } from '@/utils';
 import useSWR from 'swr';
+//import { useUser } from '@/hooks/useStore';
 
 const page = () => {
    const { data, error, isLoading } = useSWR('/api/cars', fetcher);
+   /* const { username, email, role } = useUser();
+   console.log(username, email, role); */
 
    return (
       <div className='p-2 lg:p-7 rounded-lg h-full w-full mt-[60px]'>

@@ -14,6 +14,7 @@ import Toast from './Toast';
 import { useRouter } from 'next/navigation';
 import useSWR from 'swr';
 import { fetcher } from '@/utils';
+import { useUser } from '@/hooks/useStore';
 
 interface IAddOrEditCarProps {
    mode: 'ADD_NEW' | 'UPDATE';
@@ -48,6 +49,7 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
    const [carModels, setCarModels] = useState<string[]>([]);
    const { data: carBrands } = useSWR('/api/cars/brands', fetcher);
    const router = useRouter();
+   const { username } = useUser();
 
    useEffect(() => {
       const getCarBrandById = async () => {
@@ -142,6 +144,7 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                body: JSON.stringify({
                   merek,
                   model,
+                  username,
                   tahun,
                   slug,
                   published: isDraft ? false : true,

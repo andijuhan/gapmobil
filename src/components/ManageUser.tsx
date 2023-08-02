@@ -7,6 +7,7 @@ import { useState } from 'react';
 import Dialog from './Dialog';
 import { useRouter } from 'next/navigation';
 import { IUserData } from '@/types';
+import { useUser } from '@/hooks/useStore';
 
 const CreateUser = () => {
    const { data: dataUser } = useSWR<IUserData[]>('/api/users', fetcher);
@@ -14,6 +15,7 @@ const CreateUser = () => {
    const [deleteDialog, setDeleteDialog] = useState(false);
    const [selecteUsername, setSelectedUsername] = useState('');
    const router = useRouter();
+   const { username } = useUser();
 
    const handleDelete = async () => {
       const response = await fetch(`/api/users/${selectedUserId}`, {
@@ -71,9 +73,11 @@ const CreateUser = () => {
                                  >
                                     <AiFillDelete size={20} />
                                  </button>
-                                 <button onClick={() => handleEdit(item.id)}>
-                                    <BiSolidEditAlt size={20} />
-                                 </button>
+                                 {item.username !== username && (
+                                    <button onClick={() => handleEdit(item.id)}>
+                                       <BiSolidEditAlt size={20} />
+                                    </button>
+                                 )}
                               </div>
                            </td>
                         </tr>

@@ -21,6 +21,7 @@ export interface ICarApiResponse {
    deskripsi: string;
    createAt: string;
    updateAt: string;
+   username: string;
 }
 
 export interface IUserData {

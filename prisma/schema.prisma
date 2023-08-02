@@ -34,8 +34,8 @@ model Car {
   createAt DateTime @default(now()) @map("create_At")
   updateAt DateTime @updatedAt @map("update_at")
 
-  user User? @relation(fields: [userId], references: [id])
-  userId String? @db.ObjectId
+  user User? @relation(fields: [username], references: [username])
+  username String? @unique
   carBrand CarBrand @relation(fields: [merek], references: [brandName])
 
   @@map("cars")

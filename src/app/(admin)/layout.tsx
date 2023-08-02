@@ -5,6 +5,7 @@ import AdminNavbar from '@/components/AdminNavbar';
 import Drawer from '@/components/Drawer';
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
+import { IUserData } from '@/types';
 
 export const metadata: Metadata = {
    title: 'Create Next App',
@@ -35,12 +36,12 @@ export default async function RootLayout({
 }: {
    children: React.ReactNode;
 }) {
-   const data = await getUser();
+   const data: IUserData = await getUser();
 
    return (
       <html lang='en'>
          <body className='font-secondaryFont text-neutral bg-base-200 min-h-screen flex flex-col'>
-            <AdminNavbar />
+            <AdminNavbar data={data} />
             <Drawer contentPage={children} menu={<AdminSidebar />} />
          </body>
       </html>

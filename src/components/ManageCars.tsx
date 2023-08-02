@@ -251,6 +251,7 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
                         <th>Status</th>
                         <th>Last Update</th>
                         <th>Price</th>
+                        <th>User</th>
                         <th></th>
                      </tr>
                   </thead>
@@ -310,6 +311,7 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
                               )}
                            </td>
                            <td>{formatPrice(item.harga)}</td>
+                           <td>{item.username}</td>
 
                            <th>
                               <div className='opacity-50 hover:opacity-40 cursor-pointer flex gap-3'>
@@ -336,6 +338,7 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
                         <th>Status</th>
                         <th>Last Update</th>
                         <th>Price</th>
+                        <th>User</th>
                         <th></th>
                      </tr>
                   </tfoot>
