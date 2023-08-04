@@ -40,14 +40,30 @@ export const PATCH = async (req: Request, { params }: IParams) => {
    const userId = params.id;
    const { password, email, phone, role } = await req.json();
 
-   const isEmailExist = await prisma.user.findFirst({ where: { email } });
+   const isUserExist = await prisma.user.findFirst({ where: { email } });
+   //jika email sudah digunakan user lain
+   if (isUserExist && isUserExist.id !== userId) {
+      return NextResponse.json(
+         { message: 'Email sudah digunakan user lain' },
+         { status: 409 }
+      );
+   }
 
    const hash = await argon2.hash(password);
+   const isPasswordChange =
+      password !== '' && isUserExist?.password !== password;
+
+   //jika password tidak kosong & user mengupdate password
+   //lakikan update password di database
+   //jika tidak, password di database tidak usah di update
+   let payload = isPasswordChange
+      ? { password: hash, email, phone, role }
+      : { email, phone, role };
 
    try {
       const updateUser = await prisma.user.update({
          where: { id: userId },
-         data: { password: hash, email, phone, role },
+         data: payload,
       });
       return NextResponse.json(updateUser);
    } catch (error) {

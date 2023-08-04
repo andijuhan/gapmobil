@@ -10,14 +10,14 @@ import { useDetectClickOutside } from 'react-detect-click-outside';
 const AdminNavbar = ({ data }: { data: IUserData }) => {
    const router = useRouter();
    const [showDropDown, setShowDropDown] = useState(false);
-   const { setUsername, setEmail, setRole, username } = useUser();
+   const { setId, setUsername, setEmail, setRole, username } = useUser();
 
    const dropDownRef = useDetectClickOutside({
       onTriggered: () => setShowDropDown(false),
    });
 
    useEffect(() => {
-      console.log(data);
+      setId(data.id);
       setUsername(data.username);
       setEmail(data.email);
       setRole(data.role);
@@ -30,7 +30,6 @@ const AdminNavbar = ({ data }: { data: IUserData }) => {
       }
    };
 
-   console.log(username);
    return (
       <div className='navbar bg-primary text-neutral-content shadow-sm fixed z-20'>
          <div className='flex-none'>
@@ -53,7 +52,7 @@ const AdminNavbar = ({ data }: { data: IUserData }) => {
          <div className='flex-1'>
             <a className='btn btn-ghost normal-case text-xl'>Dinamotor</a>
          </div>
-         <div className='flex-none relative mr-4'>
+         <div className='flex-none relative text-sm mr-4'>
             <button
                onClick={() => setShowDropDown(!showDropDown)}
                className='btn btn-ghost dropdown capitalize flex items-center gap-2 text-base font-normal'

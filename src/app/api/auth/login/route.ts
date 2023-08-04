@@ -21,6 +21,7 @@ export const POST = async (req: Request, res: Response) => {
 
       //verify username and password
       const isPasswordMatch = await argon2.verify(user.password, password);
+
       if (!isPasswordMatch) {
          return NextResponse.json(
             { message: 'password tidak cocok' },
@@ -30,6 +31,7 @@ export const POST = async (req: Request, res: Response) => {
 
       //create token
       const sessionToken = createSessionToken(
+         user.id,
          user.username,
          user.email,
          user.role

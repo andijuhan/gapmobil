@@ -4,18 +4,27 @@ import {
    AiOutlineWarning,
 } from 'react-icons/ai';
 import { Transition } from '@headlessui/react';
+import { useEffect } from 'react';
 
 interface IToastProps {
    show: boolean;
    setShow: React.Dispatch<React.SetStateAction<boolean>>;
    message: string;
    mode: 'SUKSES' | 'LOADING' | 'WARNING';
+   timer?: number;
 }
 
-const Toast = ({ message, mode, show, setShow }: IToastProps) => {
-   setTimeout(() => {
-      setShow(false);
-   }, 5000);
+const Toast = ({ message, mode, show, setShow, timer = 5000 }: IToastProps) => {
+   useEffect(() => {
+      if (show) {
+         const timeout = setTimeout(() => {
+            setShow(false);
+         }, timer);
+
+         return () => clearTimeout(timeout);
+      }
+   }, [show, setShow, timer]);
+
    return (
       <Transition
          show={show}
@@ -44,7 +53,7 @@ const Toast = ({ message, mode, show, setShow }: IToastProps) => {
                {mode === 'SUKSES' && (
                   <AiOutlineCheckCircle size={30} className='animate-pulse' />
                )}
-               <span>{message}</span>
+               <span className='capitalize'>{message}</span>
             </div>
          </div>
       </Transition>

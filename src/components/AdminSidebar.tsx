@@ -25,7 +25,7 @@ const AdminSidebar = () => {
    }, [path]);
 
    return (
-      <div className='w-[250px] lg:relative z-40 bg-neutral min-h-screen text-neutral-content pt-[30px] px-10 mt-[60px]'>
+      <div className='w-[250px] lg:relative z-40 bg-neutral min-h-screen text-neutral-content text-sm pt-[30px] px-10 mt-[60px]'>
          <div className='flex flex-col gap-6 dropdown mt-5'>
             {/* MANAGE DASHBOARD */}
             <Link href='/dashboard'>
@@ -64,14 +64,14 @@ const AdminSidebar = () => {
                </Link>
 
                <ul
-                  className={`mt-2 ml-5 font-light h-auto max-h-auto overflow-hidden ${
+                  className={`mt-2 ml-7 font-light h-auto max-h-auto overflow-hidden ${
                      carToggle
                         ? 'max-h-[500px] opacity-100'
                         : 'max-h-0 opacity-0'
                   } transition-all duration-500 ease-in-out`}
                >
                   <li
-                     className={`p-2 hover:text-base-100 cursor-pointer ${
+                     className={`py-2 hover:text-base-100 cursor-pointer ${
                         (path.includes('manage-car') ||
                            path.includes('edit-car')) &&
                         'text-base-100 font-medium'
@@ -80,7 +80,7 @@ const AdminSidebar = () => {
                      <Link href='/cars/manage-cars'>Manage Cars</Link>
                   </li>
                   <li
-                     className={`p-2 hover:text-base-100  cursor-pointer ${
+                     className={`py-2 hover:text-base-100  cursor-pointer ${
                         path.includes('add-new-car') &&
                         'text-base-100 font-medium'
                      }`}
@@ -88,7 +88,7 @@ const AdminSidebar = () => {
                      <Link href='/cars/add-new-car'>Add New Car</Link>
                   </li>
                   <li
-                     className={`p-2 hover:text-base-100  cursor-pointer ${
+                     className={`py-2 hover:text-base-100  cursor-pointer ${
                         path.includes('manage-brands') &&
                         'text-base-100 font-medium'
                      }`}
@@ -124,14 +124,14 @@ const AdminSidebar = () => {
                </Link>
 
                <ul
-                  className={`mt-2 ml-5 font-light h-auto max-h-auto overflow-hidden ${
+                  className={`mt-2 ml-7 font-light h-auto max-h-auto overflow-hidden ${
                      postToggle
                         ? 'max-h-[500px] opacity-100'
                         : 'max-h-0 opacity-0'
                   } transition-all duration-500 ease-in-out`}
                >
                   <li
-                     className={`p-2 hover:text-base-100  cursor-pointer ${
+                     className={`py-2 hover:text-base-100  cursor-pointer ${
                         path.includes('manage-posts') &&
                         'text-base-100 font-medium'
                      }`}
@@ -139,7 +139,7 @@ const AdminSidebar = () => {
                      <Link href='/posts/manage-posts'>Manage Posts</Link>
                   </li>
                   <li
-                     className={`p-2 hover:text-base-100  cursor-pointer ${
+                     className={`py-2 hover:text-base-100  cursor-pointer ${
                         path.includes('add-new-post') &&
                         'text-base-100 font-medium'
                      }`}
@@ -175,14 +175,14 @@ const AdminSidebar = () => {
                </Link>
 
                <ul
-                  className={`mt-2 ml-5 font-light h-auto max-h-auto overflow-hidden ${
+                  className={`mt-2 ml-7 font-light h-auto max-h-auto overflow-hidden ${
                      userToggle
                         ? 'max-h-[500px] opacity-100'
                         : 'max-h-0 opacity-0'
                   } transition-all duration-500 ease-in-out`}
                >
                   <li
-                     className={`p-2 hover:text-base-100  cursor-pointer ${
+                     className={`py-2 hover:text-base-100  cursor-pointer ${
                         path.includes('manage-users') &&
                         'text-base-100 font-medium'
                      }`}
@@ -190,12 +190,12 @@ const AdminSidebar = () => {
                      <Link href='/users/manage-users'>Manage Users</Link>
                   </li>
                   <li
-                     className={`p-2 hover:text-base-100  cursor-pointer ${
+                     className={`py-2 hover:text-base-100  cursor-pointer ${
                         path.includes('add-new-post') &&
                         'text-base-100 font-medium'
                      }`}
                   >
-                     <Link href='/users/add-new-user'>Your Account</Link>
+                     <Link href='/users/your-account'>Your Account</Link>
                   </li>
                </ul>
             </div>
@@ -226,21 +226,21 @@ const AdminSidebar = () => {
                </Link>
 
                <ul
-                  className={`mt-2 ml-5 font-light h-auto max-h-auto overflow-hidden ${
+                  className={`mt-2 ml-7 font-light h-auto max-h-auto overflow-hidden ${
                      settingToggle
                         ? 'max-h-[500px] opacity-100'
                         : 'max-h-0 opacity-0'
                   } transition-all duration-500 ease-in-out`}
                >
                   <li
-                     className={`p-2 hover:text-base-100  cursor-pointer ${
+                     className={`py-2 hover:text-base-100  cursor-pointer ${
                         path.includes('general') && 'text-base-100 font-medium'
                      }`}
                   >
                      <Link href='/settings/car-info'>General</Link>
                   </li>
                   <li
-                     className={`p-2 hover:text-base-100  cursor-pointer ${
+                     className={`py-2 hover:text-base-100  cursor-pointer ${
                         path.includes('car-info') && 'text-base-100 font-medium'
                      }`}
                   >

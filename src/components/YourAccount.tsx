@@ -1,36 +1,33 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 'use client';
+import Toast from '@/components/Toast';
+import { useUser } from '@/hooks/useStore';
+import { IUserData } from '@/types';
 import {
    isEmailValid,
    isPasswordValid,
    isPhoneNumValid,
 } from '@/utils/validasi';
 import React, { useEffect, useState } from 'react';
-import Toast from './Toast';
-import { mutate } from 'swr';
-import { useSearchParams } from 'next/navigation';
-import { IUserData } from '@/types';
-import { useRouter } from 'next/navigation';
 
-const CreateUser = () => {
-   const searchParams = useSearchParams();
-   const userId = searchParams.get('id');
+const YourAccount = () => {
    const [username, setUsername] = useState('');
-   const [password, setPassword] = useState('');
+   const [oldPassword, setOldPassword] = useState('');
+   const [newPassword, setNewPassword] = useState('');
    const [email, setEmail] = useState('');
    const [phone, setphone] = useState('');
    const [role, setRole] = useState('');
    const [warningMessage, setWarningMessage] = useState('');
+   const [infoMessage, setInfoMessage] = useState('');
+   const [successUpdate, setSuccessUpdate] = useState(false);
    const [isWarning, setIswarning] = useState(false);
-   const [successEdit, setSuccessEdit] = useState(false);
-   const [successAdd, setSuccessAdd] = useState(false);
-   const [mode, setMode] = useState<'ADD_NEW' | 'UPDATE'>('ADD_NEW');
-   const router = useRouter();
+   const { id } = useUser();
 
    useEffect(() => {
       const getUserById = async () => {
-         const response = await fetch(`/api/users/${userId}`);
+         const response = await fetch(`/api/users/${id}`);
          const data: IUserData = await response.json();
-         setMode('UPDATE');
+
          if (response.ok) {
             setUsername(data.username);
             setEmail(data.email);
@@ -38,19 +35,9 @@ const CreateUser = () => {
             setRole(data.role);
          }
       };
-      if (userId) getUserById();
-   }, [userId]);
+      if (id) getUserById();
+   }, [id]);
 
-   const resetData = () => {
-      mutate('/api/users');
-      setUsername('');
-      setEmail('');
-      setPassword('');
-      setphone('');
-      setRole('');
-   };
-
-   //validasi input
    const validasiInput = () => {
       //jika username kosong
       if (username === '' || email === '' || role === '') {
@@ -69,7 +56,7 @@ const CreateUser = () => {
       }
 
       const validatePassword =
-         password !== '' ? isPasswordValid(password) : true;
+         oldPassword !== '' ? isPasswordValid(oldPassword) : true;
 
       if (!validatePassword) {
          setIswarning(true);
@@ -89,65 +76,37 @@ const CreateUser = () => {
       return true;
    };
 
-   const handleEditUser = async () => {
+   const handleUpdateAccount = async () => {
       const isInputValid = validasiInput();
       if (isInputValid) {
-         const response = await fetch(`/api/users/${userId}`, {
+         const response = await fetch(`/api/users/update-profile/${id}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ password, email, phone, role }),
+            body: JSON.stringify({
+               oldPassword,
+               newPassword,
+               email,
+               phone,
+               role,
+            }),
          });
 
          const data = await response.json();
 
          if (response.ok) {
-            resetData();
-            setMode('ADD_NEW');
-            setSuccessEdit(true);
+            setSuccessUpdate(true);
+            setInfoMessage(data.message);
          }
          if (!response.ok) {
             setWarningMessage(data.message);
             setIswarning(true);
          }
       }
-   };
-
-   //handle add user
-   const handleAddUser = async () => {
-      const isInputValid = validasiInput();
-      if (isInputValid) {
-         const response = await fetch('/api/users', {
-            method: 'POST',
-            headers: {
-               'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username, password, email, phone, role }),
-         });
-
-         const data = await response.json();
-
-         if (response.ok) {
-            resetData();
-            setSuccessAdd(true);
-         }
-         if (!response.ok) {
-            setWarningMessage(data.message);
-            setIswarning(true);
-         }
-      }
-   };
-
-   const handleCancel = () => {
-      resetData();
-      setMode('ADD_NEW');
-      router.push('/users/manage-users');
    };
 
    return (
       <div className='bg-white px-4 lg:px-7 lg:py-10 rounded-lg text-sm'>
-         <h2 className='text-lg mb-5 font-medium'>
-            {mode == 'ADD_NEW' ? 'Create user' : 'Edit user'}
-         </h2>
+         <h2 className='text-lg mb-5 font-medium'>Update Account</h2>
          <div className='form-control gap-5'>
             <div className='flex gap-5 items-center'>
                <label className='w-[150px]' htmlFor='username'>
@@ -155,7 +114,7 @@ const CreateUser = () => {
                </label>
                <input
                   className={`input input-bordered w-full max-w-xs`}
-                  disabled={mode === 'UPDATE'}
+                  disabled
                   type='text'
                   name='username'
                   value={username}
@@ -164,15 +123,28 @@ const CreateUser = () => {
             </div>
             <div className='flex gap-5 items-center'>
                <label className='w-[150px]' htmlFor='password'>
-                  Password
+                  Old Password
                </label>
                <input
                   className='input input-bordered w-full max-w-xs'
                   type='password'
                   name='password'
-                  placeholder='Your secret password'
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder='New password'
+                  value={oldPassword}
+                  onChange={(e) => setOldPassword(e.target.value)}
+               />
+            </div>
+            <div className='flex gap-5 items-center'>
+               <label className='w-[150px]' htmlFor='password'>
+                  New Password
+               </label>
+               <input
+                  className='input input-bordered w-full max-w-xs'
+                  type='password'
+                  name='password'
+                  placeholder='New password'
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
                />
             </div>
             <div className='flex gap-5 items-center'>
@@ -220,18 +192,11 @@ const CreateUser = () => {
             <div className='flex items-center mt-5 gap-5'>
                <button
                   type='button'
-                  onClick={mode === 'ADD_NEW' ? handleAddUser : handleEditUser}
-                  className={`btn ${
-                     mode === 'ADD_NEW' ? 'btn-primary' : 'btn-secondary'
-                  } w-max`}
+                  onClick={handleUpdateAccount}
+                  className='w-max btn btn-primary'
                >
-                  {mode === 'ADD_NEW' ? 'Add user' : 'Update User'}
+                  Update
                </button>
-               {mode === 'UPDATE' && (
-                  <button onClick={handleCancel} className='btn'>
-                     Cancel
-                  </button>
-               )}
             </div>
          </div>
          <Toast
@@ -241,19 +206,14 @@ const CreateUser = () => {
             setShow={setIswarning}
          />
          <Toast
-            message='Berhasil update user'
+            message={infoMessage}
             mode='SUKSES'
-            show={successEdit}
-            setShow={setSuccessEdit}
-         />
-         <Toast
-            message='Berhasil menambah user'
-            mode='SUKSES'
-            show={successAdd}
-            setShow={setSuccessAdd}
+            show={successUpdate}
+            setShow={setSuccessUpdate}
+            timer={10000}
          />
       </div>
    );
 };
 
-export default CreateUser;
+export default YourAccount;

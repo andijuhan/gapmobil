@@ -229,7 +229,7 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
       setImages(updatedArray);
    };
    return (
-      <div className='p-2 lg:p-7 rounded-lg h-full mt-5'>
+      <div className='p-2 lg:p-7 rounded-lg h-full mt-5 text-sm'>
          <Toast
             show={sumbited}
             setShow={setSumbited}

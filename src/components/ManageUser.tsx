@@ -44,7 +44,7 @@ const CreateUser = () => {
             <div className='overflow-x-auto'>
                <table className='table'>
                   {/* head */}
-                  <thead className='text-base text-neutral'>
+                  <thead className='text-neutral'>
                      <tr>
                         <th>Username</th>
                         <th>Email</th>
@@ -55,28 +55,31 @@ const CreateUser = () => {
                   </thead>
                   <tbody>
                      {dataUser?.map((item, index) => (
-                        <tr
-                           className='hover:bg-base-200 cursor-pointer'
-                           data-tip='Click to edit'
-                           key={index}
-                        >
+                        <tr className='hover:bg-base-200' key={index}>
                            <td>{item.username}</td>
                            <td>{item.email}</td>
                            <td>{item.phone}</td>
                            <td>{item.role}</td>
                            <td>
                               <div className='flex gap-5 opacity-50 hover:opacity-40'>
-                                 <button
-                                    onClick={() =>
-                                       confirmDelete(item.id, item.username)
-                                    }
-                                 >
-                                    <AiFillDelete size={20} />
-                                 </button>
                                  {item.username !== username && (
-                                    <button onClick={() => handleEdit(item.id)}>
-                                       <BiSolidEditAlt size={20} />
-                                    </button>
+                                    <>
+                                       <button
+                                          onClick={() =>
+                                             confirmDelete(
+                                                item.id,
+                                                item.username
+                                             )
+                                          }
+                                       >
+                                          <AiFillDelete size={20} />
+                                       </button>
+                                       <button
+                                          onClick={() => handleEdit(item.id)}
+                                       >
+                                          <BiSolidEditAlt size={20} />
+                                       </button>
+                                    </>
                                  )}
                               </div>
                            </td>
