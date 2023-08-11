@@ -1,6 +1,6 @@
 'use client';
 /* eslint-disable @next/next/no-img-element */
-import { ICarApiResponse } from '@/types';
+import { ICarData } from '@/types';
 import {
    convertISOdateToStandar,
    createSlug,
@@ -58,7 +58,7 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
             if (!response.ok) {
                router.push('/cars/manage-cars');
             }
-            const data: ICarApiResponse = await response.json();
+            const data: ICarData = await response.json();
             setMerek(data?.merek);
             setModel(data?.model_);
             setTahun(data?.tahun);

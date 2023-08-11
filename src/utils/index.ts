@@ -3,17 +3,17 @@ export const createSlug = (input: string) => {
    const specialCharactersRegex = /[^a-zA-Z0-9\s]/g;
 
    // Gunakan metode replace dengan ekspresi reguler untuk menghapus karakter spesial
-   const resultString = input.replace(specialCharactersRegex, '');
+   const trimmedString = input.trim();
+   const resultString = trimmedString.replace(specialCharactersRegex, '');
    const slug = resultString.replace(/\s/g, '-');
    const code = generateRandomCode();
-   const uniqSlug = slug + '-' + code;
+   const uniqSlug = slug.trim() + '-' + code;
 
    return uniqSlug;
 };
 
 export const generateRandomCode = () => {
-   const characters =
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
    let code = '';
 
    for (let i = 0; i < 4; i++) {
@@ -21,7 +21,7 @@ export const generateRandomCode = () => {
       code += characters[randomIndex];
    }
 
-   return code;
+   return code.toLowerCase();
 };
 
 export const formatPrice = (price: number) => {

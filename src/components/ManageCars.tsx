@@ -12,18 +12,18 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { formatPrice } from '@/utils';
-import { ICarApiResponse } from '@/types';
+import { ICarData } from '@/types';
 import { mutate } from 'swr';
 import Dialog from './Dialog';
 
 interface IListCarsProps {
-   apiResponse: ICarApiResponse[];
+   apiResponse: ICarData[];
    totalPage: number;
    loading: boolean;
 }
 
 const ManageCars = ({ apiResponse, totalPage, loading }: IListCarsProps) => {
-   const [cars, setCar] = useState<ICarApiResponse[]>([]);
+   const [cars, setCar] = useState<ICarData[]>([]);
    const [carId, setCarId] = useState<String[]>([]);
    const [sort, setSort] = useState<string>('');
    const [order, setOrder] = useState<string>('desc');

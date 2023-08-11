@@ -25,7 +25,6 @@ export const GET = async (req: Request, { params }: IParams) => {
 
 export const DELETE = async (req: Request, { params }: IParams) => {
    const id = params.id;
-   console.log(id);
 
    try {
       await prisma.car.delete({ where: { id } });

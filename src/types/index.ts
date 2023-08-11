@@ -1,4 +1,4 @@
-export interface ICarApiResponse {
+export interface ICarData {
    id: string;
    published: boolean;
    slug: string;
@@ -30,4 +30,15 @@ export interface IUserData {
    email: string;
    phone: string;
    role: string;
+}
+
+export interface IPostData {
+   id: string;
+   slug: string;
+   title: string;
+   content: string;
+   categoryId: string;
+   image: string;
+   createAt: string;
+   updateAt: string;
 }

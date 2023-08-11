@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import prisma from '@/utils/prisma';
 import { createProfileUpdateToken } from '@/utils/jwt';
 import * as argon2 from 'argon2';
+import emailSender, { IMailConfig, IMailOption } from '@/utils/emailSender';
 
 interface IParams {
    params: { id: string };
@@ -13,6 +14,9 @@ export const PATCH = async (req: Request, { params }: IParams) => {
 
    try {
       const isUserExist = await prisma.user.findFirst({ where: { email } });
+      const currentUser = await prisma.user.findUnique({
+         where: { id: userId },
+      });
       //cek apakah email sudah digunakan user lain
       const isEmailAlreadyUse = isUserExist && isUserExist.id !== userId;
 
@@ -25,18 +29,35 @@ export const PATCH = async (req: Request, { params }: IParams) => {
       //kirim email konfirmasi berisi token email
       const emailToken = createProfileUpdateToken(email, userId);
       //kirim email konfirmasi ke akun email aktif
+      const mailConfig: IMailConfig = {
+         service: 'Gmail',
+         user: process.env.EMAIL_ADMIN || '',
+         pass: process.env.EMAIL_ADMIN_PASS || '',
+      };
+
+      const text = `Silahkan klik tautan untuk mengkonfirmasi perubahan email Anda ${process.env.BASE_URL}/confirm?token=${emailToken}`;
+
+      const mailOption: IMailOption = {
+         from: process.env.EMAIL_ADMIN || '',
+         to: currentUser?.email || '',
+         subject: 'Konfirmasi perubahan email',
+         text,
+      };
+
+      const isSend = await emailSender(mailConfig, mailOption);
 
       //jika user mengupdate emailnya
       //dan email belum digunakan orang lain
-      //buat pesan cek email
+      //dan jika email terkirim
+      //buat costum message cek email
       const message =
-         email !== isUserExist?.email && !isEmailAlreadyUse
+         email !== isUserExist?.email && !isEmailAlreadyUse && isSend
             ? {
                  message: 'silahkan cek inbox akun email Anda',
               }
             : { message: 'akun berhasil di update' };
 
-      //cek apakah oldpassword cocok dengna password di database
+      //cek apakah oldpassword cocok dgn password di database
       const isPasswordMatch =
          oldPassword !== ''
             ? await argon2.verify(isUserExist?.password || '', oldPassword)

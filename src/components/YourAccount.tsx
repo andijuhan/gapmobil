@@ -21,6 +21,7 @@ const YourAccount = () => {
    const [infoMessage, setInfoMessage] = useState('');
    const [successUpdate, setSuccessUpdate] = useState(false);
    const [isWarning, setIswarning] = useState(false);
+   const [isLoading, setIsLoading] = useState(false);
    const { id } = useUser();
 
    useEffect(() => {
@@ -77,6 +78,7 @@ const YourAccount = () => {
    };
 
    const handleUpdateAccount = async () => {
+      setIsLoading(true);
       const isInputValid = validasiInput();
       if (isInputValid) {
          const response = await fetch(`/api/users/update-profile/${id}`, {
@@ -94,10 +96,12 @@ const YourAccount = () => {
          const data = await response.json();
 
          if (response.ok) {
+            setIsLoading(false);
             setSuccessUpdate(true);
             setInfoMessage(data.message);
          }
          if (!response.ok) {
+            setIsLoading(false);
             setWarningMessage(data.message);
             setIswarning(true);
          }
@@ -191,6 +195,7 @@ const YourAccount = () => {
             </div>
             <div className='flex items-center mt-5 gap-5'>
                <button
+                  disabled={isLoading}
                   type='button'
                   onClick={handleUpdateAccount}
                   className='w-max btn btn-primary'
