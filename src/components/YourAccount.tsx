@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 'use client';
-import Toast from '@/components/Toast';
 import { useUser } from '@/hooks/useStore';
 import { IUserData } from '@/types';
 import {
@@ -9,6 +8,7 @@ import {
    isPhoneNumValid,
 } from '@/utils/validasi';
 import React, { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 
 const YourAccount = () => {
    const [username, setUsername] = useState('');
@@ -18,9 +18,6 @@ const YourAccount = () => {
    const [phone, setphone] = useState('');
    const [role, setRole] = useState('');
    const [warningMessage, setWarningMessage] = useState('');
-   const [infoMessage, setInfoMessage] = useState('');
-   const [successUpdate, setSuccessUpdate] = useState(false);
-   const [isWarning, setIswarning] = useState(false);
    const [isLoading, setIsLoading] = useState(false);
    const { id } = useUser();
 
@@ -39,20 +36,31 @@ const YourAccount = () => {
       if (id) getUserById();
    }, [id]);
 
+   useEffect(() => {
+      if (warningMessage !== '') {
+         Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: warningMessage,
+         });
+         setWarningMessage('');
+      }
+   }, [warningMessage, setWarningMessage]);
+
    const validasiInput = () => {
       //jika username kosong
       if (username === '' || email === '' || role === '') {
-         setWarningMessage('Silahkan lengkapi data');
-         setIswarning(true);
+         setWarningMessage('Lengkapi data username, email, & role');
 
          return false;
       }
+
       //jika format email salah
       const validateEmail = isEmailValid(email);
 
       if (!validateEmail) {
-         setWarningMessage('Format email salah');
-         setIswarning(true);
+         setWarningMessage('Gunakan format email yang benar');
+
          return false;
       }
 
@@ -60,9 +68,8 @@ const YourAccount = () => {
          oldPassword !== '' ? isPasswordValid(oldPassword) : true;
 
       if (!validatePassword) {
-         setIswarning(true);
          setWarningMessage(
-            'Gunakan minimal 8 karakter dan kombinasi huruf kapital'
+            'Gunakan passowrd minimal 8 karakter dan kombinasi huruf kapital'
          );
          return false;
       }
@@ -70,8 +77,7 @@ const YourAccount = () => {
       const validatePhoneNum = isPhoneNumValid(phone);
 
       if (!validatePhoneNum) {
-         setIswarning(true);
-         setWarningMessage('Format No HP salah');
+         setWarningMessage('Gunakan format No HP yang benar');
          return false;
       }
       return true;
@@ -97,13 +103,14 @@ const YourAccount = () => {
 
          if (response.ok) {
             setIsLoading(false);
-            setSuccessUpdate(true);
-            setInfoMessage(data.message);
-         }
-         if (!response.ok) {
+            Swal.fire('Good job!', data.message, 'success');
+         } else {
             setIsLoading(false);
-            setWarningMessage(data.message);
-            setIswarning(true);
+            Swal.fire({
+               icon: 'error',
+               title: 'Oops...',
+               text: data.message,
+            });
          }
       }
    };
@@ -204,19 +211,6 @@ const YourAccount = () => {
                </button>
             </div>
          </div>
-         <Toast
-            message={warningMessage}
-            mode='WARNING'
-            show={isWarning}
-            setShow={setIswarning}
-         />
-         <Toast
-            message={infoMessage}
-            mode='SUKSES'
-            show={successUpdate}
-            setShow={setSuccessUpdate}
-            timer={10000}
-         />
       </div>
    );
 };

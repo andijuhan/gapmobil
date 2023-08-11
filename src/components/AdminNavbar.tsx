@@ -21,7 +21,7 @@ const AdminNavbar = ({ data }: { data: IUserData }) => {
       setUsername(data.username);
       setEmail(data.email);
       setRole(data.role);
-   }, []);
+   }, [data]);
 
    const handleLougout = async () => {
       const response = await fetch('/api/auth/logout');

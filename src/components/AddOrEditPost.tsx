@@ -19,8 +19,7 @@ const AddOrEditPost = ({ mode }: IAddOrEditPostProps) => {
    const [category, setCategory] = useState<string>('');
    const [image, setImage] = useState<string[]>([]);
    const { username } = useUser();
-   const [warning, setWarning] = useState<boolean>(false);
-   const [warningrMessage, setWarningMessage] = useState<string>('');
+   const [warningMessage, setWarningMessage] = useState<string>('');
 
    const removeFeaturedImage = () => {
       const newArray = [...image];
@@ -45,11 +44,15 @@ const AddOrEditPost = ({ mode }: IAddOrEditPostProps) => {
    };
 
    useEffect(() => {
-      if (warningrMessage !== '') {
-         Swal.fire('Warning!', warningrMessage, 'warning');
+      if (warningMessage !== '') {
+         Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: warningMessage,
+         });
          setWarningMessage('');
       }
-   }, [warningrMessage, setWarningMessage]);
+   }, [warningMessage, setWarningMessage]);
 
    const publishHandle = async (published: boolean) => {
       const isInputValidated = validateInput();
@@ -89,7 +92,7 @@ const AddOrEditPost = ({ mode }: IAddOrEditPostProps) => {
             <div className='w-[70%] px-4 py-8 lg-p-7 bg-white rounded-lg flex flex-col gap-5'>
                <div className='w-full flex items-center mt-4'>
                   <label className='w-[10%]' htmlFor='title'>
-                     Images
+                     Gambar
                   </label>
                   <CloudinaryMediaLiblaryWidget
                      images={image}
@@ -97,7 +100,7 @@ const AddOrEditPost = ({ mode }: IAddOrEditPostProps) => {
                   >
                      {(handleGalery) => (
                         <button onClick={handleGalery} className='btn'>
-                           Post Images
+                           Gambar Post
                         </button>
                      )}
                   </CloudinaryMediaLiblaryWidget>
@@ -105,7 +108,7 @@ const AddOrEditPost = ({ mode }: IAddOrEditPostProps) => {
 
                <div className='w-full flex items-center mt-4'>
                   <label className='w-[10%]' htmlFor='title'>
-                     Title
+                     Judul
                   </label>
                   <input
                      name='title'
@@ -119,13 +122,11 @@ const AddOrEditPost = ({ mode }: IAddOrEditPostProps) => {
                </div>
                <div className='w-full flex'>
                   <label className='w-[10%]' htmlFor='content'>
-                     Content
+                     Konten
                   </label>
                   <div
                      data-color-mode='light'
-                     className={`font-normal rounded-md focus:outline-none ${
-                        content === '' && warning ? 'border-red-400' : ''
-                     } w-[90%]`}
+                     className='font-normal rounded-md focus:outline-none w-[90%]'
                   >
                      <MDEditor
                         height={500}
@@ -137,7 +138,7 @@ const AddOrEditPost = ({ mode }: IAddOrEditPostProps) => {
                </div>
                <div className='w-full flex items-center'>
                   <label className='w-[10%]' htmlFor='category'>
-                     Category
+                     Kategori
                   </label>
                   <select
                      name='category'

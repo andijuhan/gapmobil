@@ -10,11 +10,11 @@ import MDEditor from '@uiw/react-md-editor';
 import { useEffect, useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import CloudinaryMediaLiblaryWidget from './CloudinaryMediaLiblaryWidget';
-import Toast from './Toast';
 import { useRouter } from 'next/navigation';
 import useSWR from 'swr';
 import { fetcher } from '@/utils';
 import { useUser } from '@/hooks/useStore';
+import Swal from 'sweetalert2';
 
 interface IAddOrEditCarProps {
    mode: 'ADD_NEW' | 'UPDATE';
@@ -22,6 +22,9 @@ interface IAddOrEditCarProps {
 }
 
 const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
+   const [isDataLoaded, setIsDataLoaded] = useState<boolean>(
+      mode === 'UPDATE' ? false : true
+   );
    const [merek, setMerek] = useState('');
    const [model, setModel] = useState('');
    const [tahun, setTahun] = useState<number>(2000);
@@ -42,8 +45,7 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
    const [images, setImages] = useState<string[]>([]);
    const [deskripsi, setDeskripsi] = useState<string | undefined>('');
    const [slug, setSlug] = useState<string>('');
-   const [sumbited, setSumbited] = useState(false);
-   const [warning, setWarning] = useState(false);
+   const [warningMessage, setWarningMessage] = useState<string>('');
    const [isLoading, setIsloading] = useState(false);
    const generateYear = generateCarModelYear();
    const [carModels, setCarModels] = useState<string[]>([]);
@@ -55,9 +57,12 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
       const getCarBrandById = async () => {
          try {
             const response = await fetch(`/api/cars/${carId}`);
-            if (!response.ok) {
+            if (response.ok) {
+               setIsDataLoaded(true);
+            } else {
                router.push('/cars/manage-cars');
             }
+
             const data: ICarData = await response.json();
             setMerek(data?.merek);
             setModel(data?.model_);
@@ -78,6 +83,7 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
             setDeskripsi(data?.deskripsi);
          } catch (error) {
             console.log(error);
+            setIsDataLoaded(false);
          }
       };
       if (mode === 'UPDATE') getCarBrandById();
@@ -113,26 +119,55 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
       setDeskripsi('');
    };
 
-   const validateForm = () => {
-      if (
-         !merek ||
-         harga === 0 ||
-         jarakTempuh === 0 ||
-         !warna ||
-         !tglReg ||
-         !masaBerlakuStnk ||
-         !deskripsi ||
-         images.length === 0
-      ) {
-         setWarning(true);
-         return false;
+   useEffect(() => {
+      if (warningMessage !== '') {
+         Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: warningMessage,
+         });
+         setWarningMessage('');
       }
-      return true;
+   }, [warningMessage, setWarningMessage]);
+
+   const validateInput = () => {
+      if (merek === '') {
+         setWarningMessage('Silahkan pilih merek mobil');
+         return false;
+      } else if (model === '') {
+         setWarningMessage('Silahkan pilih model mobil');
+         return false;
+      } else if (harga === 0) {
+         setWarningMessage('Harga tidak boleh kosong');
+         return false;
+      } else if (jarakTempuh === 0) {
+         setWarningMessage('Jarak tempuh tidak boleh kosong');
+         return false;
+      } else if (warna === '') {
+         setWarningMessage('Silahkan isi kolom warna');
+         return false;
+      } else if (tglReg === '') {
+         setWarningMessage('Silahkan isi kolom tanggal registrasi');
+         return false;
+      } else if (masaBerlakuStnk === '') {
+         setWarningMessage('Silahkan isi kolom masa berlaku STNK');
+         return false;
+      } else if (images.length === 0) {
+         setWarningMessage('Gambar galeri tidak boleh kosong');
+         return false;
+      } else if (deskripsi === '') {
+         setWarningMessage('Silahkan isi kolom deskripsi');
+         return false;
+      } else {
+         setWarningMessage('');
+         return true;
+      }
    };
 
    const publishHandler = async (isDraft: boolean) => {
       const slug = createSlug(merek);
-      if (validateForm()) {
+      const isInputValidated = validateInput();
+      if (isInputValidated) {
          try {
             // Send data to the API endpoint using fetch or Axios
             setIsloading(true);
@@ -166,7 +201,11 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
             });
 
             if (response.ok) {
-               setSumbited(true);
+               Swal.fire(
+                  'Good job!',
+                  `${merek} ${model} ${tahun} berhasil di publish!`,
+                  'success'
+               );
                setIsloading(false);
                resetForm();
             }
@@ -178,7 +217,7 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
    };
 
    const updateHandler = async (isDraft: boolean) => {
-      if (validateForm()) {
+      if (validateInput()) {
          try {
             // Send data to the API endpoint using fetch or Axios
             setIsloading(true);
@@ -211,7 +250,11 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
             });
 
             if (response.ok) {
-               setSumbited(true);
+               Swal.fire(
+                  'Good job!',
+                  `${merek} ${model} ${tahun} berhasil di update!`,
+                  'success'
+               );
                setIsloading(false);
             }
          } catch (error) {
@@ -230,29 +273,6 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
    };
    return (
       <div className='p-2 lg:p-7 rounded-lg h-full mt-5 text-sm'>
-         <Toast
-            show={sumbited}
-            setShow={setSumbited}
-            mode='SUKSES'
-            message={
-               mode == 'ADD_NEW'
-                  ? 'Sukses menambahkan data'
-                  : 'Sukses mengupdate data'
-            }
-         />
-         <Toast
-            show={warning}
-            setShow={setWarning}
-            mode='WARNING'
-            message='Silahkan lengkapi data'
-         />
-         <Toast
-            show={isLoading}
-            setShow={setIsloading}
-            mode='LOADING'
-            message='Mohon tunggu'
-         />
-
          <h1 className='text-xl font-medium mb-7'>
             {mode === 'ADD_NEW' ? 'Tambah mobil' : 'Update mobil'}
          </h1>
@@ -268,12 +288,11 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                      Merek*
                   </label>
                   <select
-                     className={`select select-bordered uppercase col-span-2 ${
-                        merek === '' && warning ? 'input-error' : ''
-                     }`}
+                     className='select select-bordered uppercase col-span-2'
                      id='merek'
                      name='merek'
                      value={merek}
+                     disabled={!isDataLoaded}
                      onChange={(e) => setMerek(e.target.value)}
                   >
                      <option value=''>Pilih merek</option>
@@ -290,17 +309,14 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                      Model*
                   </label>
                   <select
-                     className={`select select-bordered uppercase col-span-2 ${
-                        model === '' && warning ? 'input-error' : ''
-                     }`}
+                     className='select select-bordered uppercase col-span-2'
                      id='model'
                      name='model'
                      value={model}
+                     disabled={!isDataLoaded}
                      onChange={(e) => setModel(e.target.value)}
                   >
-                     {(carModels as any[])?.length === 0 ? (
-                        <option value=''>Belum ada data</option>
-                     ) : null}
+                     <option value=''>Belum ada data</option>
                      {(carModels as any[])?.map((item) => (
                         <option key={item?.id} value={item?.modelName}>
                            {item?.modelName}
@@ -314,12 +330,11 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                      Tahun*
                   </label>
                   <select
-                     className={`select select-bordered col-span-2 ${
-                        model === '' && warning ? 'select-error' : ''
-                     }`}
+                     className='select select-bordered col-span-2'
                      id='tahun'
                      name='tahun'
                      value={tahun}
+                     disabled={!isDataLoaded}
                      onChange={(e) => setTahun(Number(e.target.value))}
                   >
                      {generateYear.map((year) => (
@@ -335,14 +350,13 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                      Harga*
                   </label>
                   <input
-                     className={`input input-bordered col-span-2 ${
-                        harga === 0 && warning ? 'input-error' : ''
-                     }`}
+                     className='input input-bordered col-span-2'
                      type='number'
                      id='harga'
                      name='harga'
                      placeholder='220.000.000'
                      value={harga}
+                     disabled={!isDataLoaded}
                      onChange={(e) => setHarga(Number(e.target.value))}
                   />
                </div>
@@ -353,14 +367,13 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            Jarak Tempuh*
                         </label>
                         <input
-                           className={`input input-bordered col-span-2 ${
-                              jarakTempuh === 0 && warning ? 'input-error' : ''
-                           }`}
+                           className='input input-bordered col-span-2'
                            type='number'
                            id='jarakTempuh'
                            name='jarakTempuh'
                            placeholder='10.000 km'
                            value={jarakTempuh}
+                           disabled={!isDataLoaded}
                            onChange={(e) =>
                               setJarakTempuh(Number(e.target.value))
                            }
@@ -376,6 +389,7 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            id='tipeRegistrasi'
                            name='tipeRegistrasi'
                            value={tipeRegistrasi}
+                           disabled={!isDataLoaded}
                            onChange={(e) => setTipeRegistrasi(e.target.value)}
                         />
                      </div>
@@ -388,6 +402,7 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            name='transmisi'
                            id='transmisi'
                            value={transmisi}
+                           disabled={!isDataLoaded}
                            onChange={(e) => setTransmisi(e.target.value)}
                         >
                            <option value='MT'>MT</option>
@@ -403,6 +418,7 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            name='garansi'
                            id='garansi'
                            value={garansi ? 'Ya' : 'Tidak'}
+                           disabled={!isDataLoaded}
                            onChange={(e) =>
                               setGaransi(e.target.value === 'Ya' ? true : false)
                            }
@@ -420,6 +436,7 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            name='bahanBakar'
                            id='bahanBakar'
                            value={bahanBakar}
+                           disabled={!isDataLoaded}
                            onChange={(e) => setBahanBakar(e.target.value)}
                         >
                            <option value='Bensin'>Bensin</option>
@@ -437,6 +454,7 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            name='tanganKe'
                            placeholder='1'
                            value={tanganKe}
+                           disabled={!isDataLoaded}
                            min={1}
                            onChange={(e) => setTanganKe(Number(e.target.value))}
                         />
@@ -449,6 +467,7 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            className='select select-bordered col-span-2'
                            name='tempatDuduk'
                            id='tempatDuduk'
+                           disabled={!isDataLoaded}
                            value={tempatDuduk}
                            onChange={(e) =>
                               setTempatDuduk(Number(e.target.value))
@@ -464,14 +483,13 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            Warna*
                         </label>
                         <input
-                           className={`input input-bordered col-span-2 ${
-                              warna === '' && warning ? 'input-error' : ''
-                           }`}
+                           className='input input-bordered col-span-2'
                            type='text'
                            id='warna'
                            name='warna'
                            placeholder='Hitam'
                            value={warna}
+                           disabled={!isDataLoaded}
                            onChange={(e) => setWarna(e.target.value)}
                         />
                      </div>
@@ -480,13 +498,12 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            Tanggal Registrasi*
                         </label>
                         <input
-                           className={`input input-bordered col-span-2 ${
-                              tglReg === '' && warning ? 'input-error' : ''
-                           }`}
+                           className='input input-bordered col-span-2'
                            type='date'
                            id='tglReg'
                            name='tglReg'
                            value={tglReg}
+                           disabled={!isDataLoaded}
                            onChange={(e) => setTglReg(e.target.value)}
                         />
                      </div>
@@ -495,15 +512,12 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            Masa Berlaku STNK*
                         </label>
                         <input
-                           className={`input input-bordered col-span-2 ${
-                              masaBerlakuStnk === '' && warning
-                                 ? 'input-error'
-                                 : ''
-                           }`}
+                           className='input input-bordered col-span-2'
                            type='date'
                            id='masaBerlakuStnk'
                            name='masaBerlakuStnk'
                            value={masaBerlakuStnk}
+                           disabled={!isDataLoaded}
                            onChange={(e) => setMasaBerlakuStnk(e.target.value)}
                         />
                      </div>
@@ -516,6 +530,7 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            name='statusOdo'
                            id='statusOdo'
                            value={statusOdo}
+                           disabled={!isDataLoaded}
                            onChange={(e) => setStatusOdo(e.target.value)}
                         >
                            <option value='Asli'>Asli</option>
@@ -526,11 +541,7 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                </div>
             </form>
             <div className='flex flex-col rounded-lg p-5 bg-white h-min'>
-               <div
-                  className={`h-[300px] border rounded-lg w-full flex flex-col justify-center items-center gap-4 ${
-                     images.length === 0 && warning ? 'border-red-400' : ''
-                  }`}
-               >
+               <div className='h-[300px] border rounded-lg w-full flex flex-col justify-center items-center gap-4'>
                   <CloudinaryMediaLiblaryWidget
                      images={images}
                      setImages={setImages}
@@ -576,9 +587,7 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                   <label htmlFor='deskripsi'>Deskripsi*</label>
                   <div
                      data-color-mode='light'
-                     className={`font-normal p-3 rounded-md border focus:outline-none ${
-                        deskripsi === '' && warning ? 'border-red-400' : ''
-                     }`}
+                     className='font-normal p-3 rounded-md border focus:outline-none'
                   >
                      <MDEditor
                         height={400}

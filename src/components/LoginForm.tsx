@@ -1,27 +1,40 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Toast from './Toast';
+import Swal from 'sweetalert2';
 
 const LoginForm = () => {
    const [username, setUsername] = useState('');
    const [password, setPassword] = useState('');
    const [warningMessage, setWarningMessage] = useState('');
-   const [warning, setWarning] = useState(false);
+
    const router = useRouter();
+
+   useEffect(() => {
+      if (warningMessage !== '') {
+         Swal.fire({
+            position: 'top-end',
+            icon: 'error',
+            title: 'Oops...',
+            text: warningMessage,
+            timer: 3000,
+            showConfirmButton: false,
+         });
+         setWarningMessage('');
+      }
+   }, [warningMessage, setWarningMessage]);
 
    const validateInput = () => {
       if (username === '' || password === '') {
          setWarningMessage('Masukan username dan password');
-         setWarning(true);
          return false;
       }
       return true;
    };
 
    const handleLogin = async () => {
-      const isInputValidate = validateInput();
-      if (isInputValidate) {
+      const isInputValidated = validateInput();
+      if (isInputValidated) {
          const response = await fetch('/api/auth/login', {
             method: 'POST',
             headers: {
@@ -34,11 +47,16 @@ const LoginForm = () => {
 
          if (response.ok) {
             router.push('/dashboard');
-         }
-
-         if (!response.ok) {
-            setWarningMessage(data.message);
-            setWarning(true);
+         } else {
+            Swal.fire({
+               position: 'top-end',
+               icon: 'error',
+               title: 'Oops...',
+               text: data.message,
+               timer: 3000,
+               showConfirmButton: false,
+            });
+            setWarningMessage('');
          }
       }
    };
@@ -72,12 +90,6 @@ const LoginForm = () => {
                </div>
             </div>
          </div>
-         <Toast
-            message={warningMessage}
-            mode='WARNING'
-            show={warning}
-            setShow={setWarning}
-         />
       </>
    );
 };

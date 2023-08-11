@@ -18,6 +18,7 @@ const getUser = async () => {
    if (!token) {
       redirect(`${process.env.BASE_URL}/auth`);
    }
+
    try {
       const response = await fetch(`${process.env.BASE_URL}/api/auth/me`, {
          headers: {

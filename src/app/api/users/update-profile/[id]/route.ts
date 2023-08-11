@@ -62,8 +62,25 @@ export const PATCH = async (req: Request, { params }: IParams) => {
          oldPassword !== ''
             ? await argon2.verify(isUserExist?.password || '', oldPassword)
             : false;
+
+      if (oldPassword !== '' && newPassword !== '' && !isPasswordMatch) {
+         return NextResponse.json(
+            {
+               message: 'Password yang Anda masukan tidak cocok',
+            },
+            { status: 500 }
+         );
+      }
       //cek apakah user mengupdate passwordnya
       const isPasswordUpdated = oldPassword !== newPassword;
+      if (oldPassword !== '' && newPassword !== '' && !isPasswordUpdated) {
+         return NextResponse.json(
+            {
+               message: 'Gunakan password yang berbeda',
+            },
+            { status: 500 }
+         );
+      }
       //jika password cocok dan user mengupdate passwordnya
       //update password lama di databse dengan password baru
       const hash = await argon2.hash(newPassword);
