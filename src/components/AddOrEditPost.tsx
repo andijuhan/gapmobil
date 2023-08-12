@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
-import { convertISOdateToStandar, createSlug } from '@/utils';
+import { createSlug } from '@/utils';
 import MDEditor from '@uiw/react-md-editor';
 import { useEffect, useState } from 'react';
 import CloudinaryMediaLiblaryWidget from './CloudinaryMediaLiblaryWidget';
@@ -20,6 +20,13 @@ const AddOrEditPost = ({ mode }: IAddOrEditPostProps) => {
    const [image, setImage] = useState<string[]>([]);
    const { username } = useUser();
    const [warningMessage, setWarningMessage] = useState<string>('');
+
+   const resetInput = () => {
+      setTitle('');
+      setContent('');
+      setCategory('');
+      setImage([]);
+   };
 
    const removeFeaturedImage = () => {
       const newArray = [...image];
@@ -64,7 +71,7 @@ const AddOrEditPost = ({ mode }: IAddOrEditPostProps) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                slug,
-               status: published,
+               published,
                title,
                content,
                category,
@@ -74,9 +81,13 @@ const AddOrEditPost = ({ mode }: IAddOrEditPostProps) => {
          });
 
          const data = await response.json();
+         const message = published
+            ? 'Post berhasil di publish!'
+            : 'Post berhasil di simpan';
 
          if (response.ok) {
-            Swal.fire('Good job!', 'Post berhasil di publish!', 'success');
+            Swal.fire('Good job!', message, 'success');
+            resetInput();
          } else {
             console.log(data.message);
          }
@@ -90,10 +101,7 @@ const AddOrEditPost = ({ mode }: IAddOrEditPostProps) => {
          </h1>
          <div className='flex gap-5 font-medium'>
             <div className='w-[70%] px-4 py-8 lg-p-7 bg-white rounded-lg flex flex-col gap-5'>
-               <div className='w-full flex items-center mt-4'>
-                  <label className='w-[10%]' htmlFor='title'>
-                     Gambar
-                  </label>
+               <div className='w-full flex flex-col gap-3'>
                   <CloudinaryMediaLiblaryWidget
                      images={image}
                      setImages={() => {}}
@@ -106,27 +114,23 @@ const AddOrEditPost = ({ mode }: IAddOrEditPostProps) => {
                   </CloudinaryMediaLiblaryWidget>
                </div>
 
-               <div className='w-full flex items-center mt-4'>
-                  <label className='w-[10%]' htmlFor='title'>
-                     Judul
-                  </label>
+               <div className='w-full flex flex-col gap-3 mt-4'>
+                  <label htmlFor='title'>Judul</label>
                   <input
                      name='title'
                      id='title'
                      type='text'
                      placeholder='Title'
-                     className='input input-bordered w-[90%]'
+                     className='input input-bordered'
                      value={title}
                      onChange={(e) => setTitle(e.target.value)}
                   />
                </div>
-               <div className='w-full flex'>
-                  <label className='w-[10%]' htmlFor='content'>
-                     Konten
-                  </label>
+               <div className='w-full flex flex-col gap-3'>
+                  <label htmlFor='content'>Konten</label>
                   <div
                      data-color-mode='light'
-                     className='font-normal rounded-md focus:outline-none w-[90%]'
+                     className='font-normal rounded-md focus:outline-none'
                   >
                      <MDEditor
                         height={500}
@@ -136,10 +140,8 @@ const AddOrEditPost = ({ mode }: IAddOrEditPostProps) => {
                      />
                   </div>
                </div>
-               <div className='w-full flex items-center'>
-                  <label className='w-[10%]' htmlFor='category'>
-                     Kategori
-                  </label>
+               <div className='w-full flex flex-col gap-3'>
+                  <label htmlFor='category'>Kategori</label>
                   <select
                      name='category'
                      id='category'
@@ -187,7 +189,11 @@ const AddOrEditPost = ({ mode }: IAddOrEditPostProps) => {
                   >
                      Publish
                   </button>
-                  <button type='button' className='btn'>
+                  <button
+                     onClick={() => publishHandle(false)}
+                     type='button'
+                     className='btn'
+                  >
                      Draft
                   </button>
                </div>

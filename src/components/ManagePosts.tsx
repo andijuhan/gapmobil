@@ -1,79 +1,41 @@
 /* eslint-disable @next/next/no-img-element */
-'use client';
+import { IPostData } from '@/types';
+import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
-import { format } from 'date-fns';
 import {
    AiFillDelete,
    AiFillEye,
    AiOutlineLoading3Quarters,
 } from 'react-icons/ai';
+import { format } from 'date-fns';
 import useDebounce from '@/hooks/useDebounce';
-import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { useRouter } from 'next/navigation';
-import { formatPrice } from '@/utils';
-import { ICarData } from '@/types';
 import { mutate } from 'swr';
-import Dialog from './Dialog';
+import Swal from 'sweetalert2';
 
-interface IManageCarProps {
-   apiResponse: ICarData[];
-   totalPage: number;
+interface IManagePostProps {
+   apiResponse: IPostData[];
    loading: boolean;
 }
 
-const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
-   const [cars, setCar] = useState<ICarData[]>([]);
-   const [carId, setCarId] = useState<String[]>([]);
+const ManagePosts = ({ apiResponse, loading }: IManagePostProps) => {
+   console.log(apiResponse);
+   const [posts, setPosts] = useState<IPostData[]>([]);
+   const [postId, setPostId] = useState<String[]>([]);
    const [sort, setSort] = useState<string>('');
    const [order, setOrder] = useState<string>('desc');
    const [searchKeyword, setSearchKeyword] = useState<string>('');
    const debounceSearch: string = useDebounce(searchKeyword, 1000);
-   const searchParam = useSearchParams();
-   const router = useRouter();
-   const [take, setTake] = useState<number>(10);
-   const [deleteDialog, setDeleteDialog] = useState(false);
-   const [multiDeleteDialog, setMultiDeleteDialog] = useState(false);
-   const [selectedCar, setSelectedCar] = useState('');
-
-   let page = Number(searchParam.get('page')) || 1;
 
    useEffect(() => {
       if (!loading) {
-         setCar(apiResponse);
+         setPosts(apiResponse);
       }
    }, [apiResponse]);
-
-   const handleSelectCar = (
-      event: React.ChangeEvent<HTMLInputElement>,
-      productId: string
-   ) => {
-      const isChecked = event.target.checked;
-
-      if (isChecked) {
-         setCarId((prevCarId) => [...prevCarId, productId]);
-      } else {
-         setCarId((prevCarId) => prevCarId.filter((id) => id !== productId));
-      }
-   };
-
-   const handleSelectAllCar = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const isChecked = event.target.checked;
-
-      if (isChecked) {
-         const getAllCarId = cars.map((item) => {
-            return item.id;
-         });
-         setCarId(getAllCarId);
-      } else {
-         setCarId([]);
-      }
-   };
 
    useEffect(() => {
       const handleSortAndOrder = async () => {
          const response = await fetch(
-            `/api/cars/?sortby=${sort}&&order=${order}`,
+            `/api/posts/?sortby=${sort}&&order=${order}`,
             {
                headers: {
                   'Content-Type': 'application/json',
@@ -82,7 +44,8 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
          );
 
          const data = await response.json();
-         setCar(data.cars);
+         console.log(data);
+         setPosts(data);
       };
       if (sort !== '') handleSortAndOrder();
    }, [sort, setSort, order, setOrder]);
@@ -91,7 +54,7 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
       const handleSearch = async () => {
          if (debounceSearch !== '') {
             const response = await fetch(
-               `/api/cars/?search=${debounceSearch}`,
+               `/api/posts/?search=${debounceSearch}`,
                {
                   headers: {
                      'Content-Type': 'application/json',
@@ -100,76 +63,88 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
             );
 
             const data = await response.json();
-            setCar(data.cars);
+            setPosts(data);
          }
       };
       if (debounceSearch !== '' && debounceSearch.length > 2) {
          handleSearch();
       } else {
-         setCar(apiResponse);
+         setPosts(apiResponse);
       }
    }, [debounceSearch]);
 
-   useEffect(() => {
-      const handlePagination = async () => {
-         const response = await fetch(
-            `/api/cars/?sortby=${sort}&&order=${order}&&page=${page}&&take=${take}`,
-            {
-               headers: {
-                  'Content-Type': 'application/json',
-               },
+   const handleSelectPost = (
+      event: React.ChangeEvent<HTMLInputElement>,
+      postId: string
+   ) => {
+      const isChecked = event.target.checked;
+
+      if (isChecked) {
+         setPostId((prevPostId) => [...prevPostId, postId]);
+      } else {
+         setPostId((prevPostId) => prevPostId.filter((id) => id !== postId));
+      }
+   };
+
+   const handleSelectAllPost = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const isChecked = event.target.checked;
+
+      if (isChecked) {
+         const getAllPostId = posts.map((item) => {
+            return item.id;
+         });
+         setPostId(getAllPostId);
+      } else {
+         setPostId([]);
+      }
+   };
+
+   const handleDelete = (postId: string, title: string) => {
+      Swal.fire({
+         title: 'Apakah Anda yakin?',
+         text: `Hapus post berjudul ${title}!`,
+         icon: 'warning',
+         showCancelButton: true,
+         confirmButtonColor: '#3085d6',
+         cancelButtonColor: '#d33',
+         confirmButtonText: 'Yes, delete it!',
+      }).then(async (result) => {
+         if (result.isConfirmed) {
+            const response = await fetch(`/api/posts/${postId}`, {
+               method: 'DELETE',
+            });
+            if (response.ok) {
+               mutate('/api/posts');
+               Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
             }
-         );
-
-         const data = await response.json();
-         setCar(data.cars);
-      };
-      if (page > 1) handlePagination();
-   }, [page]);
-
-   const handleNextNavigation = () => {
-      router.push(`?page=${page + 1}`);
-   };
-   const handlePrevNavigation = () => {
-      if (page > 1) {
-         router.push(`?page=${page - 1}`);
-         if (page === 2) {
-            router.push('/cars/manage-cars');
-            setCar(apiResponse);
          }
-      }
-   };
-
-   const handleDelete = async () => {
-      const response = await fetch(`/api/cars/${carId[0]}`, {
-         method: 'DELETE',
       });
-      if (response.ok) {
-         mutate('/api/cars');
-      }
    };
 
    const handleMultipleDelete = async () => {
-      const response = await fetch('/api/cars', {
-         method: 'DELETE',
-         headers: {
-            'Content-Type': 'application/json',
-         },
-         body: JSON.stringify({ carId }),
+      Swal.fire({
+         title: 'Apakah Anda yakin?',
+         text: `Hapus semua post yang di centang!`,
+         icon: 'warning',
+         showCancelButton: true,
+         confirmButtonColor: '#3085d6',
+         cancelButtonColor: '#d33',
+         confirmButtonText: 'Yes, delete it!',
+      }).then(async (result) => {
+         if (result.isConfirmed) {
+            const response = await fetch('/api/posts', {
+               method: 'DELETE',
+               headers: {
+                  'Content-Type': 'application/json',
+               },
+               body: JSON.stringify({ postId }),
+            });
+            if (response.ok) {
+               mutate('/api/posts');
+               Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
+            }
+         }
       });
-      if (response.ok) {
-         mutate('/api/cars');
-      }
-   };
-
-   const confirmDelete = (id: string, carName: string) => {
-      setDeleteDialog(true);
-      setCarId([id]);
-      setSelectedCar(carName);
-   };
-
-   const confirmMultiDelete = () => {
-      setMultiDeleteDialog(true);
    };
 
    return (
@@ -177,17 +152,16 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
          <div className='flex flex-col lg:flex-row justify-between items-center mb-[20px] gap-5 font-medium'>
             <div className='flex gap-5 items-center'>
                <select
+                  value={sort}
+                  onChange={(e) => setSort(e.target.value)}
                   className='select select-bordered'
                   name='sort'
                   id='sort'
-                  value={sort}
-                  onChange={(e) => setSort(e.target.value)}
                >
                   <option value=''>Sort by</option>
-                  <option value='merek'>Merek</option>
+                  <option value='title'>Judul</option>
                   <option value='status'>Status</option>
-                  <option value='updateAt'>Last Update</option>
-                  <option value='harga'>Price</option>
+                  <option value='updateAt'>Tgl update</option>
                </select>
                <select
                   className='select select-bordered'
@@ -200,30 +174,30 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
                   <option value='desc'>DESC</option>
                </select>
                <button
-                  disabled={carId.length === 0}
+                  disabled={postId.length === 0}
                   className='btn capitalize'
-                  onClick={confirmMultiDelete}
+                  onClick={handleMultipleDelete}
                >
-                  Delete {carId.length !== 0 && carId.length}
+                  Delete {postId.length !== 0 && postId.length}
                </button>
             </div>
             <div className='flex items-center gap-5'>
                <input
-                  value={searchKeyword}
-                  onChange={(e) => setSearchKeyword(e.target.value)}
                   className='input input-bordered'
                   type='search'
-                  placeholder='Search Car'
+                  placeholder='Search Posts'
+                  value={searchKeyword}
+                  onChange={(e) => setSearchKeyword(e.target.value)}
                />
             </div>
          </div>
-         {cars?.length === 0 && !loading ? (
+         {posts?.length === 0 && !loading ? (
             <div className='flex flex-col gap-2 p-5 justify-center items-center'>
                <h2 className='text-lg font-medium text-gray-500'>
                   Not available
                </h2>
                <Link href='/cars/add-new-car'>
-                  <button className='btn btn-neutral'>Add new car</button>
+                  <button className='btn btn-neutral'>Add new post</button>
                </Link>
             </div>
          ) : null}
@@ -233,7 +207,7 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
             </div>
          ) : null}
          <div className='overflow-x-auto font-medium'>
-            {cars?.length !== 0 && !loading ? (
+            {posts?.length !== 0 && !loading ? (
                <table className='table'>
                   {/* head */}
                   <thead className='text-base text-gray-800'>
@@ -242,25 +216,25 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
                            <label>
                               <input
                                  type='checkbox'
-                                 onChange={(e) => handleSelectAllCar(e)}
                                  className='checkbox'
+                                 onChange={(e) => handleSelectAllPost(e)}
                               />
                            </label>
                         </th>
-                        <th>Title</th>
+                        <th>Judul</th>
                         <th>Status</th>
-                        <th>Last Update</th>
-                        <th>Price</th>
+                        <th>Tanggal Update</th>
+                        <th>Kategori</th>
                         <th>User</th>
                         <th></th>
                      </tr>
                   </thead>
                   <tbody>
                      {/* row 1 */}
-                     {cars?.map((item) => (
+                     {posts?.map((item) => (
                         <tr
                            className={`hover:bg-gray-50 ${
-                              carId.includes(item.id) && 'bg-gray-100'
+                              postId.includes(item.id) && 'bg-gray-100'
                            }`}
                            key={item.id}
                         >
@@ -268,11 +242,11 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
                               <label>
                                  <input
                                     type='checkbox'
-                                    checked={carId.includes(item.id)}
-                                    onChange={(e) =>
-                                       handleSelectCar(e, item.id)
-                                    }
+                                    checked={postId.includes(item.id)}
                                     className='checkbox'
+                                    onChange={(e) =>
+                                       handleSelectPost(e, item.id)
+                                    }
                                  />
                               </label>
                            </th>
@@ -281,14 +255,12 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
                                  <div className='flex items-center space-x-3'>
                                     <div className='avatar'>
                                        <div className='mask w-20 h-12 rounded-sm object-cover'>
-                                          <img src={item.images[0]} alt='' />
+                                          <img src={item.image} alt='' />
                                        </div>
                                     </div>
                                     <div>
                                        <div className='capitalize'>
-                                          {item.merek.toUpperCase()}{' '}
-                                          {item.model_.toUpperCase()}{' '}
-                                          {item.tahun}
+                                          {item.title.toUpperCase()}
                                        </div>
                                     </div>
                                     <span className='opacity-0 group-hover:opacity-100 text-neutral text-xs'>
@@ -310,20 +282,17 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
                                  'd MMMM yyyy HH:mm'
                               )}
                            </td>
-                           <td>{formatPrice(item.harga)}</td>
+                           <td>{item.categoryIds}</td>
                            <td>{item.username}</td>
 
                            <th>
                               <div className='opacity-50 hover:opacity-40 cursor-pointer flex gap-3'>
                                  <AiFillEye size={22} />
                                  <AiFillDelete
-                                    onClick={() =>
-                                       confirmDelete(
-                                          item.id,
-                                          `${item.merek} ${item.model_} ${item.tahun}`
-                                       )
-                                    }
                                     size={20}
+                                    onClick={() =>
+                                       handleDelete(item.id, item.title)
+                                    }
                                  />
                               </div>
                            </th>
@@ -336,8 +305,8 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
                         <th></th>
                         <th>Title</th>
                         <th>Status</th>
-                        <th>Last Update</th>
-                        <th>Price</th>
+                        <th>Tanggal Update</th>
+                        <th>Kategori</th>
                         <th>User</th>
                         <th></th>
                      </tr>
@@ -346,41 +315,13 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
             ) : null}
 
             <div className='join flex justify-center mt-[40px]'>
-               <button
-                  disabled={page === 1}
-                  onClick={handlePrevNavigation}
-                  className='join-item btn'
-               >
-                  «
-               </button>
-               <button className='join-item btn'>
-                  {page === 0 ? 'Page 1' : `Page ${page}`}
-               </button>
-               <button
-                  disabled={page === totalPage}
-                  onClick={handleNextNavigation}
-                  className='join-item btn'
-               >
-                  »
-               </button>
+               <button className='join-item btn'>«</button>
+               <button className='join-item btn'></button>
+               <button className='join-item btn'>»</button>
             </div>
          </div>
-         <Dialog
-            show={deleteDialog}
-            setShow={setDeleteDialog}
-            title={`Hapus ${selectedCar} ?`}
-            message={`Apakah Anda ingin menghapus ${selectedCar} ?`}
-            callback={handleDelete}
-         />
-         <Dialog
-            show={multiDeleteDialog}
-            setShow={setMultiDeleteDialog}
-            title={`Hapus beberapa mobil ?`}
-            message={`Apakah Anda ingin menghapus beberapa mobil yang dipilih ?`}
-            callback={handleMultipleDelete}
-         />
       </div>
    );
 };
 
-export default ManageCars;
+export default ManagePosts;

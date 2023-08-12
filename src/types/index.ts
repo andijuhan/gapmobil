@@ -35,10 +35,12 @@ export interface IUserData {
 export interface IPostData {
    id: string;
    slug: string;
+   published: boolean;
    title: string;
    content: string;
-   categoryId: string;
    image: string;
    createAt: string;
    updateAt: string;
+   categoryIds: string;
+   username: string;
 }

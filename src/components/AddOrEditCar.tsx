@@ -283,12 +283,12 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                action=''
             >
                <p className='text-sm font-light'>Tanda bintang wajib di isi*</p>
-               <div className='grid grid-cols-3 items-center mt-2'>
+               <div className='flex flex-col gap-3 mt-2'>
                   <label className='' htmlFor='title'>
                      Merek*
                   </label>
                   <select
-                     className='select select-bordered uppercase col-span-2'
+                     className='select select-bordered uppercase w-full max-w-xs'
                      id='merek'
                      name='merek'
                      value={merek}
@@ -304,12 +304,12 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                   </select>
                </div>
 
-               <div className='grid grid-cols-3 items-center mt-2'>
+               <div className='flex flex-col gap-3 mt-2'>
                   <label className='' htmlFor='title'>
                      Model*
                   </label>
                   <select
-                     className='select select-bordered uppercase col-span-2'
+                     className='select select-bordered uppercase w-full max-w-xs'
                      id='model'
                      name='model'
                      value={model}
@@ -325,12 +325,12 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                   </select>
                </div>
 
-               <div className='grid grid-cols-3 items-center mt-2'>
+               <div className='flex flex-col gap-3 mt-2'>
                   <label className='' htmlFor='tahun'>
                      Tahun*
                   </label>
                   <select
-                     className='select select-bordered col-span-2'
+                     className='select select-bordered w-full max-w-xs'
                      id='tahun'
                      name='tahun'
                      value={tahun}
@@ -345,12 +345,12 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                   </select>
                </div>
 
-               <div className='grid grid-cols-3 items-center'>
+               <div className='flex flex-col gap-3'>
                   <label className='' htmlFor='harga'>
                      Harga*
                   </label>
                   <input
-                     className='input input-bordered col-span-2'
+                     className='input input-bordered w-full max-w-xs'
                      type='number'
                      id='harga'
                      name='harga'
@@ -362,12 +362,12 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                </div>
                <div>
                   <div className='flex flex-col gap-3'>
-                     <div className='grid grid-cols-3  items-center'>
+                     <div className='flex flex-col gap-3'>
                         <label className='' htmlFor='jarakTempuh'>
                            Jarak Tempuh*
                         </label>
                         <input
-                           className='input input-bordered col-span-2'
+                           className='input input-bordered w-full max-w-xs'
                            type='number'
                            id='jarakTempuh'
                            name='jarakTempuh'
@@ -379,12 +379,12 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            }
                         />
                      </div>
-                     <div className='grid grid-cols-3  items-center'>
+                     <div className='flex flex-col gap-3'>
                         <label className='' htmlFor='tipeRegistrasi'>
                            Tipe Registrasi
                         </label>
                         <input
-                           className='input input-bordered col-span-2'
+                           className='input input-bordered w-full max-w-xs'
                            type='text'
                            id='tipeRegistrasi'
                            name='tipeRegistrasi'
@@ -393,12 +393,12 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            onChange={(e) => setTipeRegistrasi(e.target.value)}
                         />
                      </div>
-                     <div className='grid grid-cols-3  items-center'>
+                     <div className='flex flex-col gap-3'>
                         <label className='' htmlFor='transmisi'>
                            Transmisi
                         </label>
                         <select
-                           className='select select-bordered col-span-2'
+                           className='select select-bordered w-full max-w-xs'
                            name='transmisi'
                            id='transmisi'
                            value={transmisi}
@@ -409,12 +409,12 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            <option value='AT'>AT</option>
                         </select>
                      </div>
-                     <div className='grid grid-cols-3  items-center'>
+                     <div className='flex flex-col gap-3'>
                         <label className='' htmlFor='garansi'>
                            Garansi
                         </label>
                         <select
-                           className='select select-bordered col-span-2'
+                           className='select select-bordered w-full max-w-xs'
                            name='garansi'
                            id='garansi'
                            value={garansi ? 'Ya' : 'Tidak'}
@@ -427,12 +427,12 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            <option value='Tidak'>Tidak</option>
                         </select>
                      </div>
-                     <div className='grid grid-cols-3  items-center'>
+                     <div className='flex flex-col gap-3'>
                         <label className='' htmlFor='bahanBakar'>
                            Bahan Bakar
                         </label>
                         <select
-                           className='select select-bordered col-span-2'
+                           className='select select-bordered w-full max-w-xs'
                            name='bahanBakar'
                            id='bahanBakar'
                            value={bahanBakar}
@@ -443,12 +443,12 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            <option value='Solar'>Solar</option>
                         </select>
                      </div>
-                     <div className='grid grid-cols-3  items-center'>
+                     <div className='flex flex-col gap-3'>
                         <label className='' htmlFor='tanganKe'>
                            Tangan Ke*
                         </label>
                         <input
-                           className='input input-bordered col-span-2'
+                           className='input input-bordered w-full max-w-xs'
                            type='number'
                            id='tanganKe'
                            name='tanganKe'
@@ -459,12 +459,12 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            onChange={(e) => setTanganKe(Number(e.target.value))}
                         />
                      </div>
-                     <div className='grid grid-cols-3  items-center'>
+                     <div className='flex flex-col gap-3'>
                         <label className='' htmlFor='tempatDuduk'>
                            Tempat Duduk
                         </label>
                         <select
-                           className='select select-bordered col-span-2'
+                           className='select select-bordered w-full max-w-xs'
                            name='tempatDuduk'
                            id='tempatDuduk'
                            disabled={!isDataLoaded}
@@ -478,12 +478,12 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            <option value='8'>8</option>
                         </select>
                      </div>
-                     <div className='grid grid-cols-3  items-center'>
+                     <div className='flex flex-col gap-3'>
                         <label className='' htmlFor='warna'>
                            Warna*
                         </label>
                         <input
-                           className='input input-bordered col-span-2'
+                           className='input input-bordered w-full max-w-xs'
                            type='text'
                            id='warna'
                            name='warna'
@@ -493,12 +493,12 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            onChange={(e) => setWarna(e.target.value)}
                         />
                      </div>
-                     <div className='grid grid-cols-3 items-center'>
+                     <div className='flex flex-col gap-3'>
                         <label className='' htmlFor='tglReg'>
                            Tanggal Registrasi*
                         </label>
                         <input
-                           className='input input-bordered col-span-2'
+                           className='input input-bordered w-full max-w-xs'
                            type='date'
                            id='tglReg'
                            name='tglReg'
@@ -507,12 +507,12 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            onChange={(e) => setTglReg(e.target.value)}
                         />
                      </div>
-                     <div className='grid grid-cols-3  items-center'>
+                     <div className='flex flex-col gap-3'>
                         <label className='' htmlFor='masaBerlakuStnk'>
                            Masa Berlaku STNK*
                         </label>
                         <input
-                           className='input input-bordered col-span-2'
+                           className='input input-bordered w-full max-w-xs'
                            type='date'
                            id='masaBerlakuStnk'
                            name='masaBerlakuStnk'
@@ -521,12 +521,12 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            onChange={(e) => setMasaBerlakuStnk(e.target.value)}
                         />
                      </div>
-                     <div className='grid grid-cols-3  items-center'>
+                     <div className='flex flex-col gap-3'>
                         <label className='' htmlFor='statusOdo'>
                            Status Odomoter*
                         </label>
                         <select
-                           className='select select-bordered col-span-2'
+                           className='select select-bordered w-full max-w-xs'
                            name='statusOdo'
                            id='statusOdo'
                            value={statusOdo}

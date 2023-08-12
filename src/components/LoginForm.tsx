@@ -61,36 +61,39 @@ const LoginForm = () => {
       }
    };
    return (
-      <>
-         <div className='p-7 border rounded-xl bg-base-100 flex flex-col gap-5 shadow-sm'>
-            <h2 className='text-xl font-medium text-center mb-3'>Login User</h2>
-            <div className='form-control gap-5'>
+      <div className='p-7 border rounded-xl bg-base-100 flex flex-col gap-5 shadow-lg'>
+         <h2 className='text-xl font-medium text-center mb-3'>Login User</h2>
+         <div className='form-control gap-3'>
+            <div className='flex flex-col gap-1'>
+               <label htmlFor='username'>Username</label>
                <input
                   type='text'
-                  placeholder='Username'
                   className='input input-bordered'
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                />
+            </div>
+            <div className='flex flex-col gap-1'>
+               <label htmlFor='password'>Password</label>
                <input
                   type='password'
-                  placeholder='Password'
                   className='input input-bordered'
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                />
-               <div className='flex items-center gap-3'>
-                  <button
-                     type='button'
-                     onClick={handleLogin}
-                     className='btn btn-primary w-full'
-                  >
-                     Login
-                  </button>
-               </div>
+            </div>
+
+            <div className='flex items-center gap-3 mt-2'>
+               <button
+                  type='button'
+                  onClick={handleLogin}
+                  className='btn btn-primary w-full'
+               >
+                  Login
+               </button>
             </div>
          </div>
-      </>
+      </div>
    );
 };
 

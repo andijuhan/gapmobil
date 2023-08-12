@@ -4,7 +4,6 @@
 import ManageCars from '@/components/ManageCars';
 import { fetcher } from '@/utils';
 import useSWR from 'swr';
-//import { useUser } from '@/hooks/useStore';
 
 const page = () => {
    const { data, error, isLoading } = useSWR('/api/cars', fetcher);
