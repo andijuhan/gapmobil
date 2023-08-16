@@ -11,7 +11,7 @@ import { useSearchParams } from 'next/navigation';
 import { IUserData } from '@/types';
 import { useRouter } from 'next/navigation';
 
-const CreateUser = () => {
+const AddOrEditUser = () => {
    const searchParams = useSearchParams();
    const userId = searchParams.get('id');
    const [username, setUsername] = useState('');
@@ -256,4 +256,4 @@ const CreateUser = () => {
    );
 };
 
-export default CreateUser;
+export default AddOrEditUser;

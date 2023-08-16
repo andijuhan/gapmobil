@@ -28,6 +28,7 @@
     "react": "18.2.0",
     "react-detect-click-outside": "^1.1.7",
     "react-dom": "18.2.0",
+    "react-dropdown-select": "^4.10.0",
     "react-icons": "^4.10.1",
     "sweetalert2": "^11.7.22",
     "swiper": "^10.0.4",

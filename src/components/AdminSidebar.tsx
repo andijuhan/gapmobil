@@ -147,6 +147,13 @@ const AdminSidebar = () => {
                   >
                      <Link href='/posts/add-new-post'>Add New Post</Link>
                   </li>
+                  <li
+                     className={`py-2 hover:text-base-100  cursor-pointer ${
+                        path.includes('category') && 'text-base-100 font-medium'
+                     }`}
+                  >
+                     <Link href='/posts/category'>Manage Category</Link>
+                  </li>
                </ul>
             </div>
             {/* MANAGE USER */}

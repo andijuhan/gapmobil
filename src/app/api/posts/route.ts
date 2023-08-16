@@ -22,7 +22,7 @@ export const GET = async (req: Request) => {
       } else {
          orderBy = { updateAt: 'desc' };
       }
-      const dataPost = await prisma.post.findMany({
+      const posts = await prisma.post.findMany({
          orderBy,
          skip: page,
          take,
@@ -35,7 +35,8 @@ export const GET = async (req: Request) => {
             title: true,
             categories: {
                select: {
-                  name: true,
+                  id: true,
+                  categoryName: true,
                },
             },
             image: true,
@@ -46,7 +47,10 @@ export const GET = async (req: Request) => {
          },
       });
 
-      return NextResponse.json(dataPost);
+      const totalData = await prisma.post.count();
+      const totalPage = Math.ceil(totalData / take);
+
+      return NextResponse.json({ posts, totalPage });
    } catch (error) {
       console.log(error);
       return NextResponse.json(

@@ -11,26 +11,34 @@ import { format } from 'date-fns';
 import useDebounce from '@/hooks/useDebounce';
 import { mutate } from 'swr';
 import Swal from 'sweetalert2';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface IManagePostProps {
    apiResponse: IPostData[];
    loading: boolean;
+   totalPage: number;
 }
 
-const ManagePosts = ({ apiResponse, loading }: IManagePostProps) => {
+const ManagePosts = ({ apiResponse, loading, totalPage }: IManagePostProps) => {
    console.log(apiResponse);
+   const [isLoading, setIsLoading] = useState<boolean>(loading);
    const [posts, setPosts] = useState<IPostData[]>([]);
    const [postId, setPostId] = useState<String[]>([]);
    const [sort, setSort] = useState<string>('');
    const [order, setOrder] = useState<string>('desc');
    const [searchKeyword, setSearchKeyword] = useState<string>('');
    const debounceSearch: string = useDebounce(searchKeyword, 1000);
+   const searchParam = useSearchParams();
+   const router = useRouter();
+   const [take, setTake] = useState<number>(10);
+   let page = Number(searchParam.get('page')) || 1;
 
    useEffect(() => {
+      setIsLoading(loading);
       if (!loading) {
          setPosts(apiResponse);
       }
-   }, [apiResponse]);
+   }, [apiResponse, loading]);
 
    useEffect(() => {
       const handleSortAndOrder = async () => {
@@ -44,8 +52,8 @@ const ManagePosts = ({ apiResponse, loading }: IManagePostProps) => {
          );
 
          const data = await response.json();
-         console.log(data);
-         setPosts(data);
+
+         setPosts(data?.posts);
       };
       if (sort !== '') handleSortAndOrder();
    }, [sort, setSort, order, setOrder]);
@@ -63,7 +71,7 @@ const ManagePosts = ({ apiResponse, loading }: IManagePostProps) => {
             );
 
             const data = await response.json();
-            setPosts(data);
+            setPosts(data?.posts);
          }
       };
       if (debounceSearch !== '' && debounceSearch.length > 2) {
@@ -147,6 +155,42 @@ const ManagePosts = ({ apiResponse, loading }: IManagePostProps) => {
       });
    };
 
+   useEffect(() => {
+      const handlePagination = async () => {
+         setIsLoading(true);
+         const response = await fetch(
+            `/api/posts/?sortby=${sort}&&order=${order}&&page=${page}&&take=${take}`,
+            {
+               headers: {
+                  'Content-Type': 'application/json',
+               },
+            }
+         );
+
+         const data = await response.json();
+         if (response.ok) {
+            setIsLoading(false);
+            setPosts(data.posts);
+         } else {
+            setIsLoading(false);
+         }
+      };
+      if (page > 1) handlePagination();
+   }, [page]);
+
+   const handleNextNavigation = () => {
+      router.push(`?page=${page + 1}`);
+   };
+   const handlePrevNavigation = () => {
+      if (page > 1) {
+         router.push(`?page=${page - 1}`);
+         if (page === 2) {
+            router.push('/posts/manage-posts');
+            setPosts(apiResponse);
+         }
+      }
+   };
+
    return (
       <div>
          <div className='flex flex-col lg:flex-row justify-between items-center mb-[20px] gap-5 font-medium'>
@@ -191,7 +235,7 @@ const ManagePosts = ({ apiResponse, loading }: IManagePostProps) => {
                />
             </div>
          </div>
-         {posts?.length === 0 && !loading ? (
+         {posts?.length === 0 && !isLoading ? (
             <div className='flex flex-col gap-2 p-5 justify-center items-center'>
                <h2 className='text-lg font-medium text-gray-500'>
                   Not available
@@ -201,13 +245,13 @@ const ManagePosts = ({ apiResponse, loading }: IManagePostProps) => {
                </Link>
             </div>
          ) : null}
-         {loading ? (
+         {isLoading ? (
             <div className='flex justify-center items-center'>
                <AiOutlineLoading3Quarters className='animate-spin' size={30} />
             </div>
          ) : null}
          <div className='overflow-x-auto font-medium'>
-            {posts?.length !== 0 && !loading ? (
+            {posts?.length !== 0 && !isLoading ? (
                <table className='table'>
                   {/* head */}
                   <thead className='text-base text-gray-800'>
@@ -251,7 +295,7 @@ const ManagePosts = ({ apiResponse, loading }: IManagePostProps) => {
                               </label>
                            </th>
                            <td className='group'>
-                              <Link href={`/cars/edit-car/${item.id}`}>
+                              <Link href={`/posts/edit-post/${item.id}`}>
                                  <div className='flex items-center space-x-3'>
                                     <div className='avatar'>
                                        <div className='mask w-20 h-12 rounded-sm object-cover'>
@@ -260,7 +304,7 @@ const ManagePosts = ({ apiResponse, loading }: IManagePostProps) => {
                                     </div>
                                     <div>
                                        <div className='capitalize'>
-                                          {item.title.toUpperCase()}
+                                          {item.title}
                                        </div>
                                     </div>
                                     <span className='opacity-0 group-hover:opacity-100 text-neutral text-xs'>
@@ -282,7 +326,7 @@ const ManagePosts = ({ apiResponse, loading }: IManagePostProps) => {
                                  'd MMMM yyyy HH:mm'
                               )}
                            </td>
-                           <td>{item.categoryIds}</td>
+                           <td>{}</td>
                            <td>{item.username}</td>
 
                            <th>
@@ -315,9 +359,23 @@ const ManagePosts = ({ apiResponse, loading }: IManagePostProps) => {
             ) : null}
 
             <div className='join flex justify-center mt-[40px]'>
-               <button className='join-item btn'>«</button>
-               <button className='join-item btn'></button>
-               <button className='join-item btn'>»</button>
+               <button
+                  disabled={page === 1}
+                  onClick={handlePrevNavigation}
+                  className='join-item btn'
+               >
+                  «
+               </button>
+               <button className='join-item btn'>
+                  {page === 0 ? 'Page 1' : `Page ${page}`}
+               </button>
+               <button
+                  disabled={page === totalPage}
+                  onClick={handleNextNavigation}
+                  className='join-item btn'
+               >
+                  »
+               </button>
             </div>
          </div>
       </div>
