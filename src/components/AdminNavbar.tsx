@@ -4,13 +4,13 @@ import { IUserData } from '@/types';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { MdLogout } from 'react-icons/md';
-import { BiChevronDown } from 'react-icons/bi';
+import { FaUser } from 'react-icons/fa';
 import { useDetectClickOutside } from 'react-detect-click-outside';
 
 const AdminNavbar = ({ data }: { data: IUserData }) => {
    const router = useRouter();
    const [showDropDown, setShowDropDown] = useState(false);
-   const { setId, setUsername, setEmail, setRole, username } = useUser();
+   const { setId, setUsername, setEmail, setRole } = useUser();
 
    const dropDownRef = useDetectClickOutside({
       onTriggered: () => setShowDropDown(false),
@@ -31,7 +31,7 @@ const AdminNavbar = ({ data }: { data: IUserData }) => {
    };
 
    return (
-      <div className='navbar bg-primary text-neutral-content shadow-sm fixed z-20'>
+      <div className='navbar bg-gray-800 text-gray-100 shadow-lg fixed z-20'>
          <div className='flex-none'>
             <button className='btn btn-square btn-ghost'>
                <svg
@@ -50,17 +50,17 @@ const AdminNavbar = ({ data }: { data: IUserData }) => {
             </button>
          </div>
          <div className='flex-1'>
-            <a className='btn btn-ghost normal-case text-xl'>Dinamotor</a>
+            <a className='btn btn-ghost text-xl'>Dinamotor</a>
          </div>
          <div className='flex-none relative text-sm mr-4'>
             <button
                onClick={() => setShowDropDown(!showDropDown)}
-               className='btn btn-ghost dropdown capitalize flex items-center gap-2 text-base font-normal'
+               className='btn btn-ghost font-medium dropdown lowercase flex items-center gap-2 text-base'
             >
-               {username} <BiChevronDown />
+               <FaUser size={20} />
             </button>
             <div
-               className={`flex absolute top-10 right-5 bg-base-100 text-neutral px-10 py-4 rounded-lg shadow-lg ${
+               className={`flex absolute top-10 right-5 bg-base-100 text-neutral px-10 py-4 rounded-sm shadow-sm ${
                   showDropDown ? 'opacity-100 scale-100' : 'opacity-0 scale-0'
                } transition-all duration-200`}
                ref={dropDownRef}

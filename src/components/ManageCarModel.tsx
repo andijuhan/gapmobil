@@ -1,17 +1,15 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useSWR, { mutate } from 'swr';
 import { fetcher } from '@/utils';
-import Toast from './Toast';
+import Swal from 'sweetalert2';
 
 const ManageCarModel = () => {
    const [brandName, setBrandName] = useState('');
    const [modelName, setModelName] = useState('');
    const [selectedModelName, setSelectedModelName] = useState('');
    const [modelId, setModelId] = useState<string | null>(null);
-   const [warning, setWarning] = useState(false);
-   const [error, setError] = useState(false);
-   const [errorMessage, setErrorMessage] = useState('');
+   const [warningMessage, setWarningMessage] = useState('');
    const [editMode, setEditMode] = useState(false);
    const { data: carBrandOption } = useSWR('/api/cars/brands', fetcher);
    const { data: carModel } = useSWR(
@@ -54,8 +52,7 @@ const ManageCarModel = () => {
          }
          if (response.status === 409 || response.status === 500) {
             const data = await response.json();
-            setErrorMessage(data.message);
-            setError(true);
+            setWarningMessage(data.message);
          }
       } catch (error: any) {
          console.log('Gagal menambah data:' + error);
@@ -63,41 +60,49 @@ const ManageCarModel = () => {
    };
 
    const handleAddNew = async () => {
-      if (modelName === '' || brandName === '') {
-         setWarning(true);
+      if (brandName === '') {
+         setWarningMessage('Silahkan pilih merek mobil');
+
+         return;
+      } else if (modelName === '') {
+         setWarningMessage('Kolom model mobil tidak boleh kosong');
 
          return;
       }
-      try {
-         const response = await fetch('/api/cars/brands/model', {
-            method: 'POST',
-            headers: {
-               'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-               modelName: modelName,
-               carBrandName: brandName,
-            }),
-         });
+      const response = await fetch('/api/cars/brands/model', {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json',
+         },
+         body: JSON.stringify({
+            modelName: modelName,
+            carBrandName: brandName,
+         }),
+      });
 
-         if (response.ok) {
-            mutate(`/api/cars/brands/model?brand=${brandName}`);
-            setModelName('');
-         }
-
-         if (response.status === 409) {
-            const data = await response.json();
-            setErrorMessage(data.message);
-            setError(true);
-         }
-      } catch (error: any) {
-         console.log('Gagal menambah data:' + error);
+      if (response.ok) {
+         mutate(`/api/cars/brands/model?brand=${brandName}`);
+         setModelName('');
+      } else {
+         const data = await response.json();
+         setWarningMessage(data.message);
       }
    };
 
+   useEffect(() => {
+      if (warningMessage !== '') {
+         Swal.fire({
+            icon: 'error',
+            title: 'Peringatan!',
+            text: warningMessage,
+         });
+         setWarningMessage('');
+      }
+   }, [warningMessage, setWarningMessage]);
+
    return (
       <div className='bg-white p-4 lg:p-7 rounded-lg flex flex-col gap-5'>
-         <h2 className='text-lg'>Brand model</h2>
+         <h2 className='text'>Model mobil</h2>
          <div className='flex gap-2 flex-wrap'>
             {(carModel as any[])?.map((item) => (
                <div
@@ -127,15 +132,13 @@ const ManageCarModel = () => {
             ))}
          </div>
          <select
-            className={`select select-bordered w-full max-w-xs ${
-               warning && 'select-error'
-            }`}
+            className='select select-bordered w-full max-w-xs'
             name='model'
             id='model'
             value={brandName}
             onChange={(e) => setBrandName(e.target.value)}
          >
-            <option value=''>Select brand</option>
+            <option value=''>Pilih merek mobil</option>
             {(carBrandOption as any[])?.map((item) => (
                <option
                   className='uppercase'
@@ -146,15 +149,17 @@ const ManageCarModel = () => {
                </option>
             ))}
          </select>
-         {editMode && (
+         {editMode ? (
             <label htmlFor='brandName'>
-               Edit {selectedModelName} to {modelName}
+               Rubah model {selectedModelName} ke {modelName}
             </label>
+         ) : (
+            <label>Tambah model mobil</label>
          )}
          <input
             className='input input-bordered w-full max-w-xs'
             type='search'
-            placeholder='Brand Model'
+            placeholder='Model mobil'
             value={modelName}
             onChange={(e) => setModelName(e.target.value)}
             onKeyUp={(e) => {
@@ -171,28 +176,15 @@ const ManageCarModel = () => {
                   editMode ? 'btn-secondary' : 'btn-primary'
                } w-min`}
             >
-               {editMode ? 'Update' : 'Add'}
+               {editMode ? 'Perbarui' : 'Tambah'}
             </button>
             <button
                onClick={() => setEditMode(false)}
                className={`${!editMode && 'hidden'} btn w-min`}
             >
-               Cancel
+               Batal
             </button>
          </div>
-
-         <Toast
-            show={warning}
-            setShow={setWarning}
-            mode='WARNING'
-            message='Silahkan pilih merek mobil'
-         />
-         <Toast
-            show={error}
-            setShow={setError}
-            mode='WARNING'
-            message={errorMessage}
-         />
       </div>
    );
 };

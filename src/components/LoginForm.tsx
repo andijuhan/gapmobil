@@ -61,13 +61,14 @@ const LoginForm = () => {
       }
    };
    return (
-      <div className='p-7 border rounded-xl bg-base-100 flex flex-col gap-5 shadow-lg'>
+      <div className='p-10 border rounded-xl bg-base-100 flex flex-col gap-5 shadow-md'>
          <h2 className='text-xl font-medium text-center mb-3'>Login User</h2>
          <div className='form-control gap-3'>
             <div className='flex flex-col gap-1'>
                <label htmlFor='username'>Username</label>
                <input
                   type='text'
+                  placeholder='dupir'
                   className='input input-bordered'
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
@@ -77,6 +78,7 @@ const LoginForm = () => {
                <label htmlFor='password'>Password</label>
                <input
                   type='password'
+                  placeholder='rahasia'
                   className='input input-bordered'
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}

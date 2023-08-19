@@ -26,6 +26,9 @@ export const GET = async (req: Request, { params }: IParams) => {
    try {
       const postById = await prisma.post.findUnique({
          where: { id },
+         include: {
+            categories: true,
+         },
       });
       return NextResponse.json(postById);
    } catch (error) {
@@ -39,12 +42,12 @@ export const GET = async (req: Request, { params }: IParams) => {
 
 export const PATCH = async (req: Request, { params }: IParams) => {
    const id = params.id;
-   const { published, title, content, category, image } = await req.json();
+   const { published, title, content, categoryIds, image } = await req.json();
 
    try {
       const updatedPost = await prisma.post.update({
          where: { id },
-         data: { published, title, content, image },
+         data: { published, title, content, image, categoryIds },
       });
 
       return NextResponse.json(updatedPost);

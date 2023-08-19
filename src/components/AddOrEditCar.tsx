@@ -15,6 +15,7 @@ import useSWR from 'swr';
 import { fetcher } from '@/utils';
 import { useUser } from '@/hooks/useStore';
 import Swal from 'sweetalert2';
+import { BiImageAdd } from 'react-icons/bi';
 
 interface IAddOrEditCarProps {
    mode: 'ADD_NEW' | 'UPDATE';
@@ -123,7 +124,7 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
       if (warningMessage !== '') {
          Swal.fire({
             icon: 'error',
-            title: 'Oops...',
+            title: 'Peringatan!',
             text: warningMessage,
          });
          setWarningMessage('');
@@ -202,7 +203,7 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
 
             if (response.ok) {
                Swal.fire(
-                  'Good job!',
+                  'Sukses!',
                   `${merek} ${model} ${tahun} berhasil di publish!`,
                   'success'
                );
@@ -251,8 +252,8 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
 
             if (response.ok) {
                Swal.fire(
-                  'Good job!',
-                  `${merek} ${model} ${tahun} berhasil di update!`,
+                  'Sukses!',
+                  `${merek} ${model} ${tahun} berhasil di perbarui!`,
                   'success'
                );
                setIsloading(false);
@@ -272,14 +273,14 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
       setImages(updatedArray);
    };
    return (
-      <div className='p-2 lg:p-7 rounded-lg h-full mt-5 text-sm'>
+      <div className='p-2 lg:p-7 rounded-lg mt-5 text-sm'>
          <h1 className='text-xl font-medium mb-7'>
             {mode === 'ADD_NEW' ? 'Tambah mobil' : 'Update mobil'}
          </h1>
 
-         <div className='grid grid-cols-1 lg:grid-cols-2 gap-5 font-medium'>
+         <div className='flex gap-5 font-medium'>
             <form
-               className='flex flex-col gap-3 border rounded-lg p-4 lg:p-7 bg-white'
+               className='w-[30%] flex flex-col gap-3 border rounded-lg p-4 lg:p-7 bg-white'
                action=''
             >
                <p className='text-sm font-light'>Tanda bintang wajib di isi*</p>
@@ -540,39 +541,36 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                   </div>
                </div>
             </form>
-            <div className='flex flex-col rounded-lg p-5 bg-white h-min'>
+            <div className='w-[70%] flex flex-col rounded-lg p-5 bg-white h-min'>
                <div className='h-[300px] border rounded-lg w-full flex flex-col justify-center items-center gap-4'>
                   <CloudinaryMediaLiblaryWidget
                      images={images}
                      setImages={setImages}
                   >
                      {(handleGalery) => (
-                        <button
-                           onClick={handleGalery}
-                           className='btn btn-neutral'
-                        >
-                           Add Image
+                        <button onClick={handleGalery} className='btn'>
+                           <BiImageAdd size={30} />
                         </button>
                      )}
                   </CloudinaryMediaLiblaryWidget>
-                  <p className='text-sm'>Car galery slider</p>
+                  <p className='text-sm'>Tambah gambar</p>
                   <div className='flex justify-center items-center gap-2'>
                      {images.length === 0 ? null : (
-                        <div className='flex gap-3 justify-center items-center p-[20px] overflow-x-hidden'>
+                        <div className='flex gap-3 justify-center items-center p-[20px] overflow-x-hidden group'>
                            {images.map((item, index) => (
                               <div className='relative' key={index}>
                                  <img
-                                    className='w-[90px] h-[60px] object-cover object-center rounded-[5px] border-gray-200'
+                                    className='w-[150px] h-[100px] object-cover object-center rounded-sm border-gray-200'
                                     src={item}
                                     alt=''
-                                 ></img>
+                                 />
                                  {index === 0 && (
-                                    <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  rounded-[5px] bg-success text-base-100 text-xs p-1'>
+                                    <button className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 btn btn-xs normal-case'>
                                        Featured
-                                    </div>
+                                    </button>
                                  )}
                                  <div
-                                    className='absolute -top-2 -right-2 bg-warning text-base-100 rounded-full p-1 cursor-pointer'
+                                    className='hidden group-hover:block absolute -top-1 -right-1 bg-red-500 text-base-100 rounded-sm p-1 cursor-pointer'
                                     onClick={() => handleRemoveImages(item)}
                                  >
                                     <AiOutlineClose />
@@ -609,7 +607,7 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                      }
                      className='btn btn-primary'
                   >
-                     {mode === 'ADD_NEW' ? 'Publish' : 'Update'}
+                     {mode === 'ADD_NEW' ? 'Publis' : 'Perbarui'}
                   </button>
                   <button
                      disabled={isLoading}
@@ -621,7 +619,7 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                      }
                      className='btn'
                   >
-                     Draft
+                     Draf
                   </button>
                </div>
             </div>

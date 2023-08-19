@@ -14,7 +14,7 @@ import { useRouter } from 'next/navigation';
 import { formatPrice } from '@/utils';
 import { ICarData } from '@/types';
 import { mutate } from 'swr';
-import Dialog from './Dialog';
+import Swal from 'sweetalert2';
 
 interface IManageCarProps {
    apiResponse: ICarData[];
@@ -32,9 +32,6 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
    const searchParam = useSearchParams();
    const router = useRouter();
    const [take, setTake] = useState<number>(10);
-   const [deleteDialog, setDeleteDialog] = useState(false);
-   const [multiDeleteDialog, setMultiDeleteDialog] = useState(false);
-   const [selectedCar, setSelectedCar] = useState('');
 
    let page = Number(searchParam.get('page')) || 1;
 
@@ -140,36 +137,47 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
       }
    };
 
-   const handleDelete = async () => {
-      const response = await fetch(`/api/cars/${carId[0]}`, {
-         method: 'DELETE',
+   const handleDelete = async (carId: string, title: string) => {
+      Swal.fire({
+         title: 'Hapus mobil?',
+         text: `Mobil ${title} akan di hapus secara permanen!`,
+         icon: 'warning',
+         showCancelButton: true,
+         confirmButtonColor: '#3085d6',
+         cancelButtonColor: '#d33',
+         confirmButtonText: 'Hapus',
+      }).then(async (result) => {
+         if (result.isConfirmed) {
+            const response = await fetch(`/api/cars/${carId}`, {
+               method: 'DELETE',
+            });
+         }
       });
-      if (response.ok) {
-         mutate('/api/cars');
-      }
    };
 
    const handleMultipleDelete = async () => {
-      const response = await fetch('/api/cars', {
-         method: 'DELETE',
-         headers: {
-            'Content-Type': 'application/json',
-         },
-         body: JSON.stringify({ carId }),
+      Swal.fire({
+         title: 'Hapus mobil?',
+         text: `Mobil yang di pilih akan di hapus seara permanen!`,
+         icon: 'warning',
+         showCancelButton: true,
+         confirmButtonColor: '#3085d6',
+         cancelButtonColor: '#d33',
+         confirmButtonText: 'Hapus',
+      }).then(async (result) => {
+         if (result.isConfirmed) {
+            const response = await fetch('/api/cars', {
+               method: 'DELETE',
+               headers: {
+                  'Content-Type': 'application/json',
+               },
+               body: JSON.stringify({ carId }),
+            });
+            if (response.ok) {
+               mutate('/api/cars');
+            }
+         }
       });
-      if (response.ok) {
-         mutate('/api/cars');
-      }
-   };
-
-   const confirmDelete = (id: string, carName: string) => {
-      setDeleteDialog(true);
-      setCarId([id]);
-      setSelectedCar(carName);
-   };
-
-   const confirmMultiDelete = () => {
-      setMultiDeleteDialog(true);
    };
 
    return (
@@ -183,11 +191,11 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
                   value={sort}
                   onChange={(e) => setSort(e.target.value)}
                >
-                  <option value=''>Sort by</option>
-                  <option value='merek'>Merek</option>
+                  <option value=''>Urut berdasarkan</option>
+                  <option value='merek'>Merek mobil</option>
                   <option value='status'>Status</option>
-                  <option value='updateAt'>Last Update</option>
-                  <option value='harga'>Price</option>
+                  <option value='updateAt'>Pembaruan terakhir</option>
+                  <option value='harga'>Harga</option>
                </select>
                <select
                   className='select select-bordered'
@@ -196,15 +204,15 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
                   value={order}
                   onChange={(e) => setOrder(e.target.value)}
                >
-                  <option value='asc'>ASC</option>
-                  <option value='desc'>DESC</option>
+                  <option value='asc'>Naik</option>
+                  <option value='desc'>Menurun</option>
                </select>
                <button
                   disabled={carId.length === 0}
                   className='btn capitalize'
-                  onClick={confirmMultiDelete}
+                  onClick={handleMultipleDelete}
                >
-                  Delete {carId.length !== 0 && carId.length}
+                  Hapus {carId.length !== 0 && carId.length}
                </button>
             </div>
             <div className='flex items-center gap-5'>
@@ -213,17 +221,17 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
                   onChange={(e) => setSearchKeyword(e.target.value)}
                   className='input input-bordered'
                   type='search'
-                  placeholder='Search Car'
+                  placeholder='Cari mobil'
                />
             </div>
          </div>
          {cars?.length === 0 && !loading ? (
             <div className='flex flex-col gap-2 p-5 justify-center items-center'>
                <h2 className='text-lg font-medium text-gray-500'>
-                  Not available
+                  Tidak tersedia
                </h2>
                <Link href='/cars/add-new-car'>
-                  <button className='btn btn-neutral'>Add new car</button>
+                  <button className='btn'>Tambah mobil baru</button>
                </Link>
             </div>
          ) : null}
@@ -247,11 +255,11 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
                               />
                            </label>
                         </th>
-                        <th>Title</th>
+                        <th>Mobil</th>
                         <th>Status</th>
-                        <th>Last Update</th>
-                        <th>Price</th>
-                        <th>User</th>
+                        <th>Pembaruan terakhir</th>
+                        <th>Harga</th>
+                        <th>Pengguna</th>
                         <th></th>
                      </tr>
                   </thead>
@@ -285,23 +293,31 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
                                        </div>
                                     </div>
                                     <div>
-                                       <div className='capitalize'>
-                                          {item.merek.toUpperCase()}{' '}
-                                          {item.model_.toUpperCase()}{' '}
-                                          {item.tahun}
+                                       <div className='flex gap-1'>
+                                          <span className='capitalize'>
+                                             {item.merek}
+                                          </span>
+                                          <span className='uppercase'>
+                                             {item.model_}
+                                          </span>
+                                          <span>{item.tahun}</span>
                                        </div>
                                     </div>
-                                    <span className='opacity-0 group-hover:opacity-100 text-neutral text-xs'>
-                                       Edit
-                                    </span>
+                                    <button className='opacity-0 group-hover:opacity-100 btn btn-xs normal-case text-white btn-info'>
+                                       Klik untuk mengedit
+                                    </button>
                                  </div>
                               </Link>
                            </td>
                            <td>
                               {item.published ? (
-                                 <span>Published</span>
+                                 <button className='btn btn-xs btn-success text-white'>
+                                    Published
+                                 </button>
                               ) : (
-                                 <span>Draft</span>
+                                 <button className='btn btn-xs btn-warning'>
+                                    Draft
+                                 </button>
                               )}
                            </td>
                            <td>
@@ -318,7 +334,7 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
                                  <AiFillEye size={22} />
                                  <AiFillDelete
                                     onClick={() =>
-                                       confirmDelete(
+                                       handleDelete(
                                           item.id,
                                           `${item.merek} ${item.model_} ${item.tahun}`
                                        )
@@ -334,11 +350,11 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
                   <tfoot className='text-base text-gray-800 font-medium'>
                      <tr>
                         <th></th>
-                        <th>Title</th>
+                        <th>Mobil</th>
                         <th>Status</th>
-                        <th>Last Update</th>
-                        <th>Price</th>
-                        <th>User</th>
+                        <th>Pembaruan terakhir</th>
+                        <th>Harga</th>
+                        <th>Pengguna</th>
                         <th></th>
                      </tr>
                   </tfoot>
@@ -354,7 +370,7 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
                   «
                </button>
                <button className='join-item btn'>
-                  {page === 0 ? 'Page 1' : `Page ${page}`}
+                  {page === 0 ? 'Page 1' : `Halaman ${page}`}
                </button>
                <button
                   disabled={page === totalPage}
@@ -365,20 +381,6 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
                </button>
             </div>
          </div>
-         <Dialog
-            show={deleteDialog}
-            setShow={setDeleteDialog}
-            title={`Hapus ${selectedCar} ?`}
-            message={`Apakah Anda ingin menghapus ${selectedCar} ?`}
-            callback={handleDelete}
-         />
-         <Dialog
-            show={multiDeleteDialog}
-            setShow={setMultiDeleteDialog}
-            title={`Hapus beberapa mobil ?`}
-            message={`Apakah Anda ingin menghapus beberapa mobil yang dipilih ?`}
-            callback={handleMultipleDelete}
-         />
       </div>
    );
 };

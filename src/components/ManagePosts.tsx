@@ -202,10 +202,10 @@ const ManagePosts = ({ apiResponse, loading, totalPage }: IManagePostProps) => {
                   name='sort'
                   id='sort'
                >
-                  <option value=''>Sort by</option>
+                  <option value=''>Urut berdasarkan</option>
                   <option value='title'>Judul</option>
                   <option value='status'>Status</option>
-                  <option value='updateAt'>Tgl update</option>
+                  <option value='updateAt'>Pembaruan terakhir</option>
                </select>
                <select
                   className='select select-bordered'
@@ -214,15 +214,15 @@ const ManagePosts = ({ apiResponse, loading, totalPage }: IManagePostProps) => {
                   value={order}
                   onChange={(e) => setOrder(e.target.value)}
                >
-                  <option value='asc'>ASC</option>
-                  <option value='desc'>DESC</option>
+                  <option value='asc'>Naik</option>
+                  <option value='desc'>Menurun</option>
                </select>
                <button
                   disabled={postId.length === 0}
                   className='btn capitalize'
                   onClick={handleMultipleDelete}
                >
-                  Delete {postId.length !== 0 && postId.length}
+                  Hapus {postId.length !== 0 && postId.length}
                </button>
             </div>
             <div className='flex items-center gap-5'>
@@ -238,10 +238,10 @@ const ManagePosts = ({ apiResponse, loading, totalPage }: IManagePostProps) => {
          {posts?.length === 0 && !isLoading ? (
             <div className='flex flex-col gap-2 p-5 justify-center items-center'>
                <h2 className='text-lg font-medium text-gray-500'>
-                  Not available
+                  Tidak tersedia
                </h2>
                <Link href='/cars/add-new-car'>
-                  <button className='btn btn-neutral'>Add new post</button>
+                  <button className='btn'>Tambah artikel baru</button>
                </Link>
             </div>
          ) : null}
@@ -307,17 +307,21 @@ const ManagePosts = ({ apiResponse, loading, totalPage }: IManagePostProps) => {
                                           {item.title}
                                        </div>
                                     </div>
-                                    <span className='opacity-0 group-hover:opacity-100 text-neutral text-xs'>
-                                       Edit
-                                    </span>
+                                    <button className='opacity-0 group-hover:opacity-100 btn btn-xs normal-case text-white btn-info'>
+                                       Klik untuk mengedit
+                                    </button>
                                  </div>
                               </Link>
                            </td>
                            <td>
                               {item.published ? (
-                                 <span>Published</span>
+                                 <button className='btn btn-xs btn-success text-white'>
+                                    Published
+                                 </button>
                               ) : (
-                                 <span>Draft</span>
+                                 <button className='btn btn-xs btn-warning'>
+                                    Draft
+                                 </button>
                               )}
                            </td>
                            <td>
@@ -326,7 +330,20 @@ const ManagePosts = ({ apiResponse, loading, totalPage }: IManagePostProps) => {
                                  'd MMMM yyyy HH:mm'
                               )}
                            </td>
-                           <td>{}</td>
+                           <td>
+                              <div className='flex gap-1'>
+                                 {item.categories
+                                    .slice(0, 2)
+                                    .map((category) => (
+                                       <button
+                                          className='btn btn-xs'
+                                          key={category.id}
+                                       >
+                                          {category.categoryName}
+                                       </button>
+                                    ))}
+                              </div>
+                           </td>
                            <td>{item.username}</td>
 
                            <th>

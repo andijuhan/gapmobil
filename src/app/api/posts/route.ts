@@ -33,6 +33,7 @@ export const GET = async (req: Request) => {
             id: true,
             slug: true,
             title: true,
+            categoryIds: true,
             categories: {
                select: {
                   id: true,
@@ -61,7 +62,7 @@ export const GET = async (req: Request) => {
 };
 
 export const POST = async (req: Request) => {
-   const { slug, published, title, content, category, image, username } =
+   const { slug, published, title, content, categoryIds, image, username } =
       await req.json();
 
    try {
@@ -71,6 +72,7 @@ export const POST = async (req: Request) => {
             published,
             title,
             content,
+            categoryIds,
             image,
             username,
          },

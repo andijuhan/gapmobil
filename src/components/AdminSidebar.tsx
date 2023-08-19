@@ -23,10 +23,11 @@ const AdminSidebar = () => {
    useEffect(() => {
       if (path.includes('cars') || path.includes('brands')) setCarToggle(true);
       if (path.includes('users')) setUserToggle(true);
+      if (path.includes('posts')) setPostToggle(true);
    }, [path]);
 
    return (
-      <div className='w-[250px] lg:relative z-40 bg-neutral min-h-screen text-neutral-content text-sm pt-[30px] px-7 mt-[60px]'>
+      <div className='w-[250px] lg:relative z-40 bg-gray-700 min-h-screen text-neutral-content font-base text-sm pt-[30px] px-7 mt-[60px]'>
          <div className='flex flex-col gap-6 dropdown mt-5'>
             {/* MANAGE DASHBOARD */}
             <Link href='/dashboard'>
@@ -36,7 +37,7 @@ const AdminSidebar = () => {
                   } hover:text-base-100 cursor-pointer`}
                >
                   <BsFillHouseDoorFill size={18} />
-                  <span>Dashboard</span>
+                  <span>Dasbor</span>
                </div>
             </Link>
             {/* MANAGE CAR */}
@@ -54,7 +55,7 @@ const AdminSidebar = () => {
                   >
                      <div className='flex items-center gap-3'>
                         <BsCarFrontFill size={18} />
-                        <span>Cars</span>
+                        <span>Mobil</span>
                      </div>
                      <BsChevronDown
                         className={` ${
@@ -65,7 +66,7 @@ const AdminSidebar = () => {
                </Link>
 
                <ul
-                  className={`mt-2 ml-7 font-light h-auto max-h-auto overflow-hidden ${
+                  className={`mt-2 ml-7 h-auto max-h-auto overflow-hidden ${
                      carToggle
                         ? 'max-h-[500px] opacity-100'
                         : 'max-h-0 opacity-0'
@@ -75,26 +76,24 @@ const AdminSidebar = () => {
                      className={`py-2 hover:text-base-100 cursor-pointer ${
                         (path.includes('manage-car') ||
                            path.includes('edit-car')) &&
-                        'text-base-100 font-medium'
+                        'text-base-100'
                      }`}
                   >
-                     <Link href='/cars/manage-cars'>Manage Cars</Link>
+                     <Link href='/cars/manage-cars'>Kelola mobil</Link>
                   </li>
                   <li
                      className={`py-2 hover:text-base-100  cursor-pointer ${
-                        path.includes('add-new-car') &&
-                        'text-base-100 font-medium'
+                        path.includes('add-new-car') && 'text-base-100'
                      }`}
                   >
-                     <Link href='/cars/add-new-car'>Add New Car</Link>
+                     <Link href='/cars/add-new-car'>Tambah mobil</Link>
                   </li>
                   <li
                      className={`py-2 hover:text-base-100  cursor-pointer ${
-                        path.includes('manage-brands') &&
-                        'text-base-100 font-medium'
+                        path.includes('manage-brands') && 'text-base-100'
                      }`}
                   >
-                     <Link href='/cars/manage-brands'>Manage Brands</Link>
+                     <Link href='/cars/manage-brands'>Kelola merek</Link>
                   </li>
                </ul>
             </div>
@@ -113,7 +112,7 @@ const AdminSidebar = () => {
                   >
                      <div className='flex items-center gap-3'>
                         <MdArticle size={18} />
-                        <span>Posts</span>
+                        <span>Artikel</span>
                      </div>
                      <BsChevronDown
                         className={` ${
@@ -125,7 +124,7 @@ const AdminSidebar = () => {
                </Link>
 
                <ul
-                  className={`mt-2 ml-7 font-light h-auto max-h-auto overflow-hidden ${
+                  className={`mt-2 ml-7 h-auto max-h-auto overflow-hidden ${
                      postToggle
                         ? 'max-h-[500px] opacity-100'
                         : 'max-h-0 opacity-0'
@@ -133,26 +132,24 @@ const AdminSidebar = () => {
                >
                   <li
                      className={`py-2 hover:text-base-100  cursor-pointer ${
-                        path.includes('manage-posts') &&
-                        'text-base-100 font-medium'
+                        path.includes('manage-posts') && 'text-base-100'
                      }`}
                   >
-                     <Link href='/posts/manage-posts'>Manage Posts</Link>
+                     <Link href='/posts/manage-posts'>Kelola artikel</Link>
                   </li>
                   <li
                      className={`py-2 hover:text-base-100  cursor-pointer ${
-                        path.includes('add-new-post') &&
-                        'text-base-100 font-medium'
+                        path.includes('add-new-post') && 'text-base-100'
                      }`}
                   >
-                     <Link href='/posts/add-new-post'>Add New Post</Link>
+                     <Link href='/posts/add-new-post'>Tambah artikel</Link>
                   </li>
                   <li
                      className={`py-2 hover:text-base-100  cursor-pointer ${
-                        path.includes('category') && 'text-base-100 font-medium'
+                        path.includes('category') && 'text-base-100'
                      }`}
                   >
-                     <Link href='/posts/category'>Manage Category</Link>
+                     <Link href='/posts/category'>Kelola kategori</Link>
                   </li>
                </ul>
             </div>
@@ -171,7 +168,7 @@ const AdminSidebar = () => {
                   >
                      <div className='flex items-center gap-3'>
                         <BsFillPersonFill size={18} />
-                        <span>Users</span>
+                        <span>Pengguna</span>
                      </div>
                      <BsChevronDown
                         className={` ${
@@ -183,7 +180,7 @@ const AdminSidebar = () => {
                </Link>
 
                <ul
-                  className={`mt-2 ml-7 font-light h-auto max-h-auto overflow-hidden ${
+                  className={`mt-2 ml-7 h-auto max-h-auto overflow-hidden ${
                      userToggle
                         ? 'max-h-[500px] opacity-100'
                         : 'max-h-0 opacity-0'
@@ -191,19 +188,17 @@ const AdminSidebar = () => {
                >
                   <li
                      className={`py-2 hover:text-base-100  cursor-pointer ${
-                        path.includes('manage-users') &&
-                        'text-base-100 font-medium'
+                        path.includes('manage-users') && 'text-base-100'
                      }`}
                   >
-                     <Link href='/users/manage-users'>Manage Users</Link>
+                     <Link href='/users/manage-users'>Kelola pengguna</Link>
                   </li>
                   <li
                      className={`py-2 hover:text-base-100  cursor-pointer ${
-                        path.includes('add-new-post') &&
-                        'text-base-100 font-medium'
+                        path.includes('add-new-post') && 'text-base-100'
                      }`}
                   >
-                     <Link href='/users/your-account'>Your Account</Link>
+                     <Link href='/users/your-account'>Akun Anda</Link>
                   </li>
                </ul>
             </div>
@@ -222,7 +217,7 @@ const AdminSidebar = () => {
                   >
                      <div className='flex items-center gap-3'>
                         <BsGearFill size={18} />
-                        <span>Settings</span>
+                        <span>Pengaturan</span>
                      </div>
                      <BsChevronDown
                         className={` ${
@@ -234,7 +229,7 @@ const AdminSidebar = () => {
                </Link>
 
                <ul
-                  className={`mt-2 ml-7 font-light h-auto max-h-auto overflow-hidden ${
+                  className={`mt-2 ml-7 h-auto max-h-auto overflow-hidden ${
                      settingToggle
                         ? 'max-h-[500px] opacity-100'
                         : 'max-h-0 opacity-0'
@@ -242,17 +237,17 @@ const AdminSidebar = () => {
                >
                   <li
                      className={`py-2 hover:text-base-100  cursor-pointer ${
-                        path.includes('general') && 'text-base-100 font-medium'
+                        path.includes('general') && 'text-base-100'
                      }`}
                   >
-                     <Link href='/settings/car-info'>General</Link>
+                     <Link href='/settings/car-info'>Umum</Link>
                   </li>
                   <li
                      className={`py-2 hover:text-base-100  cursor-pointer ${
-                        path.includes('car-info') && 'text-base-100 font-medium'
+                        path.includes('car-info') && 'text-base-100'
                      }`}
                   >
-                     <Link href='/settings/car-info'>Car info</Link>
+                     <Link href='/settings/car-info'>Tampilan</Link>
                   </li>
                </ul>
             </div>

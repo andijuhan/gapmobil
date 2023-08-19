@@ -1,33 +1,41 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useSWR, { mutate } from 'swr';
 import { fetcher } from '@/utils';
-import Toast from './Toast';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
-import Dialog from './Dialog';
+import Swal from 'sweetalert2';
 
 const ManageCarBrands = () => {
    const [brandName, setBrandName] = useState('');
    const [selectedBrandName, setSelectedBrandName] = useState('');
    const [brandId, setBrandId] = useState<string | null>(null);
    const [editMode, setEditMode] = useState(false);
-   const [warning, setWarning] = useState(false);
-   const [error, setError] = useState(false);
-   const [errorMessage, setErrorMessage] = useState('');
+   //const [warning, setWarning] = useState(false);
+   const [warningMessage, setWarningMessage] = useState('');
    const { data, isLoading } = useSWR('/api/cars/brands', fetcher);
-   const [dialog, setDialog] = useState(false);
 
-   const handleDelete = async () => {
-      const response = await fetch(`/api/cars/brands/${brandId}`, {
-         method: 'DELETE',
+   const handleDelete = async (brandId: string, title: string) => {
+      Swal.fire({
+         title: 'Hapus merek?',
+         text: `Merek ${title} akan di hapus secara permanen!`,
+         icon: 'warning',
+         showCancelButton: true,
+         confirmButtonColor: '#3085d6',
+         cancelButtonColor: '#d33',
+         confirmButtonText: 'Hapus',
+      }).then(async (result) => {
+         if (result.isConfirmed) {
+            const response = await fetch(`/api/cars/brands/${brandId}`, {
+               method: 'DELETE',
+            });
+            if (response.ok) {
+               mutate('/api/cars/brands');
+               mutate(`/api/cars/brands/model?brand=${selectedBrandName}`);
+               setBrandName('');
+               setBrandId(null);
+            }
+         }
       });
-
-      if (response.ok) {
-         mutate('/api/cars/brands');
-         mutate(`/api/cars/brands/model?brand=${selectedBrandName}`);
-         setBrandName('');
-         setBrandId(null);
-      }
    };
 
    const handleClickEdit = (id: string, value: string) => {
@@ -53,49 +61,48 @@ const ManageCarBrands = () => {
       }
       if (response.status === 409) {
          const data = await response.json();
-         setErrorMessage(data.message);
-         setError(true);
+         setWarningMessage(data.message);
       }
    };
 
    const handleAddNew = async () => {
       if (brandName === '') {
-         setWarning(true);
+         setWarningMessage('Kolom merek mobil tidak boleh kosong');
 
          return;
       }
-      try {
-         const response = await fetch('/api/cars/brands', {
-            method: 'POST',
-            headers: {
-               'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ brandName }),
-         });
+      const response = await fetch('/api/cars/brands', {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json',
+         },
+         body: JSON.stringify({ brandName }),
+      });
 
-         if (response.ok) {
-            mutate('/api/cars/brands');
-            setBrandName('');
-         }
-         if (response.status === 409) {
-            const data = await response.json();
-            setErrorMessage(data.message);
-            setError(true);
-         }
-      } catch (error) {
-         console.log('Gagal menambah data:' + error);
+      if (response.ok) {
+         mutate('/api/cars/brands');
+         setBrandName('');
+      }
+      if (response.status === 409) {
+         const data = await response.json();
+         setWarningMessage(data.message);
       }
    };
 
-   const confirmDelete = (id: string, brandNameToDelete: string) => {
-      setDialog(true);
-      setBrandId(id);
-      setSelectedBrandName(brandNameToDelete);
-   };
+   useEffect(() => {
+      if (warningMessage !== '') {
+         Swal.fire({
+            icon: 'error',
+            title: 'Peringatan!',
+            text: warningMessage,
+         });
+         setWarningMessage('');
+      }
+   }, [warningMessage, setWarningMessage]);
 
    return (
       <div className='bg-white p-4 lg:p-7 rounded-lg flex flex-col gap-5'>
-         <h2 className='text-lg'>Merek mobil</h2>
+         <h2 className='text'>Daftar merek mobil</h2>
          <div className='flex gap-2 flex-wrap'>
             {isLoading && (
                <div className='flex w-full justify-center items-center py-5'>
@@ -112,7 +119,7 @@ const ManageCarBrands = () => {
                   data-tip='Click to edit'
                >
                   <button
-                     onClick={() => confirmDelete(item?.id, item?.brandName)}
+                     onClick={() => handleDelete(item?.id, item?.brandName)}
                      className='absolute -top-2 -right-2 z-10 text-base-100 btn btn-circle btn-xs btn-warning hidden group-hover:block'
                   >
                      x
@@ -130,10 +137,12 @@ const ManageCarBrands = () => {
                </div>
             ))}
          </div>
-         {editMode && (
+         {editMode ? (
             <label htmlFor='brandName'>
-               Edit {selectedBrandName} to {brandName}
+               Rubah merek {selectedBrandName} ke {brandName}
             </label>
+         ) : (
+            <label>Tambah merek mobil</label>
          )}
          <input
             id='brandName'
@@ -145,9 +154,7 @@ const ManageCarBrands = () => {
                   editMode ? handleEdite() : handleAddNew();
                }
             }}
-            className={`input input-bordered w-full max-w-xs ${
-               warning && 'input-error'
-            }`}
+            className='input input-bordered w-full max-w-xs'
             type='search'
             placeholder='Merek mobil'
          />
@@ -159,34 +166,15 @@ const ManageCarBrands = () => {
                   editMode ? 'btn-secondary' : 'btn-primary'
                } w-min`}
             >
-               {editMode ? 'Update' : 'Add'}
+               {editMode ? 'Perbarui' : 'Tambah'}
             </button>
             <button
                onClick={() => setEditMode(false)}
                className={`${!editMode && 'hidden'} btn w-min`}
             >
-               Cancel
+               Batal
             </button>
          </div>
-         <Toast
-            show={warning}
-            setShow={setWarning}
-            mode='WARNING'
-            message='Silahkan lengkapi data'
-         />
-         <Toast
-            show={error}
-            setShow={setError}
-            mode='WARNING'
-            message={errorMessage}
-         />
-         <Dialog
-            show={dialog}
-            setShow={setDialog}
-            title={`Hapus merek ${brandName} ?`}
-            message={`Menghapus ${brandName} akan menghapus semua model mobil ${brandName}`}
-            callback={handleDelete}
-         />
       </div>
    );
 };

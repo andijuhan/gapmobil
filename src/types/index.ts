@@ -41,6 +41,12 @@ export interface IPostData {
    image: string;
    createAt: string;
    updateAt: string;
-   categoryIds: string;
+   categoryIds: string[];
+   categories: ICategoryData[];
    username: string;
+}
+
+export interface ICategoryData {
+   id: string;
+   categoryName: string;
 }
