@@ -103,7 +103,7 @@ const YourAccount = () => {
 
          if (response.ok) {
             setIsLoading(false);
-            Swal.fire('Good job!', data.message, 'success');
+            Swal.fire('Sukses!', data.message, 'success');
          } else {
             setIsLoading(false);
             Swal.fire({
@@ -117,11 +117,11 @@ const YourAccount = () => {
 
    return (
       <div className='bg-white px-4 lg:px-7 lg:py-10 rounded-lg text-sm'>
-         <h2 className='text-lg mb-5 font-medium'>Update Account</h2>
+         <h2 className='text-lg mb-5 font-medium'>Perbarui Akun</h2>
          <div className='form-control gap-5'>
             <div className='flex gap-5 items-center'>
                <label className='w-[150px]' htmlFor='username'>
-                  Username
+                  Pengguna
                </label>
                <input
                   className={`input input-bordered w-full max-w-xs`}
@@ -134,7 +134,7 @@ const YourAccount = () => {
             </div>
             <div className='flex gap-5 items-center'>
                <label className='w-[150px]' htmlFor='password'>
-                  Old Password
+                  Password lama
                </label>
                <input
                   className='input input-bordered w-full max-w-xs'
@@ -147,7 +147,7 @@ const YourAccount = () => {
             </div>
             <div className='flex gap-5 items-center'>
                <label className='w-[150px]' htmlFor='password'>
-                  New Password
+                  Password baru
                </label>
                <input
                   className='input input-bordered w-full max-w-xs'
@@ -194,7 +194,7 @@ const YourAccount = () => {
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
                >
-                  <option value=''>Select role</option>
+                  <option value=''>Pilih role</option>
                   <option value='USER'>User</option>
                   <option value='ADMIN'>Admin</option>
                   <option value='SUPER ADMIN'>Super Admin</option>
@@ -207,7 +207,7 @@ const YourAccount = () => {
                   onClick={handleUpdateAccount}
                   className='w-max btn btn-primary'
                >
-                  Update
+                  Perbarui
                </button>
             </div>
          </div>

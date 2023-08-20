@@ -12,6 +12,7 @@ import useDebounce from '@/hooks/useDebounce';
 import { mutate } from 'swr';
 import Swal from 'sweetalert2';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { BiSolidEditAlt } from 'react-icons/bi';
 
 interface IManagePostProps {
    apiResponse: IPostData[];
@@ -20,7 +21,6 @@ interface IManagePostProps {
 }
 
 const ManagePosts = ({ apiResponse, loading, totalPage }: IManagePostProps) => {
-   console.log(apiResponse);
    const [isLoading, setIsLoading] = useState<boolean>(loading);
    const [posts, setPosts] = useState<IPostData[]>([]);
    const [postId, setPostId] = useState<String[]>([]);
@@ -109,22 +109,18 @@ const ManagePosts = ({ apiResponse, loading, totalPage }: IManagePostProps) => {
 
    const handleDelete = (postId: string, title: string) => {
       Swal.fire({
-         title: 'Apakah Anda yakin?',
-         text: `Hapus post berjudul ${title}!`,
+         title: 'Hapus artikel?',
+         text: `Artikel ${title} akan di hapus secara permanen!`,
          icon: 'warning',
          showCancelButton: true,
          confirmButtonColor: '#3085d6',
          cancelButtonColor: '#d33',
-         confirmButtonText: 'Yes, delete it!',
+         confirmButtonText: 'Hapus',
       }).then(async (result) => {
          if (result.isConfirmed) {
-            const response = await fetch(`/api/posts/${postId}`, {
+            await fetch(`/api/posts/${postId}`, {
                method: 'DELETE',
             });
-            if (response.ok) {
-               mutate('/api/posts');
-               Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
-            }
          }
       });
    };
@@ -229,7 +225,7 @@ const ManagePosts = ({ apiResponse, loading, totalPage }: IManagePostProps) => {
                <input
                   className='input input-bordered'
                   type='search'
-                  placeholder='Search Posts'
+                  placeholder='Cari artikel'
                   value={searchKeyword}
                   onChange={(e) => setSearchKeyword(e.target.value)}
                />
@@ -307,8 +303,8 @@ const ManagePosts = ({ apiResponse, loading, totalPage }: IManagePostProps) => {
                                           {item.title}
                                        </div>
                                     </div>
-                                    <button className='opacity-0 group-hover:opacity-100 btn btn-xs normal-case text-white btn-info'>
-                                       Klik untuk mengedit
+                                    <button className='opacity-0 group-hover:opacity-100 btn btn-xs'>
+                                       <BiSolidEditAlt size={20} />
                                     </button>
                                  </div>
                               </Link>
@@ -319,7 +315,7 @@ const ManagePosts = ({ apiResponse, loading, totalPage }: IManagePostProps) => {
                                     Published
                                  </button>
                               ) : (
-                                 <button className='btn btn-xs btn-warning'>
+                                 <button className='btn btn-xs btn-error text-white'>
                                     Draft
                                  </button>
                               )}
@@ -332,6 +328,11 @@ const ManagePosts = ({ apiResponse, loading, totalPage }: IManagePostProps) => {
                            </td>
                            <td>
                               <div className='flex gap-1'>
+                                 {item.categories.length === 0 ? (
+                                    <button className='btn btn-xs'>
+                                       Tanpa kategori
+                                    </button>
+                                 ) : null}
                                  {item.categories
                                     .slice(0, 2)
                                     .map((category) => (
@@ -384,7 +385,7 @@ const ManagePosts = ({ apiResponse, loading, totalPage }: IManagePostProps) => {
                   «
                </button>
                <button className='join-item btn'>
-                  {page === 0 ? 'Page 1' : `Page ${page}`}
+                  {page === 0 ? 'Halaman 1' : `Halaman ${page}`}
                </button>
                <button
                   disabled={page === totalPage}

@@ -3,13 +3,31 @@ import prisma from '@/utils/prisma';
 import * as argon2 from 'argon2';
 
 export const GET = async (req: Request) => {
+   const { searchParams } = new URL(req.url);
+   let page = Number(searchParams.get('page')) || 1;
+   const take = Number(searchParams.get('take')) || 10;
+   const search = searchParams.get('search') || '';
+
+   page = (page - 1) * take;
    try {
       const dataUser = await prisma.user.findMany({
          orderBy: {
             createAt: 'desc',
          },
+         skip: page,
+         take,
+         where: {
+            username: {
+               contains: search,
+               mode: 'insensitive',
+            },
+         },
       });
-      return NextResponse.json(dataUser);
+
+      const totalData = await prisma.user.count();
+      const totalPage = Math.ceil(totalData / take);
+
+      return NextResponse.json({ dataUser, totalPage });
    } catch (error) {
       NextResponse.json({ message: 'Gagal mendapatkan data' }, { status: 500 });
    }

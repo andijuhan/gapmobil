@@ -53,9 +53,9 @@ export const PATCH = async (req: Request, { params }: IParams) => {
       const message =
          email !== isUserExist?.email && !isEmailAlreadyUse && isSend
             ? {
-                 message: 'silahkan cek inbox akun email Anda',
+                 message: 'Silahkan cek inbox akun email lama Anda',
               }
-            : { message: 'akun berhasil di update' };
+            : { message: 'Akun berhasil di perbarui' };
 
       //cek apakah oldpassword cocok dgn password di database
       const isPasswordMatch =

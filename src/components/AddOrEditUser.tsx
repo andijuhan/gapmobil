@@ -5,11 +5,11 @@ import {
    isPhoneNumValid,
 } from '@/utils/validasi';
 import React, { useEffect, useState } from 'react';
-import Toast from './Toast';
 import { mutate } from 'swr';
 import { useSearchParams } from 'next/navigation';
 import { IUserData } from '@/types';
 import { useRouter } from 'next/navigation';
+import Swal from 'sweetalert2';
 
 const AddOrEditUser = () => {
    const searchParams = useSearchParams();
@@ -20,9 +20,6 @@ const AddOrEditUser = () => {
    const [phone, setphone] = useState('');
    const [role, setRole] = useState('');
    const [warningMessage, setWarningMessage] = useState('');
-   const [isWarning, setIswarning] = useState(false);
-   const [successEdit, setSuccessEdit] = useState(false);
-   const [successAdd, setSuccessAdd] = useState(false);
    const [mode, setMode] = useState<'ADD_NEW' | 'UPDATE'>('ADD_NEW');
    const router = useRouter();
 
@@ -55,7 +52,6 @@ const AddOrEditUser = () => {
       //jika username kosong
       if (username === '' || email === '' || role === '') {
          setWarningMessage('Silahkan lengkapi data');
-         setIswarning(true);
 
          return false;
       }
@@ -64,7 +60,7 @@ const AddOrEditUser = () => {
 
       if (!validateEmail) {
          setWarningMessage('Format email salah');
-         setIswarning(true);
+
          return false;
       }
 
@@ -72,7 +68,6 @@ const AddOrEditUser = () => {
          password !== '' ? isPasswordValid(password) : true;
 
       if (!validatePassword) {
-         setIswarning(true);
          setWarningMessage(
             'Gunakan minimal 8 karakter dan kombinasi huruf kapital'
          );
@@ -82,7 +77,6 @@ const AddOrEditUser = () => {
       const validatePhoneNum = isPhoneNumValid(phone);
 
       if (!validatePhoneNum) {
-         setIswarning(true);
          setWarningMessage('Format No HP salah');
          return false;
       }
@@ -103,11 +97,9 @@ const AddOrEditUser = () => {
          if (response.ok) {
             resetData();
             setMode('ADD_NEW');
-            setSuccessEdit(true);
-         }
-         if (!response.ok) {
+            Swal.fire('Sukses!', 'Berhasil memperbarui pengguna', 'success');
+         } else {
             setWarningMessage(data.message);
-            setIswarning(true);
          }
       }
    };
@@ -128,11 +120,13 @@ const AddOrEditUser = () => {
 
          if (response.ok) {
             resetData();
-            setSuccessAdd(true);
-         }
-         if (!response.ok) {
+            Swal.fire(
+               'Sukses!',
+               'Berhasil menambahkan pengguna baru',
+               'success'
+            );
+         } else {
             setWarningMessage(data.message);
-            setIswarning(true);
          }
       }
    };
@@ -143,15 +137,26 @@ const AddOrEditUser = () => {
       router.push('/users/manage-users');
    };
 
+   useEffect(() => {
+      if (warningMessage !== '') {
+         Swal.fire({
+            icon: 'error',
+            title: 'Peringatan!',
+            text: warningMessage,
+         });
+         setWarningMessage('');
+      }
+   }, [warningMessage, setWarningMessage]);
+
    return (
       <div className='bg-white px-4 lg:px-7 lg:py-10 rounded-lg text-sm'>
          <h2 className='text-lg mb-5 font-medium'>
-            {mode == 'ADD_NEW' ? 'Create user' : 'Edit user'}
+            {mode == 'ADD_NEW' ? 'Tambah pengguna' : 'Perbarui pengguna'}
          </h2>
          <div className='form-control gap-5'>
             <div className='flex gap-5 items-center'>
                <label className='w-[150px]' htmlFor='username'>
-                  Username
+                  Pengguna
                </label>
                <input
                   className={`input input-bordered w-full max-w-xs`}
@@ -211,7 +216,7 @@ const AddOrEditUser = () => {
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
                >
-                  <option value=''>Select role</option>
+                  <option value=''>Pilih role</option>
                   <option value='USER'>User</option>
                   <option value='ADMIN'>Admin</option>
                   <option value='SUPER ADMIN'>Super Admin</option>
@@ -225,33 +230,15 @@ const AddOrEditUser = () => {
                      mode === 'ADD_NEW' ? 'btn-primary' : 'btn-secondary'
                   } w-max`}
                >
-                  {mode === 'ADD_NEW' ? 'Add user' : 'Update User'}
+                  {mode === 'ADD_NEW' ? 'Tambah' : 'Perbarui'}
                </button>
                {mode === 'UPDATE' && (
                   <button onClick={handleCancel} className='btn'>
-                     Cancel
+                     Batal
                   </button>
                )}
             </div>
          </div>
-         <Toast
-            message={warningMessage}
-            mode='WARNING'
-            show={isWarning}
-            setShow={setIswarning}
-         />
-         <Toast
-            message='Berhasil update user'
-            mode='SUKSES'
-            show={successEdit}
-            setShow={setSuccessEdit}
-         />
-         <Toast
-            message='Berhasil menambah user'
-            mode='SUKSES'
-            show={successAdd}
-            setShow={setSuccessAdd}
-         />
       </div>
    );
 };

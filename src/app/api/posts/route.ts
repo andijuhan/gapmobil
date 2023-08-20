@@ -20,6 +20,7 @@ export const GET = async (req: Request) => {
       } else if (sort === 'updateAt') {
          orderBy = { updateAt: order === 'desc' ? 'desc' : 'asc' };
       } else {
+         //default order
          orderBy = { updateAt: 'desc' };
       }
       const posts = await prisma.post.findMany({

@@ -63,13 +63,13 @@ const ManageCategory = () => {
 
    const handleDelete = async (id: string, categoryName: string) => {
       Swal.fire({
-         title: `Hapus ${categoryName}?`,
+         title: `Hapus kategori?`,
          text: `Kategori ${categoryName} akan di hapus secara permanen!`,
          icon: 'warning',
          showCancelButton: true,
          confirmButtonColor: '#3085d6',
          cancelButtonColor: '#d33',
-         confirmButtonText: 'Yes, delete it!',
+         confirmButtonText: 'Hapus',
       }).then(async (result) => {
          if (result.isConfirmed) {
             const response = await fetch(`/api/posts/category/${id}`, {
@@ -77,7 +77,6 @@ const ManageCategory = () => {
             });
             if (response.ok) {
                mutate('/api/posts/category');
-               Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
             }
          }
       });
@@ -86,7 +85,7 @@ const ManageCategory = () => {
    return (
       <div className='bg-white px-4 lg:px-7 lg:py-10 rounded-lg text-sm'>
          <h2 className='text-lg mb-5'>
-            {!editMode ? 'Add New Category' : 'Edit Category'}
+            {!editMode ? 'Tambah Kategori' : 'Edit Kategori'}
          </h2>
          <div className='flex gap-2 flex-wrap'>
             {isLoading && (
@@ -148,7 +147,7 @@ const ManageCategory = () => {
                   editMode ? 'btn-secondary' : 'btn-primary'
                } w-max`}
             >
-               {editMode ? 'Update Category' : 'Add Category'}
+               {editMode ? 'Perbarui' : 'Tambah'}
             </button>
             {editMode && (
                <button
@@ -158,7 +157,7 @@ const ManageCategory = () => {
                   }}
                   className='btn'
                >
-                  Cancel
+                  Batal
                </button>
             )}
          </div>

@@ -15,6 +15,7 @@ import { formatPrice } from '@/utils';
 import { ICarData } from '@/types';
 import { mutate } from 'swr';
 import Swal from 'sweetalert2';
+import { BiSolidEditAlt } from 'react-icons/bi';
 
 interface IManageCarProps {
    apiResponse: ICarData[];
@@ -148,7 +149,7 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
          confirmButtonText: 'Hapus',
       }).then(async (result) => {
          if (result.isConfirmed) {
-            const response = await fetch(`/api/cars/${carId}`, {
+            await fetch(`/api/cars/${carId}`, {
                method: 'DELETE',
             });
          }
@@ -303,8 +304,8 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
                                           <span>{item.tahun}</span>
                                        </div>
                                     </div>
-                                    <button className='opacity-0 group-hover:opacity-100 btn btn-xs normal-case text-white btn-info'>
-                                       Klik untuk mengedit
+                                    <button className='opacity-0 group-hover:opacity-100 btn btn-xs'>
+                                       <BiSolidEditAlt size={20} />
                                     </button>
                                  </div>
                               </Link>
@@ -315,7 +316,7 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
                                     Published
                                  </button>
                               ) : (
-                                 <button className='btn btn-xs btn-warning'>
+                                 <button className='btn btn-xs btn-error text-white'>
                                     Draft
                                  </button>
                               )}

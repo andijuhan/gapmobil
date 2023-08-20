@@ -82,10 +82,11 @@ const AddOrEditPost = ({ mode, postId }: IAddOrEditPostProps) => {
          }
       };
       if (mode === 'UPDATE') getPostById();
-      setCategories(dataCategories);
-   }, [postId, dataCategories]);
+   }, [postId]);
 
-   console.log(selectedCategories);
+   useEffect(() => {
+      setCategories(dataCategories);
+   }, [dataCategories]);
 
    const resetInput = () => {
       setTitle('');
@@ -157,7 +158,7 @@ const AddOrEditPost = ({ mode, postId }: IAddOrEditPostProps) => {
 
          if (response.ok) {
             setIsloading(false);
-            Swal.fire('Good job!', message, 'success');
+            Swal.fire('Sukses!', message, 'success');
             resetInput();
          } else {
             setIsloading(false);
@@ -194,7 +195,7 @@ const AddOrEditPost = ({ mode, postId }: IAddOrEditPostProps) => {
 
          if (response.ok) {
             setIsloading(false);
-            Swal.fire('Good job!', message, 'success');
+            Swal.fire('Sukses!', message, 'success');
          } else {
             setIsloading(false);
          }
@@ -204,7 +205,7 @@ const AddOrEditPost = ({ mode, postId }: IAddOrEditPostProps) => {
    return (
       <div className='p-2 lg:p-7 rounded-lg mt-5 text-sm'>
          <h1 className='text-xl font-medium mb-7'>
-            {mode === 'ADD_NEW' ? 'Tambah post' : 'Update post'}
+            {mode === 'ADD_NEW' ? 'Tambah Artikel' : 'Perbarui Artikel'}
          </h1>
          <div className='flex gap-5 font-medium'>
             <div className='w-[70%] px-4 py-8 lg-p-7 bg-white rounded-lg flex flex-col gap-5'>
