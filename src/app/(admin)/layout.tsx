@@ -19,15 +19,16 @@ const getUser = async () => {
       redirect(`${process.env.BASE_URL}/auth`);
    }
 
-   try {
-      const response = await fetch(`${process.env.BASE_URL}/api/auth/me`, {
-         headers: {
-            authorization: `bearer ${token.value}`,
-         },
-      });
-      const data = await response.json();
+   const response = await fetch(`${process.env.BASE_URL}/api/auth/me`, {
+      headers: {
+         authorization: `bearer ${token.value}`,
+      },
+   });
+   const data = await response.json();
+
+   if (response.ok) {
       return data;
-   } catch (error) {
+   } else {
       redirect(`${process.env.BASE_URL}/auth`);
    }
 };

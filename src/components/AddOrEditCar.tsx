@@ -26,25 +26,27 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
    const [isDataLoaded, setIsDataLoaded] = useState<boolean>(
       mode === 'UPDATE' ? false : true
    );
-   const [merek, setMerek] = useState('');
-   const [model, setModel] = useState('');
-   const [tahun, setTahun] = useState<number>(2000);
-   const [harga, setHarga] = useState(0);
-   const [jarakTempuh, setJarakTempuh] = useState(0);
-   const [tipeRegistrasi, setTipeRegistrasi] = useState('');
-   const [transmisi, setTransmisi] = useState('AT');
-   const [garansi, setGaransi] = useState(false);
-   const [bahanBakar, setBahanBakar] = useState('bensin');
-   const [tanganKe, setTanganKe] = useState(1);
-   const [tempatDuduk, setTempatDuduk] = useState(7);
-   const [warna, setWarna] = useState('');
-   const [tglReg, setTglReg] = useState(convertISOdateToStandar(''));
-   const [masaBerlakuStnk, setMasaBerlakuStnk] = useState(
+   const [carBrandName, setCarBrandName] = useState('');
+   const [carModel, setCarModel] = useState('');
+   const [year, setYear] = useState<number>(2000);
+   const [price, setPrice] = useState(0);
+   const [mileage, setMileage] = useState(0);
+   const [registrationType, setRegistrationType] = useState('');
+   const [transmision, setTransmision] = useState('AT');
+   const [warranty, setWarranty] = useState(false);
+   const [fuel, setFuel] = useState('bensin');
+   const [previousOwners, setPreviousOwners] = useState(1);
+   const [maximumPassengers, setMaximumPassengers] = useState(7);
+   const [color, setColor] = useState('');
+   const [registrationDate, setRegistrationDate] = useState(
       convertISOdateToStandar('')
    );
-   const [statusOdo, setStatusOdo] = useState('Asli');
+   const [STNKExpiration, setSTNKExpiration] = useState(
+      convertISOdateToStandar('')
+   );
+   const [odoStatus, setOdoStatus] = useState('Asli');
    const [images, setImages] = useState<string[]>([]);
-   const [deskripsi, setDeskripsi] = useState<string | undefined>('');
+   const [description, setDescription] = useState<string | undefined>('');
    const [slug, setSlug] = useState<string>('');
    const [warningMessage, setWarningMessage] = useState<string>('');
    const [isLoading, setIsloading] = useState(false);
@@ -56,35 +58,34 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
 
    useEffect(() => {
       const getCarBrandById = async () => {
-         try {
-            const response = await fetch(`/api/cars/${carId}`);
-            if (response.ok) {
-               setIsDataLoaded(true);
-            } else {
-               router.push('/cars/manage-cars');
-            }
+         const response = await fetch(`/api/cars/${carId}`);
 
-            const data: ICarData = await response.json();
-            setMerek(data?.merek);
-            setModel(data?.model_);
-            setTahun(data?.tahun);
-            setHarga(data?.harga);
-            setJarakTempuh(data?.jarakTempuh);
-            setTipeRegistrasi(data?.tipeRegistrasi);
-            setTransmisi(data?.transmisi);
-            setGaransi(data?.garansi);
-            setBahanBakar(data?.bahanBakar);
-            setTanganKe(data?.tanganKe);
-            setTempatDuduk(data?.tempatDuduk);
-            setWarna(data?.warna);
-            setTglReg(convertISOdateToStandar(data?.tglReg));
-            setMasaBerlakuStnk(convertISOdateToStandar(data?.masaBerlakuStnk));
-            setStatusOdo(data?.statusOdo);
+         const data: ICarData = await response.json();
+
+         if (response.ok) {
+            setIsDataLoaded(true);
+            setCarBrandName(data?.carBrandName);
+            setCarModel(data?.carModel);
+            setYear(data?.year);
+            setPrice(data?.price);
+            setMileage(data?.mileage);
+            setRegistrationType(data?.registrationType);
+            setTransmision(data?.transmision);
+            setWarranty(data?.warranty);
+            setFuel(data?.fuel);
+            setPreviousOwners(data?.previousOwners);
+            setMaximumPassengers(data?.maximumPassengers);
+            setColor(data?.color);
+            setRegistrationDate(
+               convertISOdateToStandar(data?.registrationDate)
+            );
+            setSTNKExpiration(convertISOdateToStandar(data?.STNKExpiration));
+            setOdoStatus(data?.odoStatus);
             setImages(data?.images);
-            setDeskripsi(data?.deskripsi);
-         } catch (error) {
-            console.log(error);
+            setDescription(data?.description);
+         } else {
             setIsDataLoaded(false);
+            router.push('/cars/manage-cars');
          }
       };
       if (mode === 'UPDATE') getCarBrandById();
@@ -92,32 +93,28 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
 
    useEffect(() => {
       const getCarModelByCarBrand = async () => {
-         try {
-            const response = await fetch(
-               `/api/cars/brands/model?brand=${merek}`
-            );
-            const data = await response.json();
-            setCarModels(data);
-         } catch (error) {
-            console.log(error);
-         }
+         const response = await fetch(
+            `/api/cars/brands/model?brand=${carBrandName}`
+         );
+         const data = await response.json();
+         setCarModels(data);
       };
-      if (merek !== '') getCarModelByCarBrand();
-   }, [merek]);
+      if (carBrandName !== '') getCarModelByCarBrand();
+   }, [carBrandName]);
 
    const resetForm = () => {
-      setMerek('');
-      setHarga(0);
-      setJarakTempuh(0);
-      setTipeRegistrasi('');
-      setTanganKe(1);
-      setTempatDuduk(7);
-      setWarna('');
-      setTglReg('');
-      setMasaBerlakuStnk('');
-      setStatusOdo('Asli');
+      setCarBrandName('');
+      setPrice(0);
+      setMileage(0);
+      setRegistrationType('');
+      setPreviousOwners(1);
+      setMaximumPassengers(7);
+      setColor('');
+      setRegistrationDate('');
+      setSTNKExpiration('');
+      setOdoStatus('Asli');
       setImages([]);
-      setDeskripsi('');
+      setDescription('');
    };
 
    useEffect(() => {
@@ -132,31 +129,31 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
    }, [warningMessage, setWarningMessage]);
 
    const validateInput = () => {
-      if (merek === '') {
+      if (carBrandName === '') {
          setWarningMessage('Silahkan pilih merek mobil');
          return false;
-      } else if (model === '') {
+      } else if (carModel === '') {
          setWarningMessage('Silahkan pilih model mobil');
          return false;
-      } else if (harga === 0) {
+      } else if (price === 0) {
          setWarningMessage('Harga tidak boleh kosong');
          return false;
-      } else if (jarakTempuh === 0) {
+      } else if (mileage === 0) {
          setWarningMessage('Jarak tempuh tidak boleh kosong');
          return false;
-      } else if (warna === '') {
+      } else if (color === '') {
          setWarningMessage('Silahkan isi kolom warna');
          return false;
-      } else if (tglReg === '') {
+      } else if (registrationDate === '') {
          setWarningMessage('Silahkan isi kolom tanggal registrasi');
          return false;
-      } else if (masaBerlakuStnk === '') {
+      } else if (STNKExpiration === '') {
          setWarningMessage('Silahkan isi kolom masa berlaku STNK');
          return false;
       } else if (images.length === 0) {
          setWarningMessage('Gambar galeri tidak boleh kosong');
          return false;
-      } else if (deskripsi === '') {
+      } else if (description === '') {
          setWarningMessage('Silahkan isi kolom deskripsi');
          return false;
       } else {
@@ -166,97 +163,85 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
    };
 
    const publishHandler = async (isDraft: boolean) => {
-      const slug = createSlug(merek);
+      const slug = createSlug(carBrandName);
       const isInputValidated = validateInput();
       if (isInputValidated) {
-         try {
-            // Send data to the API endpoint using fetch or Axios
-            setIsloading(true);
-            const response = await fetch('/api/cars', {
-               method: 'POST',
-               headers: {
-                  'Content-Type': 'application/json',
-               },
-               body: JSON.stringify({
-                  merek,
-                  model,
-                  username,
-                  tahun,
-                  slug,
-                  published: isDraft ? false : true,
-                  harga,
-                  jarakTempuh,
-                  tipeRegistrasi,
-                  transmisi,
-                  garansi,
-                  bahanBakar,
-                  tanganKe,
-                  tempatDuduk,
-                  warna,
-                  tglReg,
-                  masaBerlakuStnk,
-                  statusOdo,
-                  images,
-                  deskripsi,
-               }),
-            });
+         setIsloading(true);
+         const response = await fetch('/api/cars', {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+               carBrandName,
+               carModel,
+               username,
+               year,
+               slug,
+               published: isDraft ? false : true,
+               price,
+               mileage,
+               registrationType,
+               transmision,
+               warranty,
+               fuel,
+               previousOwners,
+               maximumPassengers,
+               color,
+               registrationDate,
+               STNKExpiration,
+               odoStatus,
+               images,
+               description,
+            }),
+         });
 
-            if (response.ok) {
-               Swal.fire(
-                  'Sukses!',
-                  `${merek} ${model} ${tahun} berhasil di publish!`,
-                  'success'
-               );
-               setIsloading(false);
-               resetForm();
-            }
-         } catch (error) {
+         if (response.ok) {
+            Swal.fire('Sukses!', `Mobil berhasil di publish!`, 'success');
             setIsloading(false);
-            console.error('Error:', error);
+            resetForm();
+         } else {
+            setIsloading(false);
          }
       }
    };
 
    const updateHandler = async (isDraft: boolean) => {
       if (validateInput()) {
-         try {
-            // Send data to the API endpoint using fetch or Axios
-            setIsloading(true);
-            const response = await fetch(`/api/cars/${carId}`, {
-               method: 'PATCH',
-               headers: {
-                  'Content-Type': 'application/json',
-               },
-               body: JSON.stringify({
-                  merek,
-                  model,
-                  slug,
-                  tahun,
-                  published: isDraft ? false : true,
-                  harga,
-                  jarakTempuh,
-                  tipeRegistrasi,
-                  transmisi,
-                  garansi,
-                  bahanBakar,
-                  tanganKe,
-                  tempatDuduk,
-                  warna,
-                  tglReg,
-                  masaBerlakuStnk,
-                  statusOdo,
-                  images,
-                  deskripsi,
-               }),
-            });
+         setIsloading(true);
+         const response = await fetch(`/api/cars/${carId}`, {
+            method: 'PATCH',
+            headers: {
+               'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+               carBrandName,
+               carModel,
+               slug,
+               year,
+               published: isDraft ? false : true,
+               price,
+               mileage,
+               registrationType,
+               transmision,
+               warranty,
+               fuel,
+               previousOwners,
+               maximumPassengers,
+               color,
+               registrationDate,
+               STNKExpiration,
+               odoStatus,
+               images,
+               description,
+            }),
+         });
 
-            if (response.ok) {
-               Swal.fire('Sukses!', `Artikel berhasil di perbarui!`, 'success');
-               setIsloading(false);
-            }
-         } catch (error) {
+         if (response.ok) {
+            Swal.fire('Sukses!', `Artikel berhasil di perbarui!`, 'success');
             setIsloading(false);
-            console.error('Error:', error);
+         } else {
+            setIsloading(false);
          }
       }
    };
@@ -288,9 +273,9 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                      className='select select-bordered uppercase w-full max-w-xs'
                      id='merek'
                      name='merek'
-                     value={merek}
+                     value={carBrandName}
                      disabled={!isDataLoaded}
-                     onChange={(e) => setMerek(e.target.value)}
+                     onChange={(e) => setCarBrandName(e.target.value)}
                   >
                      <option value=''>Pilih merek</option>
                      {(carBrands as any[])?.map((item) => (
@@ -309,9 +294,9 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                      className='select select-bordered uppercase w-full max-w-xs'
                      id='model'
                      name='model'
-                     value={model}
+                     value={carModel}
                      disabled={!isDataLoaded}
-                     onChange={(e) => setModel(e.target.value)}
+                     onChange={(e) => setCarModel(e.target.value)}
                   >
                      <option value=''>Pilih model</option>
                      {(carModels as any[])?.map((item) => (
@@ -330,9 +315,9 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                      className='select select-bordered w-full max-w-xs'
                      id='tahun'
                      name='tahun'
-                     value={tahun}
+                     value={year}
                      disabled={!isDataLoaded}
-                     onChange={(e) => setTahun(Number(e.target.value))}
+                     onChange={(e) => setYear(Number(e.target.value))}
                   >
                      {generateYear.map((year) => (
                         <option key={year} value={year}>
@@ -352,9 +337,9 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                      id='harga'
                      name='harga'
                      placeholder='220.000.000'
-                     value={harga}
+                     value={price}
                      disabled={!isDataLoaded}
-                     onChange={(e) => setHarga(Number(e.target.value))}
+                     onChange={(e) => setPrice(Number(e.target.value))}
                   />
                </div>
                <div>
@@ -369,11 +354,9 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            id='jarakTempuh'
                            name='jarakTempuh'
                            placeholder='10.000 km'
-                           value={jarakTempuh}
+                           value={mileage}
                            disabled={!isDataLoaded}
-                           onChange={(e) =>
-                              setJarakTempuh(Number(e.target.value))
-                           }
+                           onChange={(e) => setMileage(Number(e.target.value))}
                         />
                      </div>
                      <div className='flex flex-col gap-3'>
@@ -385,9 +368,9 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            type='text'
                            id='tipeRegistrasi'
                            name='tipeRegistrasi'
-                           value={tipeRegistrasi}
+                           value={registrationType}
                            disabled={!isDataLoaded}
-                           onChange={(e) => setTipeRegistrasi(e.target.value)}
+                           onChange={(e) => setRegistrationType(e.target.value)}
                         />
                      </div>
                      <div className='flex flex-col gap-3'>
@@ -398,9 +381,9 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            className='select select-bordered w-full max-w-xs'
                            name='transmisi'
                            id='transmisi'
-                           value={transmisi}
+                           value={transmision}
                            disabled={!isDataLoaded}
-                           onChange={(e) => setTransmisi(e.target.value)}
+                           onChange={(e) => setTransmision(e.target.value)}
                         >
                            <option value='MT'>MT</option>
                            <option value='AT'>AT</option>
@@ -414,10 +397,12 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            className='select select-bordered w-full max-w-xs'
                            name='garansi'
                            id='garansi'
-                           value={garansi ? 'Ya' : 'Tidak'}
+                           value={warranty ? 'Ya' : 'Tidak'}
                            disabled={!isDataLoaded}
                            onChange={(e) =>
-                              setGaransi(e.target.value === 'Ya' ? true : false)
+                              setWarranty(
+                                 e.target.value === 'Ya' ? true : false
+                              )
                            }
                         >
                            <option value='Ya'>Ya</option>
@@ -432,9 +417,9 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            className='select select-bordered w-full max-w-xs'
                            name='bahanBakar'
                            id='bahanBakar'
-                           value={bahanBakar}
+                           value={fuel}
                            disabled={!isDataLoaded}
-                           onChange={(e) => setBahanBakar(e.target.value)}
+                           onChange={(e) => setFuel(e.target.value)}
                         >
                            <option value='Bensin'>Bensin</option>
                            <option value='Solar'>Solar</option>
@@ -450,10 +435,12 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            id='tanganKe'
                            name='tanganKe'
                            placeholder='1'
-                           value={tanganKe}
+                           value={previousOwners}
                            disabled={!isDataLoaded}
                            min={1}
-                           onChange={(e) => setTanganKe(Number(e.target.value))}
+                           onChange={(e) =>
+                              setPreviousOwners(Number(e.target.value))
+                           }
                         />
                      </div>
                      <div className='flex flex-col gap-3'>
@@ -465,9 +452,9 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            name='tempatDuduk'
                            id='tempatDuduk'
                            disabled={!isDataLoaded}
-                           value={tempatDuduk}
+                           value={maximumPassengers}
                            onChange={(e) =>
-                              setTempatDuduk(Number(e.target.value))
+                              setMaximumPassengers(Number(e.target.value))
                            }
                         >
                            <option value='5'>5</option>
@@ -485,9 +472,9 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            id='warna'
                            name='warna'
                            placeholder='Hitam'
-                           value={warna}
+                           value={color}
                            disabled={!isDataLoaded}
-                           onChange={(e) => setWarna(e.target.value)}
+                           onChange={(e) => setColor(e.target.value)}
                         />
                      </div>
                      <div className='flex flex-col gap-3'>
@@ -499,9 +486,9 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            type='date'
                            id='tglReg'
                            name='tglReg'
-                           value={tglReg}
+                           value={registrationDate}
                            disabled={!isDataLoaded}
-                           onChange={(e) => setTglReg(e.target.value)}
+                           onChange={(e) => setRegistrationDate(e.target.value)}
                         />
                      </div>
                      <div className='flex flex-col gap-3'>
@@ -513,9 +500,9 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            type='date'
                            id='masaBerlakuStnk'
                            name='masaBerlakuStnk'
-                           value={masaBerlakuStnk}
+                           value={STNKExpiration}
                            disabled={!isDataLoaded}
-                           onChange={(e) => setMasaBerlakuStnk(e.target.value)}
+                           onChange={(e) => setSTNKExpiration(e.target.value)}
                         />
                      </div>
                      <div className='flex flex-col gap-3'>
@@ -526,9 +513,9 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                            className='select select-bordered w-full max-w-xs'
                            name='statusOdo'
                            id='statusOdo'
-                           value={statusOdo}
+                           value={odoStatus}
                            disabled={!isDataLoaded}
-                           onChange={(e) => setStatusOdo(e.target.value)}
+                           onChange={(e) => setOdoStatus(e.target.value)}
                         >
                            <option value='Asli'>Asli</option>
                            <option value='Modifikasi'>Modifikasi</option>
@@ -586,8 +573,8 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
                      <MDEditor
                         height={400}
                         preview='edit'
-                        value={deskripsi}
-                        onChange={setDeskripsi}
+                        value={description}
+                        onChange={setDescription}
                      />
                   </div>
                </div>

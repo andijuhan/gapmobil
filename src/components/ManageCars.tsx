@@ -296,12 +296,12 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
                                     <div>
                                        <div className='flex gap-1'>
                                           <span className='capitalize'>
-                                             {item.merek}
+                                             {item.carBrandName}
                                           </span>
                                           <span className='uppercase'>
-                                             {item.model_}
+                                             {item.carModel}
                                           </span>
-                                          <span>{item.tahun}</span>
+                                          <span>{item.year}</span>
                                        </div>
                                     </div>
                                     <button className='opacity-0 group-hover:opacity-100 btn btn-xs'>
@@ -327,7 +327,7 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
                                  'd MMMM yyyy HH:mm'
                               )}
                            </td>
-                           <td>{formatPrice(item.harga)}</td>
+                           <td>{formatPrice(item.price)}</td>
                            <td>{item.username}</td>
 
                            <th>
@@ -337,7 +337,7 @@ const ManageCars = ({ apiResponse, totalPage, loading }: IManageCarProps) => {
                                     onClick={() =>
                                        handleDelete(
                                           item.id,
-                                          `${item.merek} ${item.model_} ${item.tahun}`
+                                          `${item.carBrandName} ${item.carModel} ${item.year}`
                                        )
                                     }
                                     size={20}

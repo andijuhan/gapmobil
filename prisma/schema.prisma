@@ -14,29 +14,29 @@ model Car {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   published Boolean
   slug String @unique
-  merek String @unique
-  model_ String
-  tahun Int
-  harga Int
-  jarakTempuh Int
-  tipeRegistrasi String?
-  transmisi String
-  garansi Boolean
-  bahanBakar String
-  tanganKe Int
-  tempatDuduk Int
-  warna String
-  tglReg DateTime
-  masaBerlakuStnk DateTime
-  statusOdo String
+  carBrandName String @unique
+  carModel String
+  year Int
+  price Int
+  mileage Int
+  registrationType String?
+  transmision String
+  warranty Boolean
+  fuel String
+  previousOwners Int
+  maximumPassengers Int
+  color String
+  registrationDate DateTime
+  STNKExpiration DateTime
+  odoStatus String
   images String[]
-  deskripsi String
+  description String
   createAt DateTime @default(now()) @map("create_At")
   updateAt DateTime @updatedAt @map("update_at")
 
   user User? @relation(fields: [username], references: [username])
   username String? @unique
-  carBrand CarBrand @relation(fields: [merek], references: [brandName])
+  carBrand CarBrand @relation(fields: [carBrandName], references: [brandName])
 
   @@map("cars")
 }
@@ -104,4 +104,17 @@ model Category {
   postIds String[] @db.ObjectId
 
   @@map("categories")
+}
+
+model GeneralSetting {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  title String
+  description String
+
+  @@map("generalSettings")
+}
+
+model appearanceSetting {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  imageSlider String[]
 }

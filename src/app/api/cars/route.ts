@@ -14,13 +14,13 @@ export const GET = async (req: Request, res: Response) => {
    try {
       let orderBy: any;
       if (sort === 'merek') {
-         orderBy = { merek: order === 'desc' ? 'desc' : 'asc' };
+         orderBy = { carBrandName: order === 'desc' ? 'desc' : 'asc' };
       } else if (sort === 'status') {
          orderBy = { published: order === 'desc' ? 'desc' : 'asc' };
       } else if (sort === 'updateAt') {
          orderBy = { updateAt: order === 'desc' ? 'desc' : 'asc' };
       } else if (sort === 'harga') {
-         orderBy = { harga: order === 'desc' ? 'desc' : 'asc' };
+         orderBy = { price: order === 'desc' ? 'desc' : 'asc' };
       } else {
          orderBy = { updateAt: 'desc' };
       }
@@ -31,19 +31,19 @@ export const GET = async (req: Request, res: Response) => {
          take,
          where: {
             OR: [
-               { merek: { contains: search } },
-               { model_: { contains: search } },
+               { carBrandName: { contains: search } },
+               { carModel: { contains: search } },
             ],
          },
          select: {
             id: true,
             images: true,
-            merek: true,
-            model_: true,
-            tahun: true,
+            carBrandName: true,
+            carModel: true,
+            year: true,
             published: true,
             updateAt: true,
-            harga: true,
+            price: true,
             username: true,
          },
       });
@@ -84,51 +84,51 @@ export const DELETE = async (req: Request, res: Response) => {
 
 export const POST = async (req: Request, res: Response) => {
    const {
-      merek,
+      carBrandName,
       username,
-      model,
-      tahun,
+      carModel,
+      year,
       slug,
       published,
-      harga,
-      jarakTempuh,
-      tipeRegistrasi,
-      transmisi,
-      garansi,
-      bahanBakar,
-      tanganKe,
-      tempatDuduk,
-      warna,
-      tglReg,
-      masaBerlakuStnk,
-      statusOdo,
+      price,
+      mileage,
+      registrationType,
+      transmision,
+      warranty,
+      fuel,
+      previousOwners,
+      maximumPassengers,
+      color,
+      registrationDate,
+      STNKExpiration,
+      odoStatus,
       images,
-      deskripsi,
+      description,
    } = await req.json();
 
    try {
       const data = await prisma.car.create({
          data: {
-            merek: (merek as string).toLowerCase(),
-            model_: (model as string).toLowerCase(),
-            tahun,
+            carBrandName: (carBrandName as string).toLowerCase(),
+            carModel: (carModel as string).toLowerCase(),
+            year,
             username,
             slug,
             published,
-            harga,
-            jarakTempuh,
-            tipeRegistrasi,
-            transmisi,
-            garansi,
-            bahanBakar,
-            tanganKe,
-            tempatDuduk,
-            warna,
-            tglReg: new Date(tglReg),
-            masaBerlakuStnk: new Date(masaBerlakuStnk),
-            statusOdo,
+            price,
+            mileage,
+            registrationType,
+            transmision,
+            warranty,
+            fuel,
+            previousOwners,
+            maximumPassengers,
+            color,
+            registrationDate: new Date(registrationDate),
+            STNKExpiration: new Date(STNKExpiration),
+            odoStatus,
             images,
-            deskripsi,
+            description,
          },
       });
 
