@@ -37,7 +37,7 @@ export default async function RootLayout({
 
    return (
       <html lang='en'>
-         <body className='font-secondaryFont text-neutral bg-base-200 min-h-screen flex flex-col'>
+         <body className=' text-neutral bg-base-200 min-h-screen flex flex-col'>
             <AdminNavbar data={data} />
             <Drawer contentPage={children} menu={<AdminSidebar />} />
          </body>

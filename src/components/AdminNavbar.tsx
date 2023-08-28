@@ -44,7 +44,7 @@ const AdminNavbar = ({ data }: { data: IUserData }) => {
    };
 
    return (
-      <div className='navbar bg-gray-800 text-gray-100 shadow-lg fixed z-20'>
+      <div className='navbar bg-primary-focus text-gray-100 shadow-lg fixed z-20'>
          <div className='flex-none'>
             <button className='btn btn-square btn-ghost'>
                <svg
