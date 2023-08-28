@@ -4,6 +4,7 @@ import useSWR, { mutate } from 'swr';
 import { fetcher } from '@/utils';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import Swal from 'sweetalert2';
+import { useGeneralSetting } from '@/hooks/useStore';
 
 const ManageCarBrands = () => {
    const [brandName, setBrandName] = useState('');
@@ -13,6 +14,11 @@ const ManageCarBrands = () => {
    //const [warning, setWarning] = useState(false);
    const [warningMessage, setWarningMessage] = useState('');
    const { data, isLoading } = useSWR('/api/cars/brands', fetcher);
+   const { title } = useGeneralSetting();
+
+   useEffect(() => {
+      document.title = 'Kelola Merek Mobil - ' + title;
+   }, [title]);
 
    const handleDelete = async (brandId: string, title: string) => {
       Swal.fire({

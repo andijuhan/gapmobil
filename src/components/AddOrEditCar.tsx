@@ -13,7 +13,7 @@ import CloudinaryMediaLiblaryWidget from './CloudinaryMediaLiblaryWidget';
 import { useRouter } from 'next/navigation';
 import useSWR from 'swr';
 import { fetcher } from '@/utils';
-import { useUser } from '@/hooks/useStore';
+import { useGeneralSetting, useUser } from '@/hooks/useStore';
 import Swal from 'sweetalert2';
 import { BiImageAdd } from 'react-icons/bi';
 
@@ -55,6 +55,16 @@ const AddOrEditCar = ({ mode, carId }: IAddOrEditCarProps) => {
    const { data: carBrands } = useSWR('/api/cars/brands', fetcher);
    const router = useRouter();
    const { username } = useUser();
+
+   const { title } = useGeneralSetting();
+
+   useEffect(() => {
+      if (mode === 'ADD_NEW') {
+         document.title = 'Tambah Mobil - ' + title;
+      } else {
+         document.title = 'Perbarui Mobil - ' + title;
+      }
+   }, [title]);
 
    useEffect(() => {
       const getCarBrandById = async () => {

@@ -240,7 +240,7 @@ const AdminSidebar = () => {
                         path.includes('general') && 'text-base-100'
                      }`}
                   >
-                     <Link href='/settings/car-info'>Umum</Link>
+                     <Link href='/settings/general'>Umum</Link>
                   </li>
                   <li
                      className={`py-2 hover:text-base-100  cursor-pointer ${

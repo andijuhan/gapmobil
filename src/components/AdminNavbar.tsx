@@ -1,20 +1,33 @@
 'use client';
-import { useUser } from '@/hooks/useStore';
+import { useGeneralSetting, useUser } from '@/hooks/useStore';
 import { IUserData } from '@/types';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { MdLogout } from 'react-icons/md';
 import { FaUser } from 'react-icons/fa';
 import { useDetectClickOutside } from 'react-detect-click-outside';
+import useSWR from 'swr';
+import { fetcher } from '@/utils';
 
 const AdminNavbar = ({ data }: { data: IUserData }) => {
    const router = useRouter();
    const [showDropDown, setShowDropDown] = useState(false);
    const { setId, setUsername, setEmail, setRole } = useUser();
+   const { setTitle } = useGeneralSetting();
+   const { data: dataGeneralSettings } = useSWR(
+      '/api/settings/general',
+      fetcher
+   );
 
    const dropDownRef = useDetectClickOutside({
       onTriggered: () => setShowDropDown(false),
    });
+
+   useEffect(() => {
+      if (dataGeneralSettings) {
+         setTitle(dataGeneralSettings[0]?.title);
+      }
+   }, [dataGeneralSettings]);
 
    useEffect(() => {
       setId(data.id);
@@ -50,7 +63,7 @@ const AdminNavbar = ({ data }: { data: IUserData }) => {
             </button>
          </div>
          <div className='flex-1'>
-            <a className='btn btn-ghost text-xl'>Dinamotor</a>
+            <a className='btn btn-ghost text-lg'>Dina motor</a>
          </div>
          <div className='flex-none relative text-sm mr-4'>
             <button

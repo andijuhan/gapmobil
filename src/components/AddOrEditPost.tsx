@@ -5,7 +5,7 @@ import MDEditor from '@uiw/react-md-editor';
 import { useEffect, useState } from 'react';
 import CloudinaryMediaLiblaryWidget from './CloudinaryMediaLiblaryWidget';
 import Swal from 'sweetalert2';
-import { useUser } from '@/hooks/useStore';
+import { useGeneralSetting, useUser } from '@/hooks/useStore';
 import useSWR, { mutate } from 'swr';
 import { useRouter } from 'next/navigation';
 import { ICategoryData, IPostData } from '@/types';
@@ -33,6 +33,15 @@ const AddOrEditPost = ({ mode, postId }: IAddOrEditPostProps) => {
    const { data: dataCategories } = useSWR('/api/posts/category', fetcher);
    const [categories, setCategories] = useState<ICategoryData[]>([]);
    const [categoryName, setCategoryName] = useState<string>('');
+   const { title: siteTitle } = useGeneralSetting();
+
+   useEffect(() => {
+      if (mode === 'ADD_NEW') {
+         document.title = 'Tambah Artikel - ' + siteTitle;
+      } else {
+         document.title = 'Perbarui Artikel - ' + siteTitle;
+      }
+   }, [siteTitle]);
 
    const handleAddCategory = async () => {
       const slug = createSlug(categoryName);

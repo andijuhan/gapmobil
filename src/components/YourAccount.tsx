@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 'use client';
-import { useUser } from '@/hooks/useStore';
+import { useGeneralSetting, useUser } from '@/hooks/useStore';
 import { IUserData } from '@/types';
 import {
    isEmailValid,
@@ -20,6 +20,11 @@ const YourAccount = () => {
    const [warningMessage, setWarningMessage] = useState('');
    const [isLoading, setIsLoading] = useState(false);
    const { id } = useUser();
+   const { title } = useGeneralSetting();
+
+   useEffect(() => {
+      document.title = 'Akun Anda - ' + title;
+   }, [title]);
 
    useEffect(() => {
       const getUserById = async () => {

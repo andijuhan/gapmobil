@@ -1,6 +1,7 @@
 'use client';
+import { useGeneralSetting } from '@/hooks/useStore';
 import { createSlug, fetcher } from '@/utils';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import Swal from 'sweetalert2';
 import useSWR, { mutate } from 'swr';
@@ -10,6 +11,11 @@ const ManageCategory = () => {
    const [selectedCategoryId, setSelectedCategoryId] = useState<string>('');
    const [editMode, setEditMode] = useState<boolean>(false);
    const { data, isLoading } = useSWR('/api/posts/category', fetcher);
+   const { title } = useGeneralSetting();
+
+   useEffect(() => {
+      document.title = 'Kelola Kategori - ' + title;
+   }, [title]);
 
    const handleAddCategory = async () => {
       const slug = createSlug(categoryName);

@@ -10,6 +10,7 @@ import { useSearchParams } from 'next/navigation';
 import { IUserData } from '@/types';
 import { useRouter } from 'next/navigation';
 import Swal from 'sweetalert2';
+import { useGeneralSetting } from '@/hooks/useStore';
 
 const AddOrEditUser = () => {
    const searchParams = useSearchParams();
@@ -22,6 +23,11 @@ const AddOrEditUser = () => {
    const [warningMessage, setWarningMessage] = useState('');
    const [mode, setMode] = useState<'ADD_NEW' | 'UPDATE'>('ADD_NEW');
    const router = useRouter();
+   const { title } = useGeneralSetting();
+
+   useEffect(() => {
+      document.title = 'Kelola Pengguna - ' + title;
+   }, [title]);
 
    useEffect(() => {
       const getUserById = async () => {
