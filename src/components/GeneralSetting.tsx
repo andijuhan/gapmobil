@@ -77,7 +77,7 @@ const GeneralSetting = () => {
                type='button'
                className='btn btn-primary w-min mt-5'
             >
-               Perbarui
+               Simpan
             </button>
          </div>
       </div>

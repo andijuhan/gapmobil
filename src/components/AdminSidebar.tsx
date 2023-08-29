@@ -247,7 +247,7 @@ const AdminSidebar = () => {
                         path.includes('car-info') && 'text-base-100'
                      }`}
                   >
-                     <Link href='/settings/car-info'>Tampilan</Link>
+                     <Link href='/settings/appearance'>Tampilan</Link>
                   </li>
                </ul>
             </div>
