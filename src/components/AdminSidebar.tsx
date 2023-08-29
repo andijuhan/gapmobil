@@ -27,7 +27,7 @@ const AdminSidebar = () => {
    }, [path]);
 
    return (
-      <div className='w-[250px] lg:relative z-40 bg-gray-600 min-h-screen text-neutral-content pt-[30px] px-7 mt-[60px]'>
+      <div className='w-[250px] lg:relative z-40 bg-gray-900 min-h-screen text-neutral-content pt-[30px] px-7 mt-[60px]'>
          <div className='flex flex-col gap-6 dropdown mt-5'>
             {/* MANAGE DASHBOARD */}
             <Link href='/dashboard'>

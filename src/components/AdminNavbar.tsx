@@ -44,7 +44,7 @@ const AdminNavbar = ({ data }: { data: IUserData }) => {
    };
 
    return (
-      <div className='navbar bg-primary-focus text-gray-100 shadow-lg fixed z-20'>
+      <div className='navbar bg-violet-700 text-gray-100 shadow-lg fixed z-20'>
          <div className='flex-1'>
             <a className='btn btn-ghost text-lg'>Dina motor</a>
          </div>
