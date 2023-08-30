@@ -6,6 +6,11 @@ export const middleware = async (req: NextRequest, res: NextResponse) => {
    const { pathname } = req.nextUrl;
 
    const validateToken: any = await validateSessionTokenWithJose(token || '');
+   const isOwner = pathname.includes(validateToken?.id);
+
+   if (pathname === '/api/auth/login') {
+      return NextResponse.next();
+   }
 
    if (pathname === '/api/users' && validateToken?.role !== 'SUPER ADMIN') {
       return NextResponse.json(null, { status: 401 });
@@ -15,20 +20,11 @@ export const middleware = async (req: NextRequest, res: NextResponse) => {
       if (!validateToken) {
          return NextResponse.json(null, { status: 401 });
       }
-      if (
-         !pathname.includes(validateToken?.id) &&
-         validateToken?.role !== 'SUPER ADMIN'
-      ) {
+      //jika bukan pemilik akun dan bukan super admin
+      if (!isOwner && validateToken?.role !== 'SUPER ADMIN') {
          return NextResponse.json(null, { status: 401 });
       }
-   }
-
-   if (pathname === '/api/auth/login') {
       return NextResponse.next();
-   }
-
-   if (req.method !== 'GET') {
-      return NextResponse.json(null, { status: 401 });
    }
 
    return NextResponse.next();

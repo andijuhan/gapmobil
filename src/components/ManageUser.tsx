@@ -70,7 +70,7 @@ const CreateUser = () => {
    };
 
    const handleEdit = (id: string) => {
-      router.push(`/users/manage-users?id=${id}`);
+      router.push(`/admin/users/manage-users?id=${id}`);
    };
 
    useEffect(() => {
