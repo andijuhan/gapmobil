@@ -30,7 +30,7 @@ const AdminSidebar = () => {
       <div className='w-[250px] lg:relative z-40 bg-gray-900 min-h-screen text-neutral-content pt-[30px] px-7 mt-[60px]'>
          <div className='flex flex-col gap-6 dropdown mt-5'>
             {/* MANAGE DASHBOARD */}
-            <Link href='/dashboard'>
+            <Link href='/admin/dashboard'>
                <div
                   className={`flex gap-3 items-center ${
                      path === '/dashboard' && 'font-medium text-base-100'
@@ -79,21 +79,21 @@ const AdminSidebar = () => {
                         'text-base-100'
                      }`}
                   >
-                     <Link href='/cars/manage-cars'>Kelola mobil</Link>
+                     <Link href='/admin/cars/manage-cars'>Kelola mobil</Link>
                   </li>
                   <li
                      className={`py-2 hover:text-base-100  cursor-pointer ${
                         path.includes('add-new-car') && 'text-base-100'
                      }`}
                   >
-                     <Link href='/cars/add-new-car'>Tambah mobil</Link>
+                     <Link href='/admin/cars/add-new-car'>Tambah mobil</Link>
                   </li>
                   <li
                      className={`py-2 hover:text-base-100  cursor-pointer ${
                         path.includes('manage-brands') && 'text-base-100'
                      }`}
                   >
-                     <Link href='/cars/manage-brands'>Kelola merek</Link>
+                     <Link href='/admin/cars/manage-brands'>Kelola merek</Link>
                   </li>
                </ul>
             </div>
@@ -135,21 +135,25 @@ const AdminSidebar = () => {
                         path.includes('manage-posts') && 'text-base-100'
                      }`}
                   >
-                     <Link href='/posts/manage-posts'>Kelola artikel</Link>
+                     <Link href='/admin/posts/manage-posts'>
+                        Kelola artikel
+                     </Link>
                   </li>
                   <li
                      className={`py-2 hover:text-base-100  cursor-pointer ${
                         path.includes('add-new-post') && 'text-base-100'
                      }`}
                   >
-                     <Link href='/posts/add-new-post'>Tambah artikel</Link>
+                     <Link href='/admin/posts/add-new-post'>
+                        Tambah artikel
+                     </Link>
                   </li>
                   <li
                      className={`py-2 hover:text-base-100  cursor-pointer ${
                         path.includes('category') && 'text-base-100'
                      }`}
                   >
-                     <Link href='/posts/category'>Kelola kategori</Link>
+                     <Link href='/admin/posts/category'>Kelola kategori</Link>
                   </li>
                </ul>
             </div>
@@ -191,14 +195,16 @@ const AdminSidebar = () => {
                         path.includes('manage-users') && 'text-base-100'
                      }`}
                   >
-                     <Link href='/users/manage-users'>Kelola pengguna</Link>
+                     <Link href='/admin/users/manage-users'>
+                        Kelola pengguna
+                     </Link>
                   </li>
                   <li
                      className={`py-2 hover:text-base-100  cursor-pointer ${
                         path.includes('add-new-post') && 'text-base-100'
                      }`}
                   >
-                     <Link href='/users/your-account'>Akun Anda</Link>
+                     <Link href='/admin/users/your-account'>Akun Anda</Link>
                   </li>
                </ul>
             </div>
@@ -240,14 +246,14 @@ const AdminSidebar = () => {
                         path.includes('general') && 'text-base-100'
                      }`}
                   >
-                     <Link href='/settings/general'>Umum</Link>
+                     <Link href='/admin/settings/general'>Umum</Link>
                   </li>
                   <li
                      className={`py-2 hover:text-base-100  cursor-pointer ${
                         path.includes('car-info') && 'text-base-100'
                      }`}
                   >
-                     <Link href='/settings/appearance'>Tampilan</Link>
+                     <Link href='/admin/settings/appearance'>Tampilan</Link>
                   </li>
                </ul>
             </div>

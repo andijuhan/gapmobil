@@ -46,7 +46,7 @@ const LoginForm = () => {
          const data = await response.json();
 
          if (response.ok) {
-            router.push('/dashboard');
+            router.push('/admin/dashboard');
          } else {
             Swal.fire({
                position: 'top-end',

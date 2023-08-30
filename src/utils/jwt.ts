@@ -1,4 +1,5 @@
 import jwt, { Secret } from 'jsonwebtoken';
+import { SignJWT, jwtVerify, type JWTPayload } from 'jose';
 
 const secretKey: Secret = process.env.SECRET || '';
 
@@ -45,6 +46,22 @@ export const validateSessionToken = (token: string): object | null => {
       return decoded as object;
    } catch (error) {
       console.log('gagal memvalidasi session token : ' + error);
+      return null;
+   }
+};
+
+export const validateSessionTokenWithJose = async (
+   token: string
+): Promise<object | null> => {
+   try {
+      const { payload } = await jwtVerify(
+         token,
+         new TextEncoder().encode(secretKey)
+      );
+
+      return payload;
+   } catch (error) {
+      console.log('gagal memvalidasi session token with jose : ' + error);
       return null;
    }
 };
